@@ -21,6 +21,10 @@ public class MainActivity extends AppCompatActivity
         //dostuff;
     }
 
+    public void dosomeshitAgain(){
+        //more shit here
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
