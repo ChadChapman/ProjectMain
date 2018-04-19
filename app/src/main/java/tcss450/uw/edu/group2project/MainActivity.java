@@ -14,7 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener
+        , LoginFragment.OnFragmentInteractionListener {
 
     public void someShit(){
         //dostuff;
@@ -44,6 +45,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if (findViewById(R.id.main_layout_constraint) != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.main_layout_constraint, new LoginFragment())
+                    .commit();
+        }
     }
 
     @Override
@@ -101,5 +108,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction() {
+
     }
 }
