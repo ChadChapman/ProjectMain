@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 
 /**
@@ -16,13 +19,30 @@ import android.view.ViewGroup;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements View.OnClickListener {
+
+    EditText regEdit;
+    EditText logEdit;
 
 
     private OnFragmentInteractionListener mListener;
 
     public LoginFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        regEdit = (EditText) view.findViewById(R.id.login_edit_text_username);
+        logEdit = (EditText) view.findViewById(R.id.login_edit_text_password);
+        Button b = (Button) view.findViewById(R.id.login_button_login);
+        b.setOnClickListener(this);
+        b = (Button) view.findViewById(R.id.login_button_register);
+        b.setOnClickListener(this);
+
+        return view;
     }
 
 
@@ -40,4 +60,18 @@ public class LoginFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction();
     }
+
+
+
+    @Override
+    public void onClick(View v) {
+        if (logEdit.getText().toString().length() < 1
+                || regEdit.getText().toString().length() < 1) {
+            //Display Toast
+            Toast.makeText(getActivity(), "Username and Password field cannot be empty"
+            , Toast.LENGTH_LONG).show();
+
+        }
+    }
 }
+

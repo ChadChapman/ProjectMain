@@ -42,10 +42,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (findViewById(R.id.main_layout_constraint) != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.main_layout_constraint, new LoginFragment())
-                    .commit();
+        if (savedInstanceState == null) {
+            if (findViewById(R.id.main_layout_constraint) != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.main_layout_constraint, new LoginFragment())
+                        .commit();
+            }
         }
     }
 
