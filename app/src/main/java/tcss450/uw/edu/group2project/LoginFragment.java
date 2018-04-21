@@ -14,7 +14,6 @@ import android.view.ViewGroup;
  * Activities that contain this fragment must implement the
  * {@link LoginFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link LoginFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class LoginFragment extends Fragment {
