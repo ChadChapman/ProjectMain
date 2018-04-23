@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,8 +24,8 @@ import android.widget.Toast;
  */
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
-    EditText regEdit;
-    EditText logEdit;
+    EditText userEdit;
+    EditText passEdit;
 
 
     private OnFragmentInteractionListener mListener;
@@ -35,8 +38,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        regEdit = (EditText) view.findViewById(R.id.login_edit_text_username);
-        logEdit = (EditText) view.findViewById(R.id.login_edit_text_password);
+        userEdit = (EditText) view.findViewById(R.id.login_edit_text_username);
+        passEdit = (EditText) view.findViewById(R.id.login_edit_text_password);
         Button b = (Button) view.findViewById(R.id.login_button_login);
         b.setOnClickListener(this);
         b = (Button) view.findViewById(R.id.login_button_register);
@@ -65,13 +68,28 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (logEdit.getText().toString().length() < 1
-                || regEdit.getText().toString().length() < 1) {
+        String email = userEdit.getText().toString();
+        if (email.length() < 1 || passEdit.getText().toString().length() < 1) {
             //Display Toast
             Toast.makeText(getActivity(), "Username and Password field cannot be empty"
             , Toast.LENGTH_LONG).show();
-
+        } else if (!isEmailValid(email)) {
+            Toast.makeText(getActivity(),"Username must be a valid email address"
+            , Toast.LENGTH_LONG).show();
         }
+    }
+
+    /**
+     * method is used for checking valid email id format.
+     *
+     * @param email
+     * @return boolean true for valid false for invalid
+     */
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w]+@([\\w]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }
 
