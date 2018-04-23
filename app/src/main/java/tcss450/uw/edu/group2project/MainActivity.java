@@ -1,3 +1,7 @@
+/**
+ * merged so far: Igor, Josh, Raymond
+ */
+
 package tcss450.uw.edu.group2project;
 
 import android.os.Bundle;
