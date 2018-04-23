@@ -6,12 +6,20 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Login Fragment -->
     <string name="login_register_text_view_welcome">Welcome!!</string>
     <string name="login_edit_text_hint">Please log in or register</string>
     <string name="login_register_edit_text_username">username</string>
     <string name="login_register_edit_text_password">password</string>
-    <string name="login_button_login">LOGIN</string>
-    <string name="login_register_button_register">REGISTER</string>
+    <string name="login_button_login">Login</string>
+    <string name="login_register_button_register">Register</string>
+    <string name="login_check_box_stay_logged_in">Stay logged in</string>
+
+    <!-- Landing Fragment -->
+    <string name="landing_button_logout">Logout</string>
+
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
