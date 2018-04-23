@@ -7,6 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -14,10 +20,12 @@ import android.view.ViewGroup;
  * Activities that contain this fragment must implement the
  * {@link LoginFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the  factory method to
  * create an instance of this fragment.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements View.OnClickListener {
+
+    EditText userEdit;
+    EditText passEdit;
 
 
     private OnFragmentInteractionListener mListener;
@@ -29,9 +37,17 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        userEdit = (EditText) view.findViewById(R.id.login_edit_text_username);
+        passEdit = (EditText) view.findViewById(R.id.login_edit_text_password);
+        Button b = (Button) view.findViewById(R.id.login_button_login);
+        b.setOnClickListener(this);
+        b = (Button) view.findViewById(R.id.login_button_register);
+        b.setOnClickListener(this);
+
+        return view;
     }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -47,4 +63,33 @@ public class LoginFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction();
     }
+
+
+
+    @Override
+    public void onClick(View v) {
+        String email = userEdit.getText().toString();
+        if (email.length() < 1 || passEdit.getText().toString().length() < 1) {
+            //Display Toast
+            Toast.makeText(getActivity(), "Username and Password field cannot be empty"
+            , Toast.LENGTH_LONG).show();
+        } else if (!isEmailValid(email)) {
+            Toast.makeText(getActivity(),"Username must be a valid email address"
+            , Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * method is used for checking valid email id format.
+     *
+     * @param email
+     * @return boolean true for valid false for invalid
+     */
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w]+@([\\w]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
 }
+

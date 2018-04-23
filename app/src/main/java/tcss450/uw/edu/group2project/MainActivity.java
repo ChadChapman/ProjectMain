@@ -1,7 +1,3 @@
-/**
- * merged so far:  Igor, Josh
- */
-
 package tcss450.uw.edu.group2project;
 
 import android.os.Bundle;
@@ -20,18 +16,6 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
         , LoginFragment.OnFragmentInteractionListener {
-
-    public void someShit(){
-        //dostuff;
-    }
-
-    public void dosomeshitAgain(){
-        //more shit here i changed this ,,,,
-    }
-
-    public void newShit(){
-        //try with branch
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +42,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if (findViewById(R.id.main_layout_constraint) != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.main_layout_constraint, new RegisterFragment())
-                    .commit();
+        if (savedInstanceState == null) {
+            if (findViewById(R.id.main_layout_constraint) != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.main_layout_constraint, new LoginFragment())
+                        .commit();
+            }
         }
     }
 
