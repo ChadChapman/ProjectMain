@@ -25,6 +25,10 @@ public class MainActivity extends AppCompatActivity
         //more shit here i changed this ,,,,
     }
 
+    public void newShit(){
+        //try with branch
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
