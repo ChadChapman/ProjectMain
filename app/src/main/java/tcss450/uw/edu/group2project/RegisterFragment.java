@@ -28,7 +28,7 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_register, container, false);
-        Button b = (Button) v.findViewById(R.id.registerButton);
+        Button b = (Button) v.findViewById(R.id.registerfrag_button_register);
         b.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
