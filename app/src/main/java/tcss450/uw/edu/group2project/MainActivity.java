@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
 
         if (findViewById(R.id.main_layout_constraint) != null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.main_layout_constraint, new LoginFragment())
+                    .add(R.id.main_layout_constraint, new RegisterFragment())
                     .commit();
         }
     }
