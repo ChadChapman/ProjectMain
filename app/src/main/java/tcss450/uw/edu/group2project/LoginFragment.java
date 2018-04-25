@@ -13,6 +13,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import tcss450.uw.edu.group2project.model.Credentials;
+
 
 /**
  * A simple {@link Fragment} subclass.
