@@ -7,4 +7,5 @@
 
     <string name="keys_fragment_login">loginFragmentTag</string>
     <string name="keys_fragment_register">registerFragmentTag</string>
+    <string name="keys_fragment_landing">landingFragmentTag</string>
 </resources>

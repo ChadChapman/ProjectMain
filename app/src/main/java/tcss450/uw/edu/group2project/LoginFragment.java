@@ -47,8 +47,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         Button b = (Button) view.findViewById(R.id.login_button_login);
         b.setOnClickListener(this::attemptLogin);
         b = (Button) view.findViewById(R.id.login_button_register);
-        b.setOnClickListener(this);
-
+        b.setOnClickListener(this::registerOpen);
         return view;
     }
 
@@ -68,7 +67,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         super.onDetach();
         mListener = null;
     }
-
+    private void registerOpen(View view) {
+        if (mListener != null) {
+            mListener.onRegisterClicked();
+        }
+    }
     public void attemptLogin(View view) {
         if (mListener != null) {
             EditText username = getActivity().findViewById(R.id.login_edit_text_username);

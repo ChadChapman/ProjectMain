@@ -15,6 +15,12 @@
     <string name="login_button_login">Login</string>
     <string name="login_register_button_register">Register</string>
     <string name="login_check_box_stay_logged_in">Stay logged in</string>
+    <string name="register_edit_text_first_name">First Name</string>
+    <string name="register_edit_text_last_name">Last Name</string>
+    <string name="register_edit_text_email">Email</string>
+
+
+
 
     <!-- Landing Fragment -->
     <string name="landing_button_logout">Logout</string>

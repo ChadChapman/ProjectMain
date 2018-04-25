@@ -32,7 +32,8 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         LoginFragment.OnLoginFragmentInteractionListener,
-        LandingFragment.OnLandingFragmentInteractionListener {
+        LandingFragment.OnLandingFragmentInteractionListener,
+        RegisterFragment.OnFragmentInteractionListener {
 
     Credentials mCredentials;
 
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             if (findViewById(R.id.drawer_layout) != null) {
                 SharedPreferences prefs =
                         getSharedPreferences(
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity
                     loadLandingFragment();
                 } else {
                     getSupportFragmentManager().beginTransaction()
-                            .add(R.id.drawer_layout,
+                            .add(R.id.main_layout_constraint,
                                     new LoginFragment(),
                                     getString(R.string.keys_fragment_login))
                             .commit();
@@ -139,9 +140,51 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
+    private void loadLandingFragment() {
+        LandingFragment landingFragment = new LandingFragment();
+
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_layout_constraint, landingFragment, getString(R.string.keys_fragment_landing));
+        // Commit the transaction
+        transaction.commit();
+    }
+
+    /*
+    --------------------------Register fragment interface---------------------------
+     */
+    @Override
+    public void onRegisterAttempt(Credentials credentials) {
+        //build the web service URL
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_register))
+                .build();
+
+        //build the JSONObject
+        JSONObject msg = credentials.asJSONObject();
+
+        mCredentials = credentials;
+
+        //instantiate and execute the AsyncTask.
+        //Feel free to add a handler for onPreExecution so that a progress bar
+        //is displayed or maybe disable buttons. You would need a method in
+        //LoginFragment to perform this.
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handleRegisterOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+      /*
+    --------------------------Login fragment interface-------------------------------
+     */
+
     @Override
     public void onLoginAttempt(Credentials credentials) {
-    //build the web service URL
+        //build the web service URL
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
@@ -165,31 +208,33 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onRegisterClicked() {
-
-    }
-
-    private void loadLandingFragment() {
-        LandingFragment landingFragment = new LandingFragment();
-
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.drawer_layout, landingFragment);
+                .replace(R.id.main_layout_constraint, new RegisterFragment(),getString(R.string.keys_fragment_register))
+                .addToBackStack(null);
 
         // Commit the transaction
         transaction.commit();
     }
 
+     /*
+    --------------------------Async handlers-------------------------------
+     */
+
+
     /**
      * Handle errors that may occur during the AsyncTask.
+     *
      * @param result the error message provide from the AsyncTask
      */
     private void handleErrorsInTask(String result) {
-        Log.e("ASYNCT_TASK_ERROR",  result);
+        Log.e("ASYNCT_TASK_ERROR", result);
     }
 
     /**
      * Handle onPostExecute of the AsynceTask. The result from our webservice is
      * a JSON formatted String. Parse it for success or failure.
+     *
      * @param result the JSON formatted String response from the web service
      */
     private void handleLoginOnPost(String result) {
@@ -213,11 +258,45 @@ public class MainActivity extends AppCompatActivity
         } catch (JSONException e) {
             //It appears that the web service didn’t return a JSON formatted String
             //or it didn’t have what we expected in it.
-            Log.e("JSON_PARSE_ERROR",  result
+            Log.e("JSON_PARSE_ERROR", result
                     + System.lineSeparator()
                     + e.getMessage());
         }
     }
+
+    private void handleRegisterOnPost(String result) {
+        try {
+            JSONObject resultsJSON = new JSONObject(result);
+            boolean success = resultsJSON.getBoolean("success");
+
+            if (success) {
+                //Login was successful. Switch to the loadSuccessFragment.
+                getSupportFragmentManager().popBackStack();
+                loadLandingFragment();
+            } else {
+                //Login was unsuccessful. Don’t switch fragments and inform the user
+                LoginFragment frag =
+                        (LoginFragment) getSupportFragmentManager()
+                                .findFragmentByTag(
+                                        getString(R.string.keys_fragment_register));
+                frag.setError("Log in unsuccessful");
+            }
+
+        } catch (JSONException e) {
+            //It appears that the web service didn’t return a JSON formatted String
+            //or it didn’t have what we expected in it.
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
+        }
+    }
+
+
+
+    /*
+    --------------------------Shared Preferences Handling-------------------------------
+     */
+
 
     private void checkStayLoggedIn() {
         if (((CheckBox) findViewById(R.id.login_check_box_stay_logged_in)).isChecked()) {
@@ -254,4 +333,6 @@ public class MainActivity extends AppCompatActivity
         //the way to close an app programmaticaly
         finishAndRemoveTask();
     }
+
+
 }
