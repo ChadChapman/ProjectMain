@@ -9,7 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import tcss450.uw.edu.group2project.model.Credentials;
 
@@ -52,48 +56,90 @@ public class RegisterFragment extends Fragment {
 
 
     public void goSuccess(View view) {
+        int errors = 0;
         if (mListener != null) {
-            String email = ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_email)).getText().toString();
-            String fname = ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_firstname)).getText().toString();
-            String lname = ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_lastname)).getText().toString();
-            String nickname = ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_username)).getText().toString();
-            String password1 = ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_password1)).getText().toString();
-            String password2 = ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_password2)).getText().toString();
+            EditText emailField = ((EditText) getActivity().findViewById(R.id.registerfrag_edittext_email));
+            String email = emailField.getText().toString();
+            EditText fNameField = ((EditText) getActivity().findViewById(R.id.registerfrag_edittext_firstname));
+            String fName = fNameField.getText().toString();
+            EditText lNameField = ((EditText) getActivity().findViewById(R.id.registerfrag_edittext_lastname));
+            String lName = lNameField.getText().toString();
+            EditText uNameField = ((EditText) getActivity().findViewById(R.id.registerfrag_edittext_username));
+            String uName = uNameField.getText().toString();
+            EditText pass1Field = ((EditText) getActivity().findViewById(R.id.registerfrag_edittext_password1));
+            String pass1 = pass1Field.getText().toString();
+            EditText pass2Field = ((EditText) getActivity().findViewById(R.id.registerfrag_edittext_password2));
+            String pass2 = pass2Field.getText().toString();
+
 
             int indAt = email.indexOf('@');
             //Minimum checks for the fields....
+
             if (indAt < 0 && indAt < email.length() - 1) {
                 ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_email)).setError("Invalid Email!");
-            } else if (email.equals("")) {
-                ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_email)).setError("Email cannot be empty!");
-            } else if (fname.equals("")) {
-                ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_firstname)).setError("First name cannot be empty!");
-            } else if (lname.equals("")) {
-                ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_lastname)).setError("Last name cannot be empty!");
-            } else if (nickname.equals("")) {
-                ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_username)).setError("Username cannot be empty");
-            } else if (password1.equals("")) {
-                ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_password1)).setError("Password cannot be empty");
-            } else if (password2.equals("")) {
-                ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_password2)).setError("Confirm Password cannot be empty");
-            } else if (!(password1.equals(password2))) {
-                ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_password1)).setError("Password do not match!");
-                ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_password2)).setError("Password do not match!");
-            } else if (password1.length() < mMinSizeText) {
-                ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_password1)).setError("Password do not match!");
-                ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_password2)).setError("Password do not match!");
-            } else {
+                errors += 1;
+            }
+            if (email.equals("")) {
+                emailField.setError("Email cannot be empty!");
+                errors += 1;
+            }
+            if (!isValidEmail(email)) {
+                emailField.setError("Must be valid email!");
+                errors += 1;
+            }
+            if (fName.equals("")) {
+                fNameField.setError("First name cannot be empty!");
+                errors += 1;
+            }
+            if (lName.equals("")) {
+                lNameField.setError("Last name cannot be empty!");
+                errors += 1;
+            }
+            if (uName.equals("")) {
+                uNameField.setError("Username cannot be empty");
+                errors += 1;
+            }
+            if (pass1.equals("")) {
+                pass1Field.setError("Password cannot be empty");
+                errors += 1;
+            }
+            if (pass2.equals("")) {
+                pass2Field.setError("Confirm Password cannot be empty");
+                errors += 1;
+            }
+            if (!(pass1.equals(pass2))) {
+                pass1Field.setError("Passwords do not match!");
+                errors += 1;
+            }
+            if (pass1.length() < mMinSizeText) {
+                ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_password1)).setError("Password is too short!");
+                errors += 1;
+            }
+            if (errors == 0) {
                 //we need another method to verify email then run this code... but for now we
                 //dont verify email.
                 Editable pwd = (Editable) ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_password1)).getText();
-                mListener.onRegisterAttempt(new Credentials.Builder(nickname, pwd)
+                mListener.onRegisterAttempt(new Credentials.Builder(uName, pwd)
                         .addEmail(email)
-                        .addFirstName(fname)
-                        .addLastName(lname)
+                        .addFirstName(fName)
+                        .addLastName(lName)
                         .build());
             }
 
         }
+    }
+
+    /**
+     * method is used for checking valid email id format.
+     *
+     * @param email
+     * @return boolean true for valid false for invalid
+     */
+    public boolean isValidEmail(String email) {
+        String expression = "^[\\w]+@([\\w]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
     /**
