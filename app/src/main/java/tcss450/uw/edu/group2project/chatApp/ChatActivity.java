@@ -1,10 +1,12 @@
 package tcss450.uw.edu.group2project.chatApp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -83,8 +86,9 @@ public class ChatActivity extends AppCompatActivity
                     getString(R.string.keys_prefs_stay_logged_in),
                     false)
                     .apply();
-            //the way to close an app programmaticaly
-            finishAndRemoveTask();
+            Intent intent = new Intent(this, StartActivity.class);
+            ActivityCompat.finishAffinity(this);
+            startActivity(intent);
             return true;
         }
 
