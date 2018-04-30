@@ -1,7 +1,6 @@
-package tcss450.uw.edu.group2project;
+package tcss450.uw.edu.group2project.registerLoging;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.model.Credentials;
 
 public class RegisterFragment extends Fragment {
