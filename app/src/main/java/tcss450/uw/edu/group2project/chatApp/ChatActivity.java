@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +21,7 @@ import android.view.MenuItem;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
+import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 
 public class ChatActivity extends AppCompatActivity
@@ -31,15 +34,15 @@ public class ChatActivity extends AppCompatActivity
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        //uncomment when we decide what to do with the floating action button
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -50,15 +53,21 @@ public class ChatActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.drawer_layout,
+                .add(R.id.fragmentContainer,
                         new LandingFragment(),
                         getString(R.string.keys_fragment_landing))
                 .commit();
     }
 
+    private void loadFragment(Fragment frag,String tag){
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, frag, tag)
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -91,26 +100,28 @@ public class ChatActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_chat) {
-            // Handle the camera action
+            loadFragment(new ChatFragment(),getString(R.string.keys_fragment_chat));
         } else if (id == R.id.nav_contacts) {
-
+            loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts));
         } else if (id == R.id.nav_profile) {
-
+            loadFragment(new ProfileFragment(),getString(R.string.keys_fragment_profile));
         } else if (id == R.id.nav_settings) {
-
+            loadFragment(new SettingFragment(),getString(R.string.keys_fragment_settings));
+        }else if (id == R.id.nav_logout) {
+            onLogout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     @Override
     public void onLogout() {
         SharedPreferences prefs =

@@ -8,4 +8,9 @@
     <string name="keys_fragment_login">loginFragmentTag</string>
     <string name="keys_fragment_register">registerFragmentTag</string>
     <string name="keys_fragment_landing">landingFragmentTag</string>
+    <string name="keys_fragment_chat">chatFragmentTag</string>
+    <string name="keys_fragment_profile">profileFragmentTag</string>
+    <string name="keys_fragment_contacts">contactsFragmentTag</string>
+    <string name="keys_fragment_settings">settingsFragmentTag</string>
+
 </resources>
