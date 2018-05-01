@@ -14,19 +14,25 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CheckBox;
+import android.widget.EditText;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
 import tcss450.uw.edu.group2project.chatApp.ChatActivity;
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.chatApp.LandingFragment;
 import tcss450.uw.edu.group2project.model.Credentials;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
+
 public class StartActivity extends AppCompatActivity
         implements LoginFragment.OnLoginFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener {
+    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 
     Credentials mCredentials;
 
@@ -67,7 +73,11 @@ public class StartActivity extends AppCompatActivity
 //        // Commit the transaction
 //        transaction.commit();
 
+
         Intent intent = new Intent(this, ChatActivity.class);
+        EditText editText = (EditText) findViewById(R.id.login_edit_text_username);
+        String message = editText.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, message);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
     }
@@ -83,12 +93,10 @@ public class StartActivity extends AppCompatActivity
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_register))
                 .build();
-
         //build the JSONObject
         JSONObject msg = credentials.asJSONObject();
 
         mCredentials = credentials;
-
         //instantiate and execute the AsyncTask.
         //Feel free to add a handler for onPreExecution so that a progress bar
         //is displayed or maybe disable buttons. You would need a method in
