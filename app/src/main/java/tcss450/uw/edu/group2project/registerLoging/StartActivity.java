@@ -20,12 +20,12 @@ import org.json.JSONObject;
 
 import tcss450.uw.edu.group2project.chatApp.ChatActivity;
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.chatApp.LandingFragment;
 import tcss450.uw.edu.group2project.model.Credentials;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 public class StartActivity extends AppCompatActivity
         implements LoginFragment.OnLoginFragmentInteractionListener,
-        LandingFragment.OnLandingFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener {
 
     Credentials mCredentials;
@@ -236,23 +236,6 @@ public class StartActivity extends AppCompatActivity
                     true)
                     .apply();
         }
-    }
-
-    @Override
-    public void onLogout() {
-        SharedPreferences prefs =
-                getSharedPreferences(
-                        getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
-
-        prefs.edit().remove(getString(R.string.keys_prefs_username));
-
-        prefs.edit().putBoolean(
-                getString(R.string.keys_prefs_stay_logged_in),
-                false)
-                .apply();
-        //the way to close an app programmaticaly
-        finishAndRemoveTask();
     }
 
 

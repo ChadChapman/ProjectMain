@@ -1,4 +1,4 @@
-package tcss450.uw.edu.group2project.registerLoging;
+package tcss450.uw.edu.group2project.chatApp;
 
 
 import android.content.Context;

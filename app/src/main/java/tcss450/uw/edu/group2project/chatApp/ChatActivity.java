@@ -18,10 +18,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 
 public class ChatActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        LandingFragment.OnLandingFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,14 @@ public class ChatActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.drawer_layout,
+                        new LandingFragment(),
+                        getString(R.string.keys_fragment_landing))
+                .commit();
     }
 
     @Override
@@ -75,20 +85,6 @@ public class ChatActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            SharedPreferences prefs =
-                    getSharedPreferences(
-                            getString(R.string.keys_shared_prefs),
-                            Context.MODE_PRIVATE);
-
-            prefs.edit().remove(getString(R.string.keys_prefs_username));
-
-            prefs.edit().putBoolean(
-                    getString(R.string.keys_prefs_stay_logged_in),
-                    false)
-                    .apply();
-            Intent intent = new Intent(this, StartActivity.class);
-            ActivityCompat.finishAffinity(this);
-            startActivity(intent);
             return true;
         }
 
@@ -101,22 +97,35 @@ public class ChatActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_chat) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_contacts) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_profile) {
 
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_settings) {
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    @Override
+    public void onLogout() {
+        SharedPreferences prefs =
+                getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+
+        prefs.edit().remove(getString(R.string.keys_prefs_username));
+
+        prefs.edit().putBoolean(
+                getString(R.string.keys_prefs_stay_logged_in),
+                false)
+                .apply();
+        Intent intent = new Intent(this, StartActivity.class);
+        ActivityCompat.finishAffinity(this);
+        startActivity(intent);
     }
 }
