@@ -1,4 +1,4 @@
-package tcss450.uw.edu.group2project;
+package tcss450.uw.edu.group2project.chatApp;
 
 
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import tcss450.uw.edu.group2project.R;
 
 
 /**
@@ -28,6 +30,7 @@ public class LandingFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_landing, container, false);
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -62,6 +65,7 @@ public class LandingFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
     public interface OnLandingFragmentInteractionListener {
         void onLogout();
     }
