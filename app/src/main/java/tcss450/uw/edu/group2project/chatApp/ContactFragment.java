@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +22,19 @@ import java.util.List;
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.model.ChatContact;
 
+
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ContactFragment extends Fragment {
 
-    List<ChatContact> mContactList = new ArrayList<>();
-    SQLiteDatabase mAppDB;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    private List<ChatContact> mContactList = new ArrayList<>();
+    private SQLiteDatabase mAppDB;
 
     public ContactFragment() {
         // Required empty public constructor
@@ -39,6 +47,20 @@ public class ContactFragment extends Fragment {
         populateContactsList();
         mAppDB = ChatActivity.getmAppDB();
         mContactList = loadContactsListFromSQLite();
+        mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.contactsRecyclerView);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        mAdapter = new MyAdapter(myDataset);
+        mRecyclerView.setAdapter(mAdapter);
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_contact, container, false);
 
