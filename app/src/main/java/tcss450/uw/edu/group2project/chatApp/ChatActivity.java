@@ -10,6 +10,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,6 +31,10 @@ public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         LandingFragment.OnLandingFragmentInteractionListener {
     private static SQLiteDatabase mAppDB;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private String[] myDataset = {"Test", "Contacts", "List"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +68,22 @@ public class ChatActivity extends AppCompatActivity
                 .commit();
         //let's just make an sqlite db and be done with it
         mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
+//        mRecyclerView = (RecyclerView) findViewById(R.id.ChatContactRecyclerView);
+//
+//        // use this setting to improve performance if you know that changes
+//        // in content do not change the layout size of the RecyclerView
+//        mRecyclerView.setHasFixedSize(true);
+//
+//        // use a linear layout manager
+//        mLayoutManager = new LinearLayoutManager(this);
+//        mRecyclerView.setLayoutManager(mLayoutManager);
+//
+//        // specify an adapter (see also next example)
+//        mAdapter = new MyChatContactsAdapter(myDataset);
+//        mRecyclerView.setAdapter(mAdapter);
     }
+
+//}
 
     private void loadFragment(Fragment frag,String tag){
         FragmentTransaction transaction = getSupportFragmentManager()

@@ -11,7 +11,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+//import android.R.layout.simple_list_item_1;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +23,7 @@ import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.model.ChatContact;
-
+//import tcss450.uw.edu.group2project.utils.MyAdapter;
 
 
 /**
@@ -36,34 +38,75 @@ public class ContactFragment extends Fragment {
     private List<ChatContact> mContactList = new ArrayList<>();
     private SQLiteDatabase mAppDB;
 
+    private String[] myDataset = {"Test", "Contacts", "List"};
     public ContactFragment() {
         // Required empty public constructor
     }
 
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        //setContentView(R.layout.activity_main);
+//        //populateContactsList();
+//        //mAppDB = ChatActivity.getmAppDB();
+//        //mContactList = loadContactsListFromSQLite();
+//
+////        ArrayAdapter<ChatContact> adapter = new ArrayAdapter<ChatContact>(this, R.layout.fragment_contact, R.id.ChatContactsTextView, mContactList);
+////        ListView lv= (ListView) getActivity().findViewById(R.id.ChatContactsListView);
+////        lv.setAdapter(adapter);
+////        mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.ChatContactRecyclerView);
+////
+////        // use this setting to improve performance if you know that changes
+////        // in content do not change the layout size of the RecyclerView
+////        //mRecyclerView.setHasFixedSize(true);
+////
+////        // use a linear layout manager
+////        mLayoutManager = new LinearLayoutManager(getContext());
+////        mRecyclerView.setLayoutManager(mLayoutManager);
+////
+////        // specify an adapter (see also next example)
+////        mAdapter = new MyChatContactsAdapter(myDataset);
+////        mRecyclerView.setAdapter(mAdapter);
+//
+//    }
+//}
+    //}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        populateContactsList();
-        mAppDB = ChatActivity.getmAppDB();
-        mContactList = loadContactsListFromSQLite();
-        mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.contactsRecyclerView);
+
+//        mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.ChatContactRecyclerView);
+//
+//        // use this setting to improve performance if you know that changes
+//        // in content do not change the layout size of the RecyclerView
+//        //mRecyclerView.setHasFixedSize(true);
+//
+//        // use a linear layout manager
+//        mLayoutManager = new LinearLayoutManager(getContext());
+//        mRecyclerView.setLayoutManager(mLayoutManager);
+//
+//        // specify an adapter (see also next example)
+//        mAdapter = new MyChatContactsAdapter(myDataset);
+//        mRecyclerView.setAdapter(mAdapter);
+        return inflater.inflate(R.layout.fragment_contact, container, false);
+
+    }
+
+    public void setupRecyclerView() {
+        mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.ChatContactRecyclerView);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
+        //mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new MyAdapter(myDataset);
+        mAdapter = new MyChatContactsAdapter(myDataset);
         mRecyclerView.setAdapter(mAdapter);
-
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contact, container, false);
-
     }
 
     @Override
