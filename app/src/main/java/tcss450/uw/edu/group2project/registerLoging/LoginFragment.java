@@ -1,4 +1,4 @@
-package tcss450.uw.edu.group2project;
+package tcss450.uw.edu.group2project.registerLoging;
 
 import android.content.Context;
 import android.net.Uri;
@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.model.Credentials;
 
 
@@ -65,11 +66,13 @@ public class LoginFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
     private void registerOpen(View view) {
         if (mListener != null) {
             mListener.onRegisterClicked();
         }
     }
+
     public void attemptLogin(View view) {
         if (mListener != null) {
             EditText username = getActivity().findViewById(R.id.login_edit_text_username);
@@ -89,10 +92,10 @@ public class LoginFragment extends Fragment {
     }
 
 
-
     /**
      * Allows an external source to set an error message on this fragment. This may
      * be needed if an Activity includes processing that could cause login to fail.
+     *
      * @param err the error message to display.
      */
     public void setError(String err) {
@@ -104,6 +107,7 @@ public class LoginFragment extends Fragment {
 
     public interface OnLoginFragmentInteractionListener {
         void onLoginAttempt(Credentials credentials);
+
         void onRegisterClicked();
     }
 }

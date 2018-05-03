@@ -2,36 +2,30 @@
  * merged so far: Igor, Josh, Raymond
  */
 
-package tcss450.uw.edu.group2project;
+package tcss450.uw.edu.group2project.registerLoging;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.CheckBox;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import tcss450.uw.edu.group2project.chatApp.ChatActivity;
+import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.chatApp.LandingFragment;
 import tcss450.uw.edu.group2project.model.Credentials;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 public class StartActivity extends AppCompatActivity
         implements LoginFragment.OnLoginFragmentInteractionListener,
-        LandingFragment.OnLandingFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener {
 
     Credentials mCredentials;
@@ -64,15 +58,18 @@ public class StartActivity extends AppCompatActivity
     }
 
 
-
     private void loadLandingFragment() {
-        LandingFragment landingFragment = new LandingFragment();
+//        LandingFragment landingFragment = new LandingFragment();
+//
+//        FragmentTransaction transaction = getSupportFragmentManager()
+//                .beginTransaction()
+//                .replace(R.id.start_constraint_layout, landingFragment, getString(R.string.keys_fragment_landing));
+//        // Commit the transaction
+//        transaction.commit();
 
-        FragmentTransaction transaction = getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.start_constraint_layout, landingFragment, getString(R.string.keys_fragment_landing));
-        // Commit the transaction
-        transaction.commit();
+        Intent intent = new Intent(this, ChatActivity.class);
+        ActivityCompat.finishAffinity(this);
+        startActivity(intent);
     }
 
     /*
@@ -134,7 +131,7 @@ public class StartActivity extends AppCompatActivity
     public void onRegisterClicked() {
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.start_constraint_layout, new RegisterFragment(),getString(R.string.keys_fragment_register))
+                .replace(R.id.start_constraint_layout, new RegisterFragment(), getString(R.string.keys_fragment_register))
                 .addToBackStack(null);
 
         // Commit the transaction
@@ -239,23 +236,6 @@ public class StartActivity extends AppCompatActivity
                     true)
                     .apply();
         }
-    }
-
-    @Override
-    public void onLogout() {
-        SharedPreferences prefs =
-                getSharedPreferences(
-                        getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
-
-        prefs.edit().remove(getString(R.string.keys_prefs_username));
-
-        prefs.edit().putBoolean(
-                getString(R.string.keys_prefs_stay_logged_in),
-                false)
-                .apply();
-        //the way to close an app programmaticaly
-        finishAndRemoveTask();
     }
 
 
