@@ -14,19 +14,6 @@ import tcss450.uw.edu.group2project.R;
  */
 public class ContactFragment extends Fragment {
 
-    //query for all the contacts associated with this person
-    //get those contacts into a list
-    //decide which fields to display from the list
-    //display a list of all contacts' information
-    //edit a contact
-    //start a chat with a contact
-    //see if a contact is online right now
-    //store some contacts locally? to make it quicker to get them?
-        //then compare to see any changes with async thread?
-    //see contact details
-    //see details about last interactions with that contact
-
-
 
     public ContactFragment() {
         // Required empty public constructor
@@ -39,6 +26,5 @@ public class ContactFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_contact, container, false);
     }
-
 
 }

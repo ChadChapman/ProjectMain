@@ -3,6 +3,7 @@ package tcss450.uw.edu.group2project.chatApp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -27,6 +28,7 @@ import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         LandingFragment.OnLandingFragmentInteractionListener {
+    private static SQLiteDatabase mAppDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,8 @@ public class ChatActivity extends AppCompatActivity
                         new LandingFragment(),
                         getString(R.string.keys_fragment_landing))
                 .commit();
+        //let's just make an sqlite db and be done with it
+        mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
     }
 
     private void loadFragment(Fragment frag,String tag){
@@ -138,5 +142,9 @@ public class ChatActivity extends AppCompatActivity
         Intent intent = new Intent(this, StartActivity.class);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
+    }
+
+    public static SQLiteDatabase getmAppDB() {
+        return mAppDB;
     }
 }
