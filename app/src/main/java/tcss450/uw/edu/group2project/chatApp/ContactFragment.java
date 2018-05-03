@@ -2,6 +2,7 @@ package tcss450.uw.edu.group2project.chatApp;
 
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -37,6 +38,7 @@ public class ContactFragment extends Fragment {
                              Bundle savedInstanceState) {
         populateContactsList();
         mAppDB = ChatActivity.getmAppDB();
+        mContactList = loadContactsListFromSQLite();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_contact, container, false);
 
@@ -89,7 +91,29 @@ public class ContactFragment extends Fragment {
 
     public List<ChatContact> loadContactsListFromSQLite() {
         List<ChatContact> retList = new ArrayList<>();
-        
+        String[] queryColumns = new String[1];
+        queryColumns[0] = "JSONContacts";
+        Cursor dbCursor;
+        String jsonArrString;
+        mAppDB.beginTransaction();
+        dbCursor = mAppDB.query("ChatContacts", queryColumns, null, null, null, null, null);
+        jsonArrString = dbCursor.getString(0);
+        mAppDB.endTransaction();
+        JSONArray jsonArray;
+        try {
+            jsonArray = new JSONArray(jsonArrString);
+        } catch (JSONException e) {
+            //TODO again need ot handle JSOn parsing failing
+            jsonArray = new JSONArray();
+        }
+        int arrLength = jsonArray.length();
+        try {
+            for (int i = 0; i < arrLength; ++i) {
+                retList.add((ChatContact)jsonArray.get(i));
+            }
+        } catch (JSONException e) {
+            //TODO still need to be handling these!
+        }
         return retList;
     }
 }
