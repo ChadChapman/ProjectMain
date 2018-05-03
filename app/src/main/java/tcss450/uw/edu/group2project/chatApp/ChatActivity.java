@@ -28,7 +28,7 @@ import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         LandingFragment.OnLandingFragmentInteractionListener {
-    private static SQLiteDatabase mAppDB;
+//    private static SQLiteDatabase mAppDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class ChatActivity extends AppCompatActivity
                         getString(R.string.keys_fragment_landing))
                 .commit();
         //let's just make an sqlite db and be done with it
-        mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
+//        mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
     }
 
     private void loadFragment(Fragment frag,String tag){
@@ -144,7 +144,7 @@ public class ChatActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    public static SQLiteDatabase getmAppDB() {
-        return mAppDB;
-    }
+//    public static SQLiteDatabase getmAppDB() {
+//        return mAppDB;
+//    }
 }
