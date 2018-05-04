@@ -31,7 +31,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".chatApp.ListViewActivity"></activity>
+        <activity android:name=".chatApp.ChatContactsActivity" />
+        <activity android:name=".chatApp.ContactsActivity"></activity>
     </application>
 
 </manifest>

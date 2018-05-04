@@ -31,10 +31,6 @@ public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         LandingFragment.OnLandingFragmentInteractionListener {
     private static SQLiteDatabase mAppDB;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private String[] myDataset = {"Test", "Contacts", "List"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,8 +128,9 @@ public class ChatActivity extends AppCompatActivity
 
         if (id == R.id.nav_chat) {
             loadFragment(new ChatFragment(),getString(R.string.keys_fragment_chat));
-        } else if (id == R.id.nav_contacts) {
-            loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts));
+        } else if (id == R.id.nav_contacts) { //switch to Contacts Activity
+            //loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts)); original
+            loadContactsActivity();
         } else if (id == R.id.nav_profile) {
             loadFragment(new ProfileFragment(),getString(R.string.keys_fragment_profile));
         } else if (id == R.id.nav_settings) {
@@ -145,6 +142,12 @@ public class ChatActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void loadContactsActivity(){
+        Intent intent = new Intent(this, ContactsActivity.class);
+        ActivityCompat.finishAffinity(this);
+        startActivity(intent);
     }
 
     @Override
@@ -165,6 +168,7 @@ public class ChatActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    //should make one database to pass around
     public static SQLiteDatabase getmAppDB() {
         return mAppDB;
     }
