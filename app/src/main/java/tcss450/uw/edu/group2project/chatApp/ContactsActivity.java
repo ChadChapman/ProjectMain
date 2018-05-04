@@ -32,12 +32,13 @@ public class ContactsActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
+    private List<String> contactsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
-
+        adapter =new MyRecyclerViewAdapter(this, feedsList);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
