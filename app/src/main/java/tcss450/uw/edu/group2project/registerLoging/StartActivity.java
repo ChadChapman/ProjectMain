@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CheckBox;
+import android.widget.EditText;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,7 +28,7 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 public class StartActivity extends AppCompatActivity
         implements LoginFragment.OnLoginFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener {
-
+    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     Credentials mCredentials;
 
     @Override
@@ -68,6 +69,9 @@ public class StartActivity extends AppCompatActivity
 //        transaction.commit();
 
         Intent intent = new Intent(this, ChatActivity.class);
+        EditText editText = (EditText) findViewById(R.id.login_edit_text_username);
+        String message = editText.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, message);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
     }
