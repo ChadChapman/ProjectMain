@@ -29,6 +29,7 @@ public class StartActivity extends AppCompatActivity
         implements LoginFragment.OnLoginFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener {
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+
     Credentials mCredentials;
 
     @Override
@@ -46,7 +47,7 @@ public class StartActivity extends AppCompatActivity
 
                 if (prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in),
                         false)) {
-                    loadLandingFragment();
+                   loadLandingFragment(prefs.getString(getString(R.string.keys_prefs_username),null));
                 } else {
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.start_constraint_layout,
@@ -59,7 +60,7 @@ public class StartActivity extends AppCompatActivity
     }
 
 
-    private void loadLandingFragment() {
+    private void loadLandingFragment(String message) {
 //        LandingFragment landingFragment = new LandingFragment();
 //
 //        FragmentTransaction transaction = getSupportFragmentManager()
@@ -69,8 +70,6 @@ public class StartActivity extends AppCompatActivity
 //        transaction.commit();
 
         Intent intent = new Intent(this, ChatActivity.class);
-        EditText editText = (EditText) findViewById(R.id.login_edit_text_username);
-        String message = editText.getText().toString();
         intent.putExtra(EXTRA_MESSAGE, message);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
@@ -170,7 +169,7 @@ public class StartActivity extends AppCompatActivity
             if (success) {
                 //Login was successful. Switch to the loadSuccessFragment.
                 checkStayLoggedIn();
-                loadLandingFragment();
+                loadLandingFragment(((EditText) findViewById(R.id.login_edit_text_username)).getText().toString());
             } else {
                 //Login was unsuccessful. Don’t switch fragments and inform the user
                 LoginFragment frag =
@@ -197,7 +196,11 @@ public class StartActivity extends AppCompatActivity
             if (success) {
                 //Login was successful. Switch to the loadSuccessFragment.
                 getSupportFragmentManager().popBackStack();
-                loadLandingFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.start_constraint_layout,
+                                new LoginFragment(),
+                                getString(R.string.keys_fragment_login))
+                        .commit();
             } else {
                 //Login was unsuccessful. Don’t switch fragments and inform the user
                 RegisterFragment frag =
