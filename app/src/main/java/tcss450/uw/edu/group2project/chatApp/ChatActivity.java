@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,15 +27,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.model.ChatContact;
+import tcss450.uw.edu.group2project.model.Credentials;
 import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
 import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
+import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -88,7 +95,7 @@ public class ChatActivity extends AppCompatActivity
         //use memberid to update contacts on device
         updateChatContactsOnDevice(mUserMemberID);
         //create an array to pass to contacts activity to populate it
-        mContactsBundle = createChatContactsArray(mUserMemberID);
+        mContactsBundle = createChatContactsBundle(mUserMemberID);
        }
 
 //}
@@ -185,9 +192,10 @@ public class ChatActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private void updateChatContactsOnDevice(String memberIDInt) {
+    private void updateChatContactsOnDevice(String result) {
 
         //make async call to web service, get most up to date contacts
+
 
         //compare to contacts on device?  or write if does not exist?
         mAppDB.beginTransaction();
@@ -198,7 +206,43 @@ public class ChatActivity extends AppCompatActivity
 
     }
 
-    private Bundle createChatContactsArray(String mUserMemberID) {
+    public void asyncContactsDBQuery(String memberid) {
+        //build the web service URL
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_contacts))
+                .appendPath(getString(R.string.ep_contacts_query_ny_memberid))
+                .build();
+
+        //build the JSONObject
+        JSONObject msg = new JSONObject();
+        try {
+             msg.put("memberid", memberid);
+            } catch (JSONException e) {
+                Log.wtf("CONTACTS QUERY BY MEMBERID", "Error creating JSON: " + e.getMessage());
+            }
+
+        //instantiate and execute the AsyncTask.
+        //Feel free to add a handler for onPreExecution so that a progress bar
+        //is displayed or maybe disable buttons. You would need a method in
+        //LoginFragment to perform this.
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::updateChatContactsOnDevice)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    /**
+     * Handle errors that may occur during the AsyncTask.
+     *
+     * @param result the error message provide from the AsyncTask
+     */
+    private void handleErrorsInTask(String result) {
+        Log.e("ASYNCT_TASK_ERROR", result);
+    }
+
+    private Bundle createChatContactsBundle(String mUserMemberID) {
         String[] columnsToMatch = {mUserMemberID};
         CancellationSignal cancellationSignal = new CancellationSignal();
         //what to do with cancellation signal?
