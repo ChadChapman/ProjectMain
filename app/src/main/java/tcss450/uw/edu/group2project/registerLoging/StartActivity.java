@@ -28,7 +28,10 @@ public class StartActivity extends AppCompatActivity
         implements LoginFragment.OnLoginFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener {
 
-    Credentials mCredentials;
+    private Credentials mCredentials;
+    //private int mUserMemberID;
+    private String mUserMemberIDStr;
+    private int mUserMemberIDInt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,7 @@ public class StartActivity extends AppCompatActivity
 //        transaction.commit();
 
         Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("userMemberID", mUserMemberIDStr);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
     }
@@ -165,6 +169,8 @@ public class StartActivity extends AppCompatActivity
 
             if (success) {
                 //Login was successful. Switch to the loadSuccessFragment.
+                mUserMemberIDInt = resultsJSON.getInt("message");
+                Log.e("MEMBERID WAS: ", mUserMemberIDStr);
                 checkStayLoggedIn();
                 loadLandingFragment();
             } else {

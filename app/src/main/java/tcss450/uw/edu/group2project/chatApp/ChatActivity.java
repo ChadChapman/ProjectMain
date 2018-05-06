@@ -31,6 +31,9 @@ public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         LandingFragment.OnLandingFragmentInteractionListener {
     private static SQLiteDatabase mAppDB;
+    private String mUserMemberID;
+    private int mUserMemberIDInt;
+    //private String mUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,20 +67,18 @@ public class ChatActivity extends AppCompatActivity
                 .commit();
         //let's just make an sqlite db and be done with it
         mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
-//        mRecyclerView = (RecyclerView) findViewById(R.id.ChatContactRecyclerView);
-//
-//        // use this setting to improve performance if you know that changes
-//        // in content do not change the layout size of the RecyclerView
-//        mRecyclerView.setHasFixedSize(true);
-//
-//        // use a linear layout manager
-//        mLayoutManager = new LinearLayoutManager(this);
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//
-//        // specify an adapter (see also next example)
-//        mAdapter = new MyChatContactsAdapter(myDataset);
-//        mRecyclerView.setAdapter(mAdapter);
-    }
+
+        //grab the memberid from the intent that got us here
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            mUserMemberIDInt = extras.getInt("userMemberID");
+        }
+
+        //use memberid to update contacts on device
+    //    updateChatContactsOnDevice(mUserMemberIDInt);
+        //create an array to pass to contacts activity to populate it
+    //    createChatContactsArray(mUserMemberIDInt);
+       }
 
 //}
 
@@ -130,6 +131,10 @@ public class ChatActivity extends AppCompatActivity
             loadFragment(new ChatFragment(),getString(R.string.keys_fragment_chat));
         } else if (id == R.id.nav_contacts) { //switch to Contacts Activity
             //loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts)); original
+            //quickest thing for the contacts activity to use will be an array?
+            //use method to get contacts from device?
+            //need to have a separate action here that updates the contacts on the device with the contacts from the backend, should run in oncreate
+            //mUserMemberIDInt = getMemberIDFromUsername(mUsername);
             loadContactsActivity();
         } else if (id == R.id.nav_profile) {
             loadFragment(new ProfileFragment(),getString(R.string.keys_fragment_profile));
@@ -146,6 +151,7 @@ public class ChatActivity extends AppCompatActivity
 
     private void loadContactsActivity(){
         Intent intent = new Intent(this, ContactsActivity.class);
+        intent.putExtra("userMemberID", mUserMemberID);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
     }
@@ -166,6 +172,13 @@ public class ChatActivity extends AppCompatActivity
         Intent intent = new Intent(this, StartActivity.class);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
+    }
+
+    private int tMemberIDFromUsername(String username) {
+        Integer retInt = -1;
+
+
+        return retInt;
     }
 
     //should make one database to pass around
