@@ -9,29 +9,25 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 /**
- * Class to encapsulate credentials fields. Building an Object requires a username and password.
+ * Class to encapsulate fields for a contact in this app, not a contact from the device.
  * <p>
- * Optional fields include email, first and last name.
+ * Optional fields include an image to display with the contact and a chosen color
+ * to associate with the contact.
  * <p>
- * Password field is never stored as a String object. The method getPassword allows only one access
- * and clears the password field after the initial access.
- * <p>
- * Accessing the fields using the asJSONObject method does not clear the password field. Repeated
- * calls to asJSONObject continue to include the password. However, calls to asJSONObject after
- * getPassword has been used will result in an empty password in the resulting JSON object.
- *
+ * @author Chad Chapman
  * @author Charles Bryan
- * @version 14 April 2018
+ * @version 5 May 2018
  */
 public class ChatContact implements Serializable {
 
+    private static final long serialVersionUID = -1634677417576883813L;
 
     private final String mUsername;
     private String mFirstName;
     private String mLastName;
     private String mCreatedAt;
     private String mLastModified;
-    private int mVerified;
+    private String mVerified;
     private String mContactInitiator;
     private String mImageLink;
     private String mDisplayColor;
@@ -47,7 +43,7 @@ public class ChatContact implements Serializable {
         private String mLastName = "";
         private String mCreatedAt = "";
         private String mLastModified = "";
-        private int mVerified;
+        private String mVerified;
         private String mContactInitiator = "";
         private String mImageLink = "";//can randomize this
         private String mDisplayColor = "";//can randomize this
@@ -66,7 +62,7 @@ public class ChatContact implements Serializable {
             mLastName = lname;
             mCreatedAt = createdAt;
             mLastModified = lastMod;
-            mVerified = 0; //still have to wait on a response from new contact
+            mVerified = "0"; //still have to wait on a response from new contact
             mContactInitiator = initiator;
 
 
@@ -153,7 +149,7 @@ public class ChatContact implements Serializable {
         return mLastModified;
     }
 
-    public int getmVerified() {
+    public String getmVerified() {
         return mVerified;
     }
 

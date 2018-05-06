@@ -25,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,8 +41,10 @@ public class ChatActivity extends AppCompatActivity
     private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
     //private int mUserMemberIDInt;
-    private ArrayList<String> mChatContactsArrList;
+    private ArrayList<ChatContact> mChatContactsArrList;
     //private String mUsername;
+
+    Bundle mContactsBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +88,7 @@ public class ChatActivity extends AppCompatActivity
         //use memberid to update contacts on device
         updateChatContactsOnDevice(mUserMemberID);
         //create an array to pass to contacts activity to populate it
-        mChatContactsArrList = createChatContactsArray(mUserMemberID);
+        mContactsBundle = createChatContactsArray(mUserMemberID);
        }
 
 //}
@@ -159,7 +162,7 @@ public class ChatActivity extends AppCompatActivity
 
     private void loadContactsActivity(){
         Intent intent = new Intent(this, ContactsActivity.class);
-        intent.putStringArrayListExtra("chatContactsArr", mChatContactsArrList);
+        intent.putExtra("contactsBundle", mContactsBundle);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
     }
@@ -195,10 +198,10 @@ public class ChatActivity extends AppCompatActivity
 
     }
 
-    private ArrayList<String> createChatContactsArray(String mUserMemberID) {
-        ArrayList<String> retList = new ArrayList<>();
+    private Bundle createChatContactsArray(String mUserMemberID) {
         String[] columnsToMatch = {mUserMemberID};
         CancellationSignal cancellationSignal = new CancellationSignal();
+        //what to do with cancellation signal?
         //get a cursor from the db
         mAppDB.beginTransaction();
         //SQLiteCursor cursor = mAppDB.query("ChatContact", columnsToReturn, );
@@ -212,19 +215,39 @@ public class ChatActivity extends AppCompatActivity
         mAppDB.endTransaction();
         int columnCount = cursor.getColumnCount();
         int cursorCount = cursor.getCount();
+        Bundle contactsBundle = new Bundle(cursorCount);
+
         if (cursorCount > 1) {
-            //now iterate with cursor and fill the list
-             int rowsCounter = 1;
-             while (cursor.n)
+            //create a new bundle to add the query info to
+            contactsBundle = new Bundle(columnCount);
+            //now iterate with cursor and create a new chat contact from it
+             Integer rowsCounter = 1;
+             ChatContact queryContact;
+             for (cursor.isFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+                 ChatContact.Builder queryContactBuilder =
+                         new ChatContact.Builder(cursor.getString(0)
+                         , cursor.getString(1)
+                         , cursor.getString(2)
+                         , cursor.getString(3)
+                         , cursor.getString(4)
+                         , cursor.getString(5));
 
-            }
+                       if (!cursor.getString(6).equals("none")) {
+                           queryContactBuilder.addImageLink(cursor.getString(6));
+                       }
+                       if (!cursor.getString(7).equals("none")) {
+                           queryContactBuilder.addColor(cursor.getString(7));
+                       }
+                       queryContact = queryContactBuilder.build();
+                       contactsBundle.putSerializable("contactNo:" + rowsCounter, queryContact);
+                       rowsCounter++;
+             }
         }
-
-        return retList;
+        return contactsBundle;
     }
 
 
-    //should make one database to pass around
+    //should make one database to pass around, but only if we have to
     public static SQLiteDatabase getmAppDB() {
         return mAppDB;
     }
