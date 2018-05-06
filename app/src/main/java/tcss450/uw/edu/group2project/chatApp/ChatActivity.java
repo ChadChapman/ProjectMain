@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.RadioButton;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
@@ -29,7 +31,8 @@ import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        LandingFragment.OnLandingFragmentInteractionListener {
+        LandingFragment.OnLandingFragmentInteractionListener,
+        SettingFragment.OnSettingFragmentInteractionListener {
     private static SQLiteDatabase mAppDB;
 
     @Override
@@ -166,6 +169,50 @@ public class ChatActivity extends AppCompatActivity
         Intent intent = new Intent(this, StartActivity.class);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
+    }
+
+    @Override
+    public void onSettingSaveButtonClicked(View view) {
+        if (((RadioButton) view.findViewById(R.id.setting_radio_theme_1)).isChecked()) {
+            Log.e("Theme 1", "Theme 1 Selected");
+            setTheme(R.style.AppTheme);
+        } else if (((RadioButton) view.findViewById(R.id.setting_radio_theme_2)).isChecked()) {
+            Log.e("Theme 2", "Theme 2 Selected");
+            setTheme(R.style.AppTheme2);
+        } else if (((RadioButton) view.findViewById(R.id.setting_radio_theme_3)).isChecked()) {
+            Log.e("Theme 3", "Theme 3 Selected");
+            setTheme(R.style.AppTheme3);
+        } else if (((RadioButton) view.findViewById(R.id.setting_radio_theme_4)).isChecked()) {
+            Log.e("Theme 4", "Theme 4 Selected");
+            setTheme(R.style.AppTheme4);
+        }
+
+        super.onCreateOptionsMenu(null);
+        setContentView(R.layout.activity_chat);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragmentContainer,
+                        new LandingFragment(),
+                        getString(R.string.keys_fragment_landing))
+                .commit();
+        //let's just make an sqlite db and be done with it
+        mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
+    }
+
+    @Override
+    public void onSettingCancelButtonClicked() {
+        loadFragment(new LandingFragment(), "landingFragmentTag");
     }
 
     //should make one database to pass around
