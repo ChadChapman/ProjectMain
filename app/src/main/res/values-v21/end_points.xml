@@ -9,5 +9,6 @@
     <string name="ep_contacts_sent_requests">contacts/sent</string>
     <string name="ep_contacts_pending_requests">contacts/pending</string>
     <string name="ep_contacts_find_new">contacts/find</string>
+    <string name="ep_contacts_query_ny_memberid">member/all</string>
 
     </resources>

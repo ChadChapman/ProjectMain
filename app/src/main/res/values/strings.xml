@@ -23,6 +23,23 @@
 
     <!-- Landing Fragment -->
     <string name="landing_button_logout">Logout</string>
+    <string name="sqlite_internal_database_name">RabbitChatDB</string>
+
+    <!-- Contacts Activity -->
+
+
+    <!-- Chat Activity -->
+
+    <!-- >>>>>> SQLITE3 INTERNAL DEVICE DB QUERY STRINGS GO HERE <<<<<< -->
+    <!-- >>>>>> naming example: sqlite_create_table_ChatContact <<<<<< -->
+    <string name="sqlite_create_table_ChatContact">CREATE TABLE IF NOT EXISTS
+        RabbitChatDB.ChatContact ( memberid INTEGER PRIMARY KEY,  username TEXT UNIQUE NOT NULL
+        , fname TEXT, lname TEXT, created_at TEXT, last_modified TEXT, verified TEXT
+        , image_link TEXT , display_color TEXT</string>
+
+
+    <!-- >>>>>> HEROKU POSTGRES DB QUERY STRINGS GO HERE <<<<<< -->
+
 
 
     <!-- TODO: Remove or change this placeholder text -->

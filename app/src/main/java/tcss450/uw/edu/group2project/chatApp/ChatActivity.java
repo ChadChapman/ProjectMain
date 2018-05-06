@@ -26,6 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,18 +85,27 @@ public class ChatActivity extends AppCompatActivity
                         getString(R.string.keys_fragment_landing))
                 .commit();
         //let's just make an sqlite db and be done with it
-        mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
+        //mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
+        setupDeviceDatabase();
 
-        //grab the memberid from the intent that got us here
-        Bundle extras = getIntent().getExtras();
-        if (extras != null){
-            mUserMemberID = extras.getString("userMemberID");
-        }
 
-        //use memberid to update contacts on device
-        updateChatContactsOnDevice(mUserMemberID);
-        //create an array to pass to contacts activity to populate it
-        mContactsBundle = createChatContactsBundle(mUserMemberID);
+
+       }
+
+       @Override
+       public void onStart(){
+        super.onStart();
+           //grab the memberid from the intent that got us here
+           //this may need to go into onCreate?
+           Bundle extras = getIntent().getExtras();
+           if (extras != null){
+               mUserMemberID = extras.getString("userMemberID");
+           }
+            //use memberid to update contacts on device
+           asyncContactsDBQuery(mUserMemberID);
+           //create an array to pass to contacts activity to populate it
+           mContactsBundle = createChatContactsBundle(mUserMemberID);
+
        }
 
 //}
@@ -192,10 +202,47 @@ public class ChatActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private void updateChatContactsOnDevice(String result) {
+    public void setupDeviceDatabase() {
 
-        //make async call to web service, get most up to date contacts
+        mAppDB = openOrCreateDatabase("RabbitChatDB", MODE_PRIVATE, null);
+        mAppDB.beginTransaction();
+        mAppDB.execSQL(getString(R.string.sqlite_create_table_ChatContact));
+        //add whatever other tables need to be setup here
+        mAppDB.endTransaction();
 
+    }
+
+    private void handleChatContactsAsyncQueryResult(String result) {
+
+        //parameter string is from async call to web service, should have most up to date contacts
+        try {
+            JSONObject resultsJSON = new JSONObject(result);
+            //make sure to include success field in returned object
+            Boolean success = resultsJSON.getBoolean("success");
+            Boolean contactsChanged = resultsJSON.getBoolean("changed");
+            Log.e("QUERY SUCCESS ON CONTACTS FROM HEROKU DB: ", success.toString());
+            Log.e("CHANGES TO CONTACTS FROM HEROKU DB: ", contactsChanged.toString());
+            if (success && contactsChanged) {
+                //query was successful and there are changes to update db with
+
+            } else { //Query was unsuccessful or there was no changes to update with
+                if (!success) {
+                    Toast.makeText(ChatActivity.this, "Failed to fetch new chat contacts data!"
+                            , Toast.LENGTH_LONG).show();
+                }
+                if (!contactsChanged) {
+                    Toast.makeText(ChatActivity.this, "No new chat contacts updates!"
+                            , Toast.LENGTH_LONG).show();
+                }
+            }
+
+        } catch (JSONException e) {
+            //It appears that the web service didn’t return a JSON formatted String
+            //or it didn’t have what we expected in it.
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
+        }
 
         //compare to contacts on device?  or write if does not exist?
         mAppDB.beginTransaction();
@@ -203,7 +250,6 @@ public class ChatActivity extends AppCompatActivity
         //query for all records in ChatContact table
         mAppDB.endTransaction();
         //compare and update db if needed
-
     }
 
     public void asyncContactsDBQuery(String memberid) {
@@ -228,7 +274,7 @@ public class ChatActivity extends AppCompatActivity
         //is displayed or maybe disable buttons. You would need a method in
         //LoginFragment to perform this.
         new SendPostAsyncTask.Builder(uri.toString(), msg)
-                .onPostExecute(this::updateChatContactsOnDevice)
+                .onPostExecute(this::handleChatContactsAsyncQueryResult)
                 .onCancelled(this::handleErrorsInTask)
                 .build().execute();
     }

@@ -121,21 +121,21 @@ public class ContactFragment extends Fragment {
     }
 
     private void populateContactsList() {
-        ChatContact contact1 = new ChatContact.Builder("tester1")
-                .addFirstName("test1")
-                .addLastName("lastname")
-                .build();
-        ChatContact contact2 = new ChatContact.Builder("tester2")
-                .addFirstName("test1")
-                .addLastName("lastname")
-                .build();
-        ChatContact contact3 = new ChatContact.Builder("tester3")
-                .addFirstName("test1")
-                .addLastName("lastname")
-                .build();
-        mContactList.add(contact1);
-        mContactList.add(contact2);
-        mContactList.add(contact3);
+//        ChatContact contact1 = new ChatContact.Builder("tester1")
+//                .addFirstName("test1")
+//                .addLastName("lastname")
+//                .build();
+//        ChatContact contact2 = new ChatContact.Builder("tester2")
+//                .addFirstName("test1")
+//                .addLastName("lastname")
+//                .build();
+//        ChatContact contact3 = new ChatContact.Builder("tester3")
+//                .addFirstName("test1")
+//                .addLastName("lastname")
+//                .build();
+//        mContactList.add(contact1);
+//        mContactList.add(contact2);
+//        mContactList.add(contact3);
     }
 
     public void saveContactsListToSQLite() throws JSONException {
