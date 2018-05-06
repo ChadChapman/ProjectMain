@@ -3,8 +3,11 @@ package tcss450.uw.edu.group2project.chatApp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.CancellationSignal;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -36,8 +39,8 @@ public class ChatActivity extends AppCompatActivity
         LandingFragment.OnLandingFragmentInteractionListener {
     private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
-    private int mUserMemberIDInt;
-    private List<ChatContact> mChatContactsArr;
+    //private int mUserMemberIDInt;
+    private ArrayList<String> mChatContactsArrList;
     //private String mUsername;
 
     @Override
@@ -76,13 +79,13 @@ public class ChatActivity extends AppCompatActivity
         //grab the memberid from the intent that got us here
         Bundle extras = getIntent().getExtras();
         if (extras != null){
-            mUserMemberIDInt = extras.getInt("userMemberID");
+            mUserMemberID = extras.getString("userMemberID");
         }
 
         //use memberid to update contacts on device
-        updateChatContactsOnDevice(mUserMemberIDInt);
+        updateChatContactsOnDevice(mUserMemberID);
         //create an array to pass to contacts activity to populate it
-        mChatContactsArr = createChatContactsArray(mUserMemberIDInt);
+        mChatContactsArrList = createChatContactsArray(mUserMemberID);
        }
 
 //}
@@ -156,7 +159,7 @@ public class ChatActivity extends AppCompatActivity
 
     private void loadContactsActivity(){
         Intent intent = new Intent(this, ContactsActivity.class);
-        intent.putExtra("userMemberID", mUserMemberIDInt);
+        intent.putStringArrayListExtra("chatContactsArr", mChatContactsArrList);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
     }
@@ -179,7 +182,7 @@ public class ChatActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private void updateChatContactsOnDevice(int memberIDInt) {
+    private void updateChatContactsOnDevice(String memberIDInt) {
 
         //make async call to web service, get most up to date contacts
 
@@ -192,10 +195,31 @@ public class ChatActivity extends AppCompatActivity
 
     }
 
-    private List<ChatContact> createChatContactsArray(int memberIDInt) {
-        List<ChatContact> retList = new ArrayList<>();
+    private ArrayList<String> createChatContactsArray(String mUserMemberID) {
+        ArrayList<String> retList = new ArrayList<>();
+        String[] columnsToMatch = {mUserMemberID};
+        CancellationSignal cancellationSignal = new CancellationSignal();
         //get a cursor from the db
-        
+        mAppDB.beginTransaction();
+        //SQLiteCursor cursor = mAppDB.query("ChatContact", columnsToReturn, );
+        Cursor cursor = mAppDB.rawQuery(
+                "SELECT Username, FName, LName, created_at, last_modified, verified, " +
+                        "image_link, display_color " +
+                    "FROM ChatContact " +
+                    "WHERE memberid = ?"
+                        , columnsToMatch
+                        , cancellationSignal);
+        mAppDB.endTransaction();
+        int columnCount = cursor.getColumnCount();
+        int cursorCount = cursor.getCount();
+        if (cursorCount > 1) {
+            //now iterate with cursor and fill the list
+             int rowsCounter = 1;
+             while (cursor.n)
+
+            }
+        }
+
         return retList;
     }
 

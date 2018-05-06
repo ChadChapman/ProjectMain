@@ -27,9 +27,15 @@ public class ChatContact implements Serializable {
 
 
     private final String mUsername;
-
     private String mFirstName;
     private String mLastName;
+    private String mCreatedAt;
+    private String mLastModified;
+    private int mVerified;
+    private String mContactInitiator;
+    private String mImageLink;
+    private String mDisplayColor;
+
     /**
      * Helper class for building Credentials.
      *
@@ -37,11 +43,14 @@ public class ChatContact implements Serializable {
      */
     public static class Builder {
         private final String mUsername;
-
-
         private String mFirstName = "";
         private String mLastName = "";
-
+        private String mCreatedAt = "";
+        private String mLastModified = "";
+        private int mVerified;
+        private String mContactInitiator = "";
+        private String mImageLink = "";//can randomize this
+        private String mDisplayColor = "";//can randomize this
 
         /**
          * Constructs a new Builder.
@@ -50,31 +59,38 @@ public class ChatContact implements Serializable {
          *
          * @param username the username
          */
-        public Builder(String username) {
+        public Builder(String username, String fname, String lname,
+                       String createdAt, String lastMod, String initiator) {
             mUsername = username;
+            mFirstName = fname;
+            mLastName = lname;
+            mCreatedAt = createdAt;
+            mLastModified = lastMod;
+            mVerified = 0; //still have to wait on a response from new contact
+            mContactInitiator = initiator;
+
 
         }
 
-
         /**
-         * Add an optional first name.
+         * Add an optional image to display in contact.
          *
-         * @param val an optional first name
+         * @param imgLink an optional first name
          * @return
          */
-        public Builder addFirstName(final String val) {
-            mFirstName = val;
+        public Builder addImageLink(final String imgLink) {
+            mImageLink = imgLink;
             return this;
         }
 
         /**
-         * Add an optional last name.
+         * Add an optional color to use on contact card.
          *
-         * @param val an optional last name
+         * @param colorStr an optional last name
          * @return
          */
-        public Builder addLastName(final String val) {
-            mLastName = val;
+        public Builder addColor(final String colorStr) {
+            mDisplayColor = colorStr;
             return this;
         }
 
@@ -90,9 +106,14 @@ public class ChatContact implements Serializable {
      */
     private ChatContact(final Builder builder) {
         mUsername = builder.mUsername;
-
         mFirstName = builder.mFirstName;
         mLastName = builder.mLastName;
+        mCreatedAt = builder.mCreatedAt;
+        mLastModified = builder.mLastModified;
+        mVerified = builder.mVerified;
+        mContactInitiator = builder.mContactInitiator;
+        mImageLink = builder.mImageLink;
+        mDisplayColor = builder.mDisplayColor;
 
     }
 
@@ -124,6 +145,30 @@ public class ChatContact implements Serializable {
         return mLastName;
     }
 
+    public String getmCreatedAt() {
+        return mCreatedAt;
+    }
+
+    public String getmLastModified() {
+        return mLastModified;
+    }
+
+    public int getmVerified() {
+        return mVerified;
+    }
+
+    public String getmContactInitiator() {
+        return mContactInitiator;
+    }
+
+    public String getmImageLink() {
+        return mImageLink;
+    }
+
+    public String getmDisplayColor() {
+        return mDisplayColor;
+    }
+
 
     /**
      * Get all of the fields in a single JSON object. Note, if no values were provided for the
@@ -139,12 +184,17 @@ public class ChatContact implements Serializable {
         JSONObject msg = new JSONObject();
         try {
             msg.put("username", getUsername());
-
-            msg.put("first", getFirstName());
-            msg.put("last", getLastName());
+            msg.put("firstname", getFirstName());
+            msg.put("lastname", getLastName());
+            msg.put("lastmodified", getmLastModified());
+            msg.put("createdat", getmCreatedAt());
+            msg.put("verified", getmVerified());
+            msg.put("initiator", getmContactInitiator());
+            msg.put("imagelink", getmImageLink());
+            msg.put("color", getmDisplayColor());
 
         } catch (JSONException e) {
-            Log.wtf("CREDENTIALS", "Error creating JSON: " + e.getMessage());
+            Log.wtf("ChatContact", "Error creating JSON: " + e.getMessage());
         }
         return msg;
     }
