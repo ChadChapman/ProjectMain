@@ -2,7 +2,9 @@ package tcss450.uw.edu.group2project.chatApp;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,19 @@ public class SettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_setting, container, false);
+
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("SettingPreferences", Context.MODE_PRIVATE);
+
+        if (sharedPreferences != null) {
+            ((RadioButton) v.findViewById(R.id.setting_radio_theme_1)).setChecked(
+                    sharedPreferences.getBoolean("radio_button_1", true));
+            ((RadioButton) v.findViewById(R.id.setting_radio_theme_2)).setChecked(
+                    sharedPreferences.getBoolean("radio_button_2", false));
+            ((RadioButton) v.findViewById(R.id.setting_radio_theme_3)).setChecked(
+                    sharedPreferences.getBoolean("radio_button_3", false));
+            ((RadioButton) v.findViewById(R.id.setting_radio_theme_4)).setChecked(
+                    sharedPreferences.getBoolean("radio_button_4", false));
+        }
 
 
         Button b = (Button) v.findViewById(R.id.setting_button_cancel);
@@ -67,6 +82,21 @@ public class SettingFragment extends Fragment {
         if (mListener != null) {
             mListener.onSettingSaveButtonClicked(v);
         }
+
+        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("SettingPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putBoolean("radio_button_1",
+                ((RadioButton) v.findViewById(R.id.setting_radio_theme_1)).isChecked());
+        editor.putBoolean("radio_button_2",
+                ((RadioButton) v.findViewById(R.id.setting_radio_theme_2)).isChecked());
+        editor.putBoolean("radio_button_3",
+                ((RadioButton) v.findViewById(R.id.setting_radio_theme_3)).isChecked());
+        editor.putBoolean("radio_button_4",
+                ((RadioButton) v.findViewById(R.id.setting_radio_theme_4)).isChecked());
+
+        editor.commit();
+
     }
 
 
