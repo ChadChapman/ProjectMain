@@ -22,7 +22,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.model.ChatContact;
 import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
 import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
@@ -33,6 +37,7 @@ public class ChatActivity extends AppCompatActivity
     private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
     private int mUserMemberIDInt;
+    private List<ChatContact> mChatContactsArr;
     //private String mUsername;
 
     @Override
@@ -75,9 +80,9 @@ public class ChatActivity extends AppCompatActivity
         }
 
         //use memberid to update contacts on device
-    //    updateChatContactsOnDevice(mUserMemberIDInt);
+        updateChatContactsOnDevice(mUserMemberIDInt);
         //create an array to pass to contacts activity to populate it
-    //    createChatContactsArray(mUserMemberIDInt);
+        mChatContactsArr = createChatContactsArray(mUserMemberIDInt);
        }
 
 //}
@@ -151,7 +156,7 @@ public class ChatActivity extends AppCompatActivity
 
     private void loadContactsActivity(){
         Intent intent = new Intent(this, ContactsActivity.class);
-        intent.putExtra("userMemberID", mUserMemberID);
+        intent.putExtra("userMemberID", mUserMemberIDInt);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
     }
@@ -174,12 +179,26 @@ public class ChatActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private int tMemberIDFromUsername(String username) {
-        Integer retInt = -1;
+    private void updateChatContactsOnDevice(int memberIDInt) {
 
+        //make async call to web service, get most up to date contacts
 
-        return retInt;
+        //compare to contacts on device?  or write if does not exist?
+        mAppDB.beginTransaction();
+        //get a cursor object from the query
+        //query for all records in ChatContact table
+        mAppDB.endTransaction();
+        //compare and update db if needed
+
     }
+
+    private List<ChatContact> createChatContactsArray(int memberIDInt) {
+        List<ChatContact> retList = new ArrayList<>();
+        //get a cursor from the db
+        
+        return retList;
+    }
+
 
     //should make one database to pass around
     public static SQLiteDatabase getmAppDB() {
