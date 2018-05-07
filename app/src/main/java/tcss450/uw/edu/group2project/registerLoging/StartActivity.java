@@ -117,6 +117,7 @@ public class StartActivity extends AppCompatActivity
 
         mCredentials = credentials;
 
+
         //instantiate and execute the AsyncTask.
         //Feel free to add a handler for onPreExecution so that a progress bar
         //is displayed or maybe disable buttons. You would need a method in
