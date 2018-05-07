@@ -38,6 +38,7 @@ public class ChatActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // setAppTheme();
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -83,6 +84,22 @@ public class ChatActivity extends AppCompatActivity
     }
 
 //}
+
+    private void setAppTheme() {
+        SharedPreferences sharedPreferences = getSharedPreferences(
+                getString(R.string.keys_shared_setting_prefs), Context.MODE_PRIVATE);
+        if (sharedPreferences != null) {
+            if (sharedPreferences.getBoolean("radio_button_1", true)) {
+                setTheme(R.style.AppTheme);
+            } else if (sharedPreferences.getBoolean("radio_button_2", false)) {
+                setTheme(R.style.AppTheme2);
+            } else if (sharedPreferences.getBoolean("radio_button_3", false)) {
+                setTheme(R.style.AppTheme3);
+            } else if (sharedPreferences.getBoolean("radio_button_4", false)) {
+                setTheme(R.style.AppTheme4);
+            }
+        }
+    }
 
     private void loadFragment(Fragment frag,String tag){
         FragmentTransaction transaction = getSupportFragmentManager()
@@ -173,21 +190,8 @@ public class ChatActivity extends AppCompatActivity
 
     @Override
     public void onSettingSaveButtonClicked(View view) {
-        if (((RadioButton) view.findViewById(R.id.setting_radio_theme_1)).isChecked()) {
-            Log.e("Theme 1", "Theme 1 Selected");
-            setTheme(R.style.AppTheme);
-        } else if (((RadioButton) view.findViewById(R.id.setting_radio_theme_2)).isChecked()) {
-            Log.e("Theme 2", "Theme 2 Selected");
-            setTheme(R.style.AppTheme2);
-        } else if (((RadioButton) view.findViewById(R.id.setting_radio_theme_3)).isChecked()) {
-            Log.e("Theme 3", "Theme 3 Selected");
-            setTheme(R.style.AppTheme3);
-        } else if (((RadioButton) view.findViewById(R.id.setting_radio_theme_4)).isChecked()) {
-            Log.e("Theme 4", "Theme 4 Selected");
-            setTheme(R.style.AppTheme4);
-        }
+        setAppTheme();
 
-        super.onCreateOptionsMenu(null);
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

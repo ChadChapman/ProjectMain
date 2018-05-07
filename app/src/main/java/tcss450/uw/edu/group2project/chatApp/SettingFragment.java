@@ -31,7 +31,8 @@ public class SettingFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_setting, container, false);
 
-        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("SettingPreferences", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getActivity()
+                .getSharedPreferences(getString(R.string.keys_shared_setting_prefs), Context.MODE_PRIVATE);
 
         if (sharedPreferences != null) {
             ((RadioButton) v.findViewById(R.id.setting_radio_theme_1)).setChecked(
@@ -83,7 +84,8 @@ public class SettingFragment extends Fragment {
             mListener.onSettingSaveButtonClicked(v);
         }
 
-        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("SettingPreferences", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = this.getActivity()
+                .getSharedPreferences(getString(R.string.keys_shared_setting_prefs), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putBoolean("radio_button_1",
