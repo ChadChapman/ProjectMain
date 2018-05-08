@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -23,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
-
+import tcss450.uw.edu.group2project.model.FeedItem;
 
 
 public class ContactsActivity extends AppCompatActivity {

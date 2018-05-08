@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.model.FeedItem;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.CustomViewHolder> {
     private List<FeedItem> feedItemList;
