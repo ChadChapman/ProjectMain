@@ -26,6 +26,7 @@ import tcss450.uw.edu.group2project.model.FeedItem;
 
 
 public class ContactsActivity extends AppCompatActivity {
+
     private static final String TAG = "RecyclerViewExample";
     private List<FeedItem> feedsList;
     private RecyclerView mRecyclerView;
@@ -36,24 +37,35 @@ public class ContactsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
+
         //grab the memberid from the intent that got us here
         Bundle extras = getIntent().getExtras();
         if (extras != null){
             mUserMemberID = extras.getInt("userMemberID");
         }
+        //I have wavered in making it an Integer or keeping a String, ideally it would be done right
+        //when it is parsed from the response object.  Ultimately though I think the int one so it
+        //be used directly as an int in database queries on both sides that need the int as
+        //the primary key
         Integer userIDInt = new Integer(mUserMemberID);
         String userIDStr = userIDInt.toString();
         Log.e("MEMBERID:", userIDStr);
+
         adapter =new MyRecyclerViewAdapter(this, feedsList);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
+        //hardcoded url from the tutorial i follwed
+        //TODO - build a uri string here to contact our endpoints instead
         String url = "http://stacktips.com/?json=get_category_posts&slug=news&count=30";
         new DownloadTask().execute(url);
 
+        //this should make each item clickable, like each card or whatever in the layout
+        //currently i do not think it is being called correctly elsewhere
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(FeedItem item) {
@@ -61,8 +73,14 @@ public class ContactsActivity extends AppCompatActivity {
 
             }
         });
-    }
+    }//end oC
 
+    /**
+     * This is where the magic happens, this internal class is from the tutorial
+     * I followed at stacktips.com
+     *
+     * It is nice to have a second working example of one
+     */
     public class DownloadTask extends AsyncTask<String, Void, Integer> {
 
         @Override
@@ -109,7 +127,7 @@ public class ContactsActivity extends AppCompatActivity {
                 Toast.makeText(ContactsActivity.this, "Failed to fetch data!", Toast.LENGTH_SHORT).show();
             }
         }
-    }
+    }//end DT class
 
     private void parseResult(String result) {
         try {
@@ -127,7 +145,7 @@ public class ContactsActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
+    }//end pR
 
 
-}
+}//end CA

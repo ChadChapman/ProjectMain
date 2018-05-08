@@ -43,56 +43,17 @@ public class ContactFragment extends Fragment {
         // Required empty public constructor
     }
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        //setContentView(R.layout.activity_main);
-//        //populateContactsList();
-//        //mAppDB = ChatActivity.getmAppDB();
-//        //mContactList = loadContactsListFromSQLite();
-//
-////        ArrayAdapter<ChatContact> adapter = new ArrayAdapter<ChatContact>(this, R.layout.fragment_contact, R.id.ChatContactsTextView, mContactList);
-////        ListView lv= (ListView) getActivity().findViewById(R.id.ChatContactsListView);
-////        lv.setAdapter(adapter);
-////        mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.ChatContactRecyclerView);
-////
-////        // use this setting to improve performance if you know that changes
-////        // in content do not change the layout size of the RecyclerView
-////        //mRecyclerView.setHasFixedSize(true);
-////
-////        // use a linear layout manager
-////        mLayoutManager = new LinearLayoutManager(getContext());
-////        mRecyclerView.setLayoutManager(mLayoutManager);
-////
-////        // specify an adapter (see also next example)
-////        mAdapter = new MyChatContactsAdapter(myDataset);
-////        mRecyclerView.setAdapter(mAdapter);
-//
-//    }
-//}
-    //}
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-//        mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.ChatContactRecyclerView);
-//
-//        // use this setting to improve performance if you know that changes
-//        // in content do not change the layout size of the RecyclerView
-//        //mRecyclerView.setHasFixedSize(true);
-//
-//        // use a linear layout manager
-//        mLayoutManager = new LinearLayoutManager(getContext());
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//
-//        // specify an adapter (see also next example)
-//        mAdapter = new MyChatContactsAdapter(myDataset);
-//        mRecyclerView.setAdapter(mAdapter);
         return inflater.inflate(R.layout.fragment_contact, container, false);
 
     }
 
+    /**
+     * not sure this belongds here but i am going to leave it and make sure this push isn't borked
+     */
     public void setupRecyclerView() {
         mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.ChatContactRecyclerView);
 
@@ -117,34 +78,26 @@ public class ContactFragment extends Fragment {
         } catch (JSONException e) {
             //TODO give signal contacts were not saved on app exit
         }
-
     }
 
-    private void populateContactsList() {
-//        ChatContact contact1 = new ChatContact.Builder("tester1")
-//                .addFirstName("test1")
-//                .addLastName("lastname")
-//                .build();
-//        ChatContact contact2 = new ChatContact.Builder("tester2")
-//                .addFirstName("test1")
-//                .addLastName("lastname")
-//                .build();
-//        ChatContact contact3 = new ChatContact.Builder("tester3")
-//                .addFirstName("test1")
-//                .addLastName("lastname")
-//                .build();
-//        mContactList.add(contact1);
-//        mContactList.add(contact2);
-//        mContactList.add(contact3);
-    }
 
+    /**
+     *
+     * Write all information in the current list of ChatContacts (still strings right now) to
+     * an internal database.
+     * This way even if the internet isn't working we can still populate a list of contacts from
+     * an internal db query.
+     * Should iterate through list and insert all into the sqlite db.  Currently does not iterate
+     * through shit.
+     *
+     * @throws JSONException - tried to make a JSONArray out of the list, it didn't work
+     */
     public void saveContactsListToSQLite() throws JSONException {
-        //JSONObject jsonContacts = new JSONObject();
-        //jsonContacts.put("chatContactsList", new JSONArray(mContactList));
+
         JSONArray jsonArray = new JSONArray(mContactList);
-        //String jsonContactsString = jsonContacts.toString();
+
         ContentValues jsonStringContentValues = new ContentValues();
-//        for (ChatContact cc : mContactList) {
+//        for (ChatContact cc : mContactList) { //left this to demonstrate what i'm trying to do here
 //            jsonStringContentValues.put();
 //        }
         jsonStringContentValues.put("jsonChatContacts", jsonArray.toString());
@@ -153,6 +106,19 @@ public class ContactFragment extends Fragment {
         mAppDB.endTransaction();
     }
 
+    /**
+     * Fetch all ChatContact rows from the internal sqlite db and return them as a list.
+     *
+     * Rather than wait on an internet connection, we can just load info for contacts from
+     * this query's list.  The list may not be the most up to date info.
+     * As as aside, the contacts in the db will be updated with an async call.
+     * This method prevents having to wait on HTTP actions to create the contacts ativity
+     * or the contacts frag.
+     *
+     * @return - a list of ChatContacts created from a query to the internal db, contains all
+     * contacts found on the device for this user.
+     *
+     */
 
     public List<ChatContact> loadContactsListFromSQLite() {
         List<ChatContact> retList = new ArrayList<>();
