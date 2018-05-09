@@ -8,8 +8,23 @@
     tools:context=".chatApp.ChatFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <EditText
+        android:id="@+id/chatInputEditText"
+        android:layout_width="254dp"
+        android:layout_height="41dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="24dp"
+        android:ems="10"
+        android:hint="Write a message"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
     <TextView
         android:id="@+id/chatOutputTextView"
+        android:textSize="26sp"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
@@ -20,18 +35,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/chatInputEditText"
-        android:layout_width="254dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="16dp"
-        android:ems="10"
-        android:hint="Write a message"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/chatSendButton"
@@ -44,4 +47,6 @@
         app:layout_constraintStart_toEndOf="@+id/chatInputEditText"
         app:layout_constraintTop_toBottomOf="@+id/chatOutputTextView"
         app:srcCompat="@android:drawable/ic_media_play" />
+
+
 </android.support.constraint.ConstraintLayout>

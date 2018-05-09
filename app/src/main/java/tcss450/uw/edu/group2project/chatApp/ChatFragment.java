@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -33,6 +35,7 @@ public class ChatFragment extends Fragment{
 
     private OnFragmentInteractionListener mListener;
 
+
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -42,9 +45,12 @@ public class ChatFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
+
         v.findViewById(R.id.chatSendButton).setOnClickListener(this::sendMessage);
+
         mOutputTextView = v.findViewById(R.id.chatOutputTextView);
-        return inflater.inflate(R.layout.fragment_chat, container, false);
+
+        return v;
     }
 
     @Override
@@ -60,15 +66,14 @@ public class ChatFragment extends Fragment{
 
         mUsername = prefs.getString(getString(R.string.keys_prefs_username), "");
 
-        Log.e("Username; ", mUsername);
+
         mSendUrl = new Uri.Builder()
                 .scheme("https")
                 .authority(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_send_message))
                 .build()
                 .toString();
-        Log.e("URL: ", mSendUrl.toString());
-        Log.e("USERNAME: ", getString(R.string.keys_json_username));
+
 
         Uri retrieve = new Uri.Builder()
                 .scheme("https")
@@ -198,7 +203,9 @@ public class ChatFragment extends Fragment{
 
             getActivity().runOnUiThread(() -> {
                 for(String msg: msgs) {
+                    
                     mOutputTextView.append(msg);
+
                     mOutputTextView.append(System.lineSeparator());
                 }
             });
