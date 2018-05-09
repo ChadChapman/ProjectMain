@@ -1,5 +1,7 @@
 package tcss450.uw.edu.group2project.chatApp;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,6 +39,7 @@ public class ContactsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setAppTheme();
         setContentView(R.layout.activity_contacts);
         adapter =new MyRecyclerViewAdapter(this, feedsList);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -53,6 +56,22 @@ public class ContactsActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setAppTheme() {
+        SharedPreferences sharedPreferences = getSharedPreferences(
+                getString(R.string.keys_shared_setting_prefs), Context.MODE_PRIVATE);
+        if (sharedPreferences != null) {
+            if (sharedPreferences.getBoolean("radio_button_1", true)) {
+                setTheme(R.style.AppTheme);
+            } else if (sharedPreferences.getBoolean("radio_button_2", false)) {
+                setTheme(R.style.AppTheme2);
+            } else if (sharedPreferences.getBoolean("radio_button_3", false)) {
+                setTheme(R.style.AppTheme3);
+            } else if (sharedPreferences.getBoolean("radio_button_4", false)) {
+                setTheme(R.style.AppTheme4);
+            }
+        }
     }
 
     public class DownloadTask extends AsyncTask<String, Void, Integer> {
