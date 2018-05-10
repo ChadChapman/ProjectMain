@@ -1,15 +1,18 @@
 package tcss450.uw.edu.group2project.registerLoging;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +32,7 @@ public class LoginFragment extends Fragment {
 
     EditText userEdit;
     EditText passEdit;
-
+    ProgressBar mProgressBar;
 
     private OnLoginFragmentInteractionListener mListener;
 
@@ -43,6 +46,9 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         userEdit = (EditText) view.findViewById(R.id.login_edit_text_username);
         passEdit = (EditText) view.findViewById(R.id.login_edit_text_password);
+        mProgressBar = (ProgressBar)view.findViewById(R.id.loginProgressBar);
+        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+
         Button b = (Button) view.findViewById(R.id.login_button_login);
         b.setOnClickListener(this::attemptLogin);
         b = (Button) view.findViewById(R.id.login_button_register);
@@ -75,7 +81,15 @@ public class LoginFragment extends Fragment {
 
     public void attemptLogin(View view) {
         if (mListener != null) {
+            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            SharedPreferences prefs =
+                    getActivity().getSharedPreferences(
+                            getString(R.string.keys_shared_prefs),
+                            Context.MODE_PRIVATE);
+
+
             EditText username = getActivity().findViewById(R.id.login_edit_text_username);
+
             EditText password = getActivity().findViewById(R.id.login_edit_text_password);
             String usernameText = username.getText().toString().trim();
             String passwordText = password.getText().toString().trim();
@@ -85,6 +99,10 @@ public class LoginFragment extends Fragment {
             } else if (passwordText.equals("")) {
                 password.setError("Password cannot be empty");
             } else {
+                prefs.edit().putString(
+                        getString(R.string.keys_prefs_username),
+                        usernameText)
+                        .apply();
                 Credentials.Builder builder = new Credentials.Builder(usernameText, new SpannableStringBuilder(passwordText));
                 mListener.onLoginAttempt(builder.build());
             }
