@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,10 +31,12 @@ public class StartActivity extends AppCompatActivity
 
     Credentials mCredentials;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
 
 
         if (savedInstanceState == null) {
@@ -105,6 +108,7 @@ public class StartActivity extends AppCompatActivity
 
     @Override
     public void onLoginAttempt(Credentials credentials) {
+
         //build the web service URL
         Uri uri = new Uri.Builder()
                 .scheme("https")
@@ -160,6 +164,7 @@ public class StartActivity extends AppCompatActivity
      * @param result the JSON formatted String response from the web service
      */
     private void handleLoginOnPost(String result) {
+
         try {
             JSONObject resultsJSON = new JSONObject(result);
             boolean success = resultsJSON.getBoolean("success");

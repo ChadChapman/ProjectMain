@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +32,7 @@ public class LoginFragment extends Fragment {
 
     EditText userEdit;
     EditText passEdit;
-
+    ProgressBar mProgressBar;
 
     private OnLoginFragmentInteractionListener mListener;
 
@@ -45,6 +46,8 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         userEdit = (EditText) view.findViewById(R.id.login_edit_text_username);
         passEdit = (EditText) view.findViewById(R.id.login_edit_text_password);
+        mProgressBar = (ProgressBar)view.findViewById(R.id.loginProgressBar);
+        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
         Button b = (Button) view.findViewById(R.id.login_button_login);
         b.setOnClickListener(this::attemptLogin);
@@ -78,6 +81,7 @@ public class LoginFragment extends Fragment {
 
     public void attemptLogin(View view) {
         if (mListener != null) {
+            mProgressBar.setVisibility(ProgressBar.VISIBLE);
             SharedPreferences prefs =
                     getActivity().getSharedPreferences(
                             getString(R.string.keys_shared_prefs),
