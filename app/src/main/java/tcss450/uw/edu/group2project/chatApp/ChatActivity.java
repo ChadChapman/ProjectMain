@@ -243,7 +243,7 @@ public class ChatActivity extends AppCompatActivity
                     + System.lineSeparator()
                     + e.getMessage());
         }
-
+        //TODO now need to parse result and get it into the db
         //compare to contacts on device?  or write if does not exist?
         mAppDB.beginTransaction();
         //get a cursor object from the query

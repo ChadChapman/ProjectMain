@@ -170,7 +170,7 @@ public class StartActivity extends AppCompatActivity
             if (success) {
                 //Login was successful. Switch to the loadSuccessFragment.
                 mUserMemberIDInt = resultsJSON.getInt("message");
-                Log.e("MEMBERID WAS: ", mUserMemberIDStr);
+        //        Log.e("MEMBERID WAS: ", mUserMemberIDStr);
                 checkStayLoggedIn();
                 loadLandingFragment();
             } else {
