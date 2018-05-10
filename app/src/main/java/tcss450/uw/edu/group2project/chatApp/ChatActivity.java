@@ -23,11 +23,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
 import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
+import tcss450.uw.edu.group2project.utils.UITheme;
 
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -35,10 +37,15 @@ public class ChatActivity extends AppCompatActivity
         SettingFragment.OnSettingFragmentInteractionListener {
     private static SQLiteDatabase mAppDB;
 
+    public static int mTheme = UITheme.THEME_ONE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setAppTheme();
+
+        // Update theme color
+        setTheme(UITheme.getThemeId(mTheme));
+
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,21 +92,6 @@ public class ChatActivity extends AppCompatActivity
 
 //}
 
-    private void setAppTheme() {
-        SharedPreferences sharedPreferences = getSharedPreferences(
-                getString(R.string.keys_shared_setting_prefs), Context.MODE_PRIVATE);
-        if (sharedPreferences != null) {
-            if (sharedPreferences.getBoolean("radio_button_1", true)) {
-                setTheme(R.style.AppTheme);
-            } else if (sharedPreferences.getBoolean("radio_button_2", false)) {
-                setTheme(R.style.AppTheme2);
-            } else if (sharedPreferences.getBoolean("radio_button_3", false)) {
-                setTheme(R.style.AppTheme3);
-            } else if (sharedPreferences.getBoolean("radio_button_4", false)) {
-                setTheme(R.style.AppTheme4);
-            }
-        }
-    }
 
     private void loadFragment(Fragment frag,String tag){
         FragmentTransaction transaction = getSupportFragmentManager()
@@ -188,39 +180,41 @@ public class ChatActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    @Override
-    public void onSettingSaveButtonClicked(View view) {
-        setAppTheme();
 
-        setContentView(R.layout.activity_chat);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragmentContainer,
-                        new LandingFragment(),
-                        getString(R.string.keys_fragment_landing))
-                .commit();
-        //let's just make an sqlite db and be done with it
-        mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
-    }
-
-    @Override
-    public void onSettingCancelButtonClicked() {
-        loadFragment(new LandingFragment(), "landingFragmentTag");
-    }
 
     //should make one database to pass around
     public static SQLiteDatabase getmAppDB() {
         return mAppDB;
+    }
+
+    @Override
+    public void onSettingThemeButtonClicked(int color) {
+        switch(color) {
+            case 1:
+                changeTheme(UITheme.THEME_ONE);
+                break;
+            case 2:
+                changeTheme(UITheme.THEME_TWO);
+                break;
+            case 3:
+                changeTheme(UITheme.THEME_THREE);
+                break;
+            case 4:
+                changeTheme(UITheme.THEME_FOUR);
+                break;
+        }
+    }
+
+    public void changeTheme(final int theme) {
+        // Handles theme changes to activity
+        mTheme = theme;
+        setTheme(mTheme);
+
+        ChatActivity.this.recreate();
+
+        int duration = Toast.LENGTH_SHORT;
+        Context context = this.getBaseContext();
+        Toast toast = Toast.makeText(context, "Changed to Theme " + theme, duration);
+        toast.show();
     }
 }

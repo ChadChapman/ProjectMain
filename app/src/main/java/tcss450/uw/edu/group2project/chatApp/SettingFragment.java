@@ -34,23 +34,17 @@ public class SettingFragment extends Fragment {
         SharedPreferences sharedPreferences = this.getActivity()
                 .getSharedPreferences(getString(R.string.keys_shared_setting_prefs), Context.MODE_PRIVATE);
 
-        if (sharedPreferences != null) {
-            ((RadioButton) v.findViewById(R.id.setting_radio_theme_1)).setChecked(
-                    sharedPreferences.getBoolean("radio_button_1", true));
-            ((RadioButton) v.findViewById(R.id.setting_radio_theme_2)).setChecked(
-                    sharedPreferences.getBoolean("radio_button_2", false));
-            ((RadioButton) v.findViewById(R.id.setting_radio_theme_3)).setChecked(
-                    sharedPreferences.getBoolean("radio_button_3", false));
-            ((RadioButton) v.findViewById(R.id.setting_radio_theme_4)).setChecked(
-                    sharedPreferences.getBoolean("radio_button_4", false));
-        }
+        Button b = (Button) v.findViewById(R.id.setting_button_theme_1);
+        b.setOnClickListener(this::onThemeOneButtonClicked);
 
+        b = (Button) v.findViewById(R.id.setting_button_theme_2);
+        b.setOnClickListener(this::onThemeTwoButtonClicked);
 
-        Button b = (Button) v.findViewById(R.id.setting_button_cancel);
-        b.setOnClickListener(this::onCancelButtonClicked);
+        b = (Button) v.findViewById(R.id.setting_button_theme_3);
+        b.setOnClickListener(this::onThemeThreeButtonClicked);
 
-        b = (Button) v.findViewById(R.id.setting_button_save);
-        b.setOnClickListener(this::onSaveButtonClicked);
+        b = (Button) v.findViewById(R.id.setting_button_theme_4);
+        b.setOnClickListener(this::onThemeFourButtonClicked);
 
         // Inflate the layout for this fragment
         return v;
@@ -73,39 +67,32 @@ public class SettingFragment extends Fragment {
         mListener = null;
 }
 
-    private void onCancelButtonClicked(View v) {
+    private void onThemeOneButtonClicked(View v) {
         if (mListener != null) {
-            mListener.onSettingCancelButtonClicked();
+            mListener.onSettingThemeButtonClicked(1);
         }
     }
 
-    private void onSaveButtonClicked(View view) {
+    private void onThemeTwoButtonClicked(View v) {
         if (mListener != null) {
-            mListener.onSettingSaveButtonClicked(v);
+            mListener.onSettingThemeButtonClicked(2);
         }
-
-        SharedPreferences sharedPreferences = this.getActivity()
-                .getSharedPreferences(getString(R.string.keys_shared_setting_prefs), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putBoolean("radio_button_1",
-                ((RadioButton) v.findViewById(R.id.setting_radio_theme_1)).isChecked());
-        editor.putBoolean("radio_button_2",
-                ((RadioButton) v.findViewById(R.id.setting_radio_theme_2)).isChecked());
-        editor.putBoolean("radio_button_3",
-                ((RadioButton) v.findViewById(R.id.setting_radio_theme_3)).isChecked());
-        editor.putBoolean("radio_button_4",
-                ((RadioButton) v.findViewById(R.id.setting_radio_theme_4)).isChecked());
-
-        editor.commit();
-
     }
 
+    private void onThemeThreeButtonClicked(View v) {
+        if (mListener != null) {
+            mListener.onSettingThemeButtonClicked(3);
+        }
+    }
 
+    private void onThemeFourButtonClicked(View v) {
+        if (mListener != null) {
+            mListener.onSettingThemeButtonClicked(4);
+        }
+    }
 
     public interface OnSettingFragmentInteractionListener {
-        void onSettingSaveButtonClicked(View v);
-        void onSettingCancelButtonClicked();
+        void onSettingThemeButtonClicked(int color);
     }
 
 

@@ -9,26 +9,6 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <Button
-        android:id="@+id/setting_button_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/setting_button_save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/setting_button_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/setting_button_cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <TextView
         android:id="@+id/setting_text_view_theme"
         android:layout_width="wrap_content"
@@ -37,46 +17,54 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="30dp"
         android:text="@string/setting_text_view_theme"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
+    <Button
+        android:id="@+id/setting_button_theme_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@drawable/customborder"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
+        android:background="@color/colorPrimary"
+        android:text="@string/setting_button_theme_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/setting_text_view_theme">
+        app:layout_constraintTop_toBottomOf="@+id/setting_text_view_theme" />
 
-        <RadioButton
-            android:id="@+id/setting_radio_theme_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/setting_radio_theme_1" />
+    <Button
+        android:id="@+id/setting_button_theme_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimary2"
+        android:text="@string/setting_button_theme_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_button_theme_1" />
 
-        <RadioButton
-            android:id="@+id/setting_radio_theme_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/setting_radio_theme_2" />
+    <Button
+        android:id="@+id/setting_button_theme_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimary3"
+        android:text="@string/setting_button_theme_3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_button_theme_2" />
 
-        <RadioButton
-            android:id="@+id/setting_radio_theme_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/setting_radio_theme_3" />
-
-        <RadioButton
-            android:id="@+id/setting_radio_theme_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/setting_radio_theme_4" />
-    </RadioGroup>
+    <Button
+        android:id="@+id/setting_button_theme_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimary4"
+        android:text="@string/setting_button_theme_4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_button_theme_3" />
 
 
 </android.support.constraint.ConstraintLayout>
