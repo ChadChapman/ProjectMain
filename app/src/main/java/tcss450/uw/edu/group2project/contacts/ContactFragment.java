@@ -20,7 +20,7 @@ import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.model.ChatContact;
-import tcss450.uw.edu.group2project.utils.MyChatContactsAdapter;
+//import tcss450.uw.edu.group2project.utils.MyChatContactsAdapter;
 //import tcss450.uw.edu.group2project.utils.MyAdapter;
 
 
@@ -103,7 +103,7 @@ public class ContactFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new MyChatContactsAdapter(myDataset);
+       // mAdapter = new MyChatContactsAdapter(myDataset);
         mRecyclerView.setAdapter(mAdapter);
     }
 
