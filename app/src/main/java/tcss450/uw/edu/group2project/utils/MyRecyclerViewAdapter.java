@@ -80,10 +80,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         return (null != feedItemList ? feedItemList.size() : 0);
     }
 
-    public void itemClickedReactsOnly(ContactFeedItem item){
-        Log.e("ITEM WAS CLICKED", "METHOD CALL SUCCESS");
-    }
-
 
     /**
      * begin internal class for the viewholder
