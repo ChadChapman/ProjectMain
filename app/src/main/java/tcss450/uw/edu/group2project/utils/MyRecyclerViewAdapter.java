@@ -39,13 +39,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         Log.e("CONTACTS ADAPTER CREATED FROM: ", "SUCCESS");
     }
 
-//    //this construstor is for messages
-//    public MyRecyclerViewAdapter(Context context, List<MessageFeedItem> feedItemList) {
-//        this.messageFeedItemList = feedItemList;
-//        this.mContext = context;
-//        Log.e("MESSAGES ADAPTER CREATED FROM: ", "SUCCESS");
-//    }
-
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_row, null);
@@ -75,6 +68,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 onItemClickListener.onContactItemClick(feedItem);
             }
         };
+
         customViewHolder.imageView.setOnClickListener(listener);
         customViewHolder.textView.setOnClickListener(listener);
     }

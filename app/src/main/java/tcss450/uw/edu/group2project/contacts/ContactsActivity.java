@@ -133,59 +133,7 @@ public class ContactsActivity extends AppCompatActivity {
 
 
 
-    public class DownloadTask extends AsyncTask<String, Void, Integer> {
 
-        @Override
-        protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Integer doInBackground(String... params) {
-            Integer result = 0;
-            //String resultString;
-            StringBuilder response = new StringBuilder();
-            HttpURLConnection urlConnection;
-            try {
-                URL url = new URL(params[0]);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                int statusCode = urlConnection.getResponseCode();
-
-                // 200 represents HTTP OK
-                if (statusCode == 200) {
-                    BufferedReader r = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                    //StringBuilder response = new StringBuilder();
-                    String line;
-                    while ((line = r.readLine()) != null) {
-                        response.append(line);
-                    }
-                    //parseResult(response.toString());
-                    parseHerokuResult(response.toString());
-                    result = 1; // Successful
-                } else {
-                    result = 0; //"Failed to fetch data!";
-                }
-            } catch (Exception e) {
-                Log.d(TAG, e.getLocalizedMessage());
-            }
-            return result; //"Failed to fetch data!";
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            progressBar.setVisibility(View.GONE);
-
-            if (result == 1) {
-                //adapter = new MyRecyclerViewAdapter(ContactsActivity.this, feedsList);
-                adapter = new MyRecyclerViewAdapter(
-                        ContactsActivity.this, mContactFeedItemList);
-                mRecyclerView.setAdapter(adapter);
-            } else {
-                Toast.makeText(ContactsActivity.this
-                        , "Failed to fetch data!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
     //on post exec should be -> handle successful contacts query
     public void handleContactsQueryResponseOnPostExec(String result) {
