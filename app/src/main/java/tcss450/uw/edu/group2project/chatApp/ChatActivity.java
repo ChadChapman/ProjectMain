@@ -41,11 +41,12 @@ import tcss450.uw.edu.group2project.model.Credentials;
 import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
 import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
-import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
+//import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         LandingFragment.OnLandingFragmentInteractionListener {
+
     private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
     //private int mUserMemberIDInt;
@@ -85,9 +86,14 @@ public class ChatActivity extends AppCompatActivity
                         new LandingFragment(),
                         getString(R.string.keys_fragment_landing))
                 .commit();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null){
+            mUserMemberID = extras.getString("userMemberID");
+        }
         //let's just make an sqlite db and be done with it
         //mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
-        setupDeviceDatabase();
+//        setupDeviceDatabase();
 
 
 
@@ -98,14 +104,11 @@ public class ChatActivity extends AppCompatActivity
         super.onStart();
            //grab the memberid from the intent that got us here
            //this may need to go into onCreate?
-           Bundle extras = getIntent().getExtras();
-           if (extras != null){
-               mUserMemberID = extras.getString("userMemberID");
-           }
+
             //use memberid to update contacts on device
-           asyncContactsDBQuery(mUserMemberID);
+          // asyncContactsDBQuery(mUserMemberID);
            //create an array to pass to contacts activity to populate it
-           mContactsBundle = createChatContactsBundle(mUserMemberID);
+//           mContactsBundle = createChatContactsBundle(mUserMemberID);
 
        }
 
@@ -180,7 +183,7 @@ public class ChatActivity extends AppCompatActivity
 
     private void loadContactsActivity(){
         Intent intent = new Intent(this, ContactsActivity.class);
-        intent.putExtra("contactsBundle", mContactsBundle);
+        intent.putExtra("mUserMemberID", mUserMemberID);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
     }
@@ -205,11 +208,11 @@ public class ChatActivity extends AppCompatActivity
 
     public void setupDeviceDatabase() {
 
-        mAppDB = openOrCreateDatabase("RabbitChatDB", MODE_PRIVATE, null);
-        mAppDB.beginTransaction();
-        mAppDB.execSQL(getString(R.string.sqlite_create_table_ChatContact));
-        //add whatever other tables need to be setup here
-        mAppDB.endTransaction();
+//        mAppDB = openOrCreateDatabase("RabbitChatDB", MODE_PRIVATE, null);
+//        mAppDB.beginTransaction();
+//        mAppDB.execSQL(getString(R.string.sqlite_create_table_ChatContact));
+//        //add whatever other tables need to be setup here
+//        mAppDB.endTransaction();
 
     }
 
@@ -253,32 +256,32 @@ public class ChatActivity extends AppCompatActivity
         //compare and update db if needed
     }
 
-    public void asyncContactsDBQuery(String memberid) {
-        //build the web service URL
-        Uri uri = new Uri.Builder()
-                .scheme("https")
-                .appendPath(getString(R.string.ep_base_url))
-                .appendPath(getString(R.string.ep_contacts))
-                .appendPath(getString(R.string.ep_contacts_query_ny_memberid))
-                .build();
-
-        //build the JSONObject
-        JSONObject msg = new JSONObject();
-        try {
-             msg.put("memberid", memberid);
-            } catch (JSONException e) {
-                Log.wtf("CONTACTS QUERY BY MEMBERID", "Error creating JSON: " + e.getMessage());
-            }
-
-        //instantiate and execute the AsyncTask.
-        //Feel free to add a handler for onPreExecution so that a progress bar
-        //is displayed or maybe disable buttons. You would need a method in
-        //LoginFragment to perform this.
-        new SendPostAsyncTask.Builder(uri.toString(), msg)
-                .onPostExecute(this::handleChatContactsAsyncQueryResult)
-                .onCancelled(this::handleErrorsInTask)
-                .build().execute();
-    }
+//    public void asyncContactsDBQuery(String memberid) {
+//        //build the web service URL
+//        Uri uri = new Uri.Builder()
+//                .scheme("https")
+//                .appendPath(getString(R.string.ep_base_url))
+//                .appendPath(getString(R.string.ep_contacts))
+//                .appendPath(getString(R.string.ep_contacts_query_ny_memberid))
+//                .build();
+//
+//        //build the JSONObject
+//        JSONObject msg = new JSONObject();
+//        try {
+//             msg.put("memberid", memberid);
+//            } catch (JSONException e) {
+//                Log.wtf("CONTACTS QUERY BY MEMBERID", "Error creating JSON: " + e.getMessage());
+//            }
+//
+//        //instantiate and execute the AsyncTask.
+//        //Feel free to add a handler for onPreExecution so that a progress bar
+//        //is displayed or maybe disable buttons. You would need a method in
+//        //LoginFragment to perform this.
+//        new SendPostAsyncTask.Builder(uri.toString(), msg)
+//                .onPostExecute(this::handleChatContactsAsyncQueryResult)
+//                .onCancelled(this::handleErrorsInTask)
+//                .build().execute();
+//    }
 
     /**
      * Handle errors that may occur during the AsyncTask.
@@ -294,7 +297,7 @@ public class ChatActivity extends AppCompatActivity
         CancellationSignal cancellationSignal = new CancellationSignal();
         //what to do with cancellation signal?
         //get a cursor from the db
-        mAppDB.beginTransaction();
+//        mAppDB.beginTransaction();
         //SQLiteCursor cursor = mAppDB.query("ChatContact", columnsToReturn, );
         Cursor cursor = mAppDB.rawQuery(
                 "SELECT Username, FName, LName, created_at, last_modified, verified, " +

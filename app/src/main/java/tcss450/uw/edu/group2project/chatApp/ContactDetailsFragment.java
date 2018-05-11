@@ -11,6 +11,7 @@ import tcss450.uw.edu.group2project.R;
 
 /**
  * A simple {@link Fragment} subclass.
+ * This class will display all the details of a contact
  */
 public class ContactDetailsFragment extends Fragment {
 

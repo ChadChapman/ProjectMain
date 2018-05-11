@@ -11,6 +11,8 @@ import tcss450.uw.edu.group2project.R;
 
 /**
  * A simple {@link Fragment} subclass.
+ * This class will list all contacts in the db
+ * For now this will just be an empty frag
  */
 public class ContactsListFragment extends Fragment {
 

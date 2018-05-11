@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,19 @@ import java.util.List;
 import tcss450.uw.edu.group2project.R;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.CustomViewHolder> {
-    private List<FeedItem> feedItemList;
+    private List<ContactFeedItem> feedItemList;
     private Context mContext;
     private OnItemClickListener onItemClickListener;
 
-    public MyRecyclerViewAdapter(Context context, List<FeedItem> feedItemList) {
+//    public MyRecyclerViewAdapter(Context context, List<FeedItem> feedItemList) {
+//        this.feedItemList = feedItemList;
+//        this.mContext = context;
+//    }
+
+    public MyRecyclerViewAdapter(Context context, List<ContactFeedItem> feedItemList) {
         this.feedItemList = feedItemList;
         this.mContext = context;
+        Log.e("ADAPTER CREATED FROM: ", "SUCCESS");
     }
 
     @Override
@@ -35,7 +42,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     @Override
     public void onBindViewHolder(CustomViewHolder customViewHolder, int i) {
-        FeedItem feedItem = feedItemList.get(i);
+        //FeedItem feedItem = feedItemList.get(i);
+        ContactFeedItem feedItem = feedItemList.get(i);
 
         //Render image using Picasso library
         if (!TextUtils.isEmpty(feedItem.getThumbnail())) {
@@ -51,7 +59,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onItemClick(feedItem);
+                onItemClickListener.onContactItemClick(feedItem);
             }
         };
         customViewHolder.imageView.setOnClickListener(listener);

@@ -26,7 +26,8 @@
     <string name="sqlite_internal_database_name">RabbitChatDB</string>
 
     <!-- Contacts Activity -->
-
+    <string name="contacts_frag_toggle_button_pending">Pending</string>
+    <string name="contacts_frag_toggle_button_sent">Sent</string>
 
     <!-- Chat Activity -->
 
@@ -39,7 +40,6 @@
 
 
     <!-- >>>>>> HEROKU POSTGRES DB QUERY STRINGS GO HERE <<<<<< -->
-
 
 
     <!-- TODO: Remove or change this placeholder text -->
