@@ -242,6 +242,7 @@ public class ContactsActivity extends AppCompatActivity {
 
     private void parseHerokuResult(String result) {
         //String imgAddress = "https://www.logoground.com/uploads/2017108832017-04-203705844rabbitchat.jpg";
+        //maybe add an array of images?
         String imgAddress = "http://2.bp.blogspot.com/-BvXcUdArvGk/UK54mxYSUOI/AAAAAAAAbg8/XycJSQH_IrU/s640/funny-animal-captions-005-020.jpg";
         try {
             JSONObject response = new JSONObject(result);
