@@ -1,4 +1,4 @@
-package tcss450.uw.edu.group2project.chatApp;
+package tcss450.uw.edu.group2project.utils;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -16,9 +16,14 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.model.ContactFeedItem;
+import tcss450.uw.edu.group2project.model.FeedItem;
+import tcss450.uw.edu.group2project.model.MessageFeedItem;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.CustomViewHolder> {
     private List<ContactFeedItem> feedItemList;
+    private List<MessageFeedItem> messageFeedItemList;
+    //private List<FeedItem>  feedItemList;
     private Context mContext;
     private OnItemClickListener onItemClickListener;
 
@@ -27,11 +32,19 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 //        this.mContext = context;
 //    }
 
+    //this constructor is for contacts
     public MyRecyclerViewAdapter(Context context, List<ContactFeedItem> feedItemList) {
         this.feedItemList = feedItemList;
         this.mContext = context;
-        Log.e("ADAPTER CREATED FROM: ", "SUCCESS");
+        Log.e("CONTACTS ADAPTER CREATED FROM: ", "SUCCESS");
     }
+
+//    //this construstor is for messages
+//    public MyRecyclerViewAdapter(Context context, List<MessageFeedItem> feedItemList) {
+//        this.messageFeedItemList = feedItemList;
+//        this.mContext = context;
+//        Log.e("MESSAGES ADAPTER CREATED FROM: ", "SUCCESS");
+//    }
 
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {

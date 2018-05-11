@@ -1,4 +1,4 @@
-package tcss450.uw.edu.group2project.chatApp;
+package tcss450.uw.edu.group2project.contacts;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -24,8 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.model.ContactFeedItem;
+import tcss450.uw.edu.group2project.model.FeedItem;
+import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
+import tcss450.uw.edu.group2project.utils.OnItemClickListener;
 import tcss450.uw.edu.group2project.model.ChatContact;
-import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 
@@ -243,7 +245,8 @@ public class ContactsActivity extends AppCompatActivity {
     private void parseHerokuResult(String result) {
         //String imgAddress = "https://www.logoground.com/uploads/2017108832017-04-203705844rabbitchat.jpg";
         //maybe add an array of images?
-        String imgAddress = "http://2.bp.blogspot.com/-BvXcUdArvGk/UK54mxYSUOI/AAAAAAAAbg8/XycJSQH_IrU/s640/funny-animal-captions-005-020.jpg";
+        //String imgAddress = "http://2.bp.blogspot.com/-BvXcUdArvGk/UK54mxYSUOI/AAAAAAAAbg8/XycJSQH_IrU/s640/funny-animal-captions-005-020.jpg";
+        String imgAddress = "http://ajax.googleapis.com/ajax/services/search/images?q=%s&v=1.0&rsz=large&start=1";
         try {
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray("contacts");

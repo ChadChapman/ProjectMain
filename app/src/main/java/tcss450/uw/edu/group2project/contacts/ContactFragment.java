@@ -1,4 +1,4 @@
-package tcss450.uw.edu.group2project.chatApp;
+package tcss450.uw.edu.group2project.contacts;
 
 
 import android.content.ContentValues;
@@ -11,18 +11,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 //import android.R.layout.simple_list_item_1;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.model.ChatContact;
+import tcss450.uw.edu.group2project.utils.MyChatContactsAdapter;
 //import tcss450.uw.edu.group2project.utils.MyAdapter;
 
 

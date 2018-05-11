@@ -1,4 +1,4 @@
-package tcss450.uw.edu.group2project.chatApp;
+package tcss450.uw.edu.group2project.utils;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package tcss450.uw.edu.group2project.chatApp;
+package tcss450.uw.edu.group2project.contacts;
 
 
 import android.os.Bundle;
@@ -11,12 +11,13 @@ import tcss450.uw.edu.group2project.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * This class will display all the details of a contact
+ * This class will list all contacts in the db
+ * For now this will just be an empty frag
  */
-public class ContactDetailsFragment extends Fragment {
+public class ContactsListFragment extends Fragment {
 
 
-    public ContactDetailsFragment() {
+    public ContactsListFragment() {
         // Required empty public constructor
     }
 
@@ -25,7 +26,7 @@ public class ContactDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contact_details, container, false);
+        return inflater.inflate(R.layout.fragment_contacts_list, container, false);
     }
 
 }
