@@ -93,17 +93,6 @@ public class ContactsActivity extends AppCompatActivity {
                 .build().execute();
     }
 
-//    @Override //was just made in steps to get away from the tut
-//    public void onStart(){ //recently added to try and make work with our project
-//        super.onStart();
-//        JSONObject jsonObject = createVerifiedContactsRequestObject();
-//        //now json obj is built, time ot send it off
-//        new SendPostAsyncTask.Builder(mContactsUri.toString(), jsonObject)
-//                .onPostExecute(this::handleContactsQueryResponseOnPostExec)
-//                .onCancelled(this::handleErrorsInTask)
-//                .build().execute();
-//    }
-
     public JSONObject createVerifiedContactsRequestObject() {
         JSONObject msg = new JSONObject();
         try {
