@@ -56,7 +56,7 @@ public class ContactsActivity extends AppCompatActivity {
         String userIDStr = userIDInt.toString();
         Log.e("MEMBERID:", mUserMemberIDStr);
         //adapter =new MyRecyclerViewAdapter(this, feedsList);
-        adapter =new MyRecyclerViewAdapter(this, mContactFeedItemList);
+        //adapter =new MyRecyclerViewAdapter(this, mContactFeedItemList);  commented this out for testing
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -75,13 +75,13 @@ public class ContactsActivity extends AppCompatActivity {
 //            }
 //        });
 
-        adapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onContactItemClick(ContactFeedItem item) {
-                Toast.makeText(ContactsActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
-
-            }
-        });
+//        adapter.setOnItemClickListener(new OnItemClickListener() {
+//            @Override
+//            public void onContactItemClick(ContactFeedItem item) {
+//                Toast.makeText(ContactsActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+//
+//            }
+//        }); alos commented out for testing
     }
 
     public void loadVerifiedContacts(){
@@ -131,10 +131,6 @@ public class ContactsActivity extends AppCompatActivity {
         return uri;
     }
 
-
-
-
-
     //on post exec should be -> handle successful contacts query
     public void handleContactsQueryResponseOnPostExec(String result) {
         try {
@@ -147,14 +143,28 @@ public class ContactsActivity extends AppCompatActivity {
 
                 //need to populate the contacts list before passing it to the adapter
                 parseHerokuResult(result);
+                //added from here
+                adapter = new MyRecyclerViewAdapter(ContactsActivity.this, mContactFeedItemList);
+                mRecyclerView.setAdapter(adapter);
+                adapter.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onContactItemClick(ContactFeedItem item) {
+                        Toast.makeText(ContactsActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
 
-                adapter = new MyRecyclerViewAdapter(
-                            ContactsActivity.this, mContactFeedItemList);
-                    mRecyclerView.setAdapter(adapter);
-          } else {
-                    Toast.makeText(ContactsActivity.this
-                            , "Failed to fetch data!", Toast.LENGTH_SHORT).show();
-            }
+                    }
+                });
+
+            } else {
+                Toast.makeText(ContactsActivity.this, "Failed to fetch data!", Toast.LENGTH_SHORT).show();
+            }//to here from tut GH
+
+//                adapter = new MyRecyclerViewAdapter(
+//                            ContactsActivity.this, mContactFeedItemList);
+//                    mRecyclerView.setAdapter(adapter);
+//          } else {
+//                    Toast.makeText(ContactsActivity.this
+//                            , "Failed to fetch data!", Toast.LENGTH_SHORT).show();
+//            } //commented out for testing
         } catch(JSONException e){
                 //It appears that the web service didn’t return a JSON formatted String
                 //or it didn’t have what we expected in it.

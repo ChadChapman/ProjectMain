@@ -65,7 +65,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //onItemClickListener.onContactItemClick(feedItem);
                 onItemClickListener.onContactItemClick(feedItem);
+
             }
         };
 
@@ -73,19 +75,19 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         customViewHolder.textView.setOnClickListener(listener);
     }
 
-    public OnItemClickListener getOnItemClickListener() {
-        return onItemClickListener;
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
-    }
-
     @Override
     public int getItemCount() {
         return (null != feedItemList ? feedItemList.size() : 0);
     }
 
+    public void itemClickedReactsOnly(ContactFeedItem item){
+        Log.e("ITEM WAS CLICKED", "METHOD CALL SUCCESS");
+    }
+
+
+    /**
+     * begin internal class for the viewholder
+     */
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected ImageView imageView;
         protected TextView textView;
@@ -95,5 +97,14 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             this.imageView = (ImageView) view.findViewById(R.id.thumbnail);
             this.textView = (TextView) view.findViewById(R.id.title);
         }
+    }//end internal class CVH
+
+    public OnItemClickListener getOnItemClickListener() {
+        return onItemClickListener;
     }
-}
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
+}//end class MRVA
