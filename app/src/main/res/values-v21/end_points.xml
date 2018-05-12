@@ -6,6 +6,7 @@
     <string name="ep_contacts">contacts</string>
     <string name="ep_chats">chats</string>
     <string name="ep_profile">profile</string>
+    <string name="ep_getinfo">getinfo</string>
     <string name="ep_contacts_sent_requests">contacts/sent</string>
     <string name="ep_contacts_pending_requests">contacts/pending</string>
     <string name="ep_contacts_find_new">contacts/find</string>

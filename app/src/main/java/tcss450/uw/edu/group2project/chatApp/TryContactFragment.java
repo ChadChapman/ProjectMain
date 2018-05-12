@@ -68,11 +68,6 @@ public class TryContactFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         progressBar = (ProgressBar) (v.findViewById(R.id.try_progress_bar));
         mContactsUri = buildHerokuAddress(); //TODO start using this uri instead
-        //mContactsUri = buildHerokuAddress(); //TODO start using this uri instead
-        //mContactFeedItemList = new ArrayList<>(); done in parseHerokuResult
-        //String url = "http://stacktips.com/?json=get_category_posts&slug=news&count=30";
-        //new DownloadTask().execute(url);
-        //new DownloadTask().execute(mContactsUri.toString()); //commented out trying to get away from tut
         loadVerifiedContacts();
         return v;
     }

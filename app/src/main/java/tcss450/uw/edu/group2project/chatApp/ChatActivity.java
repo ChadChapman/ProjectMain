@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,7 +23,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -31,6 +37,7 @@ import tcss450.uw.edu.group2project.model.ChatContact;
 import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
 import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
+import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.UITheme;
 
 public class ChatActivity extends AppCompatActivity
@@ -163,6 +170,8 @@ public class ChatActivity extends AppCompatActivity
             loadFragment(new TryContactFragment(mUserMemberID), getString(R.string.keys_fragment_contacts));
         } else if (id == R.id.nav_profile) {
             loadFragment(new ProfileFragment(), getString(R.string.keys_fragment_profile));
+            loadInfo();
+
         } else if (id == R.id.nav_settings) {
             loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
         } else if (id == R.id.nav_logout) {
@@ -233,5 +242,64 @@ public class ChatActivity extends AppCompatActivity
         Context context = this.getBaseContext();
         Toast toast = Toast.makeText(context, "Changed to Theme " + theme, duration);
         toast.show();
+    }
+
+    //load the profile info
+    private void loadInfo() {
+        //build the web service URL
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_getinfo))
+                .build();
+        //build the JSONObject
+        //build the JSONObject
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("ID", mUserMemberID);
+        } catch (JSONException e) {
+            Log.wtf("username", "Error creating JSON: " + e.getMessage());
+        }
+
+
+        //instantiate and execute the AsyncTask.
+        //Feel free to add a handler for onPreExecution so that a progress bar
+        //is displayed or maybe disable buttons. You would need a method in
+        //LoginFragment to perform this.
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handleOnGetInfoPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+
+    /*
+    --------------------------Async handlers-------------------------------
+     */
+
+
+    /**
+     * Handle errors that may occur during the AsyncTask.
+     *
+     * @param result the error message provide from the AsyncTask
+     */
+    private void handleErrorsInTask(String result) {
+        Log.e("ASYNCT_TASK_ERROR", result);
+    }
+    private void handleOnGetInfoPost(String result) {
+        try {
+            Log.e("",result);
+            JSONObject msg = new JSONObject(result);
+            ((TextView) findViewById(R.id.profile_text_view_username)).setText(msg.getString("username"));
+            ((TextView) findViewById(R.id.profile_text_view_firstname)).setText(msg.getString("firstname"));
+            ((TextView) findViewById(R.id.profile_text_view_lastname)).setText(msg.getString("lastname"));
+            ((TextView) findViewById(R.id.profile_text_view_email)).setText(msg.getString("email"));
+        } catch (JSONException e) {
+            //It appears that the web service didn’t return a JSON formatted String
+            //or it didn’t have what we expected in it.
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
+        }
     }
 }
