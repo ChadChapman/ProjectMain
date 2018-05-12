@@ -47,16 +47,21 @@ public class ContactsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
+
         //grab the memberid from the intent that got us here
         Bundle extras = getIntent().getExtras();
         if (extras != null){
             mUserMemberIDStr = extras.getString("mUserMemberID");
         }
+
+
+
         Integer userIDInt = new Integer(mUserMemberID);
         String userIDStr = userIDInt.toString();
         Log.e("MEMBERID:", mUserMemberIDStr);
+
         //adapter =new MyRecyclerViewAdapter(this, feedsList);
-        //adapter =new MyRecyclerViewAdapter(this, mContactFeedItemList);  commented this out for testing
+        //adapter =new MyRecyclerViewAdapter(this, mContactFeedItemList);  commented this out for testin
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);

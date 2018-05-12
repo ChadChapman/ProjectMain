@@ -143,7 +143,7 @@ public class ChatActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            loadFragment(new SettingFragment(),getString(R.string.keys_fragment_settings));
         }
 
         return super.onOptionsItemSelected(item);
