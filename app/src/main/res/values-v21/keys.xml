@@ -13,6 +13,7 @@
     <string name="keys_fragment_profile">profileFragmentTag</string>
     <string name="keys_fragment_contacts">contactsFragmentTag</string>
     <string name="keys_fragment_settings">settingsFragmentTag</string>
+    <string name="keys_fragment_contact_details">contactDetailsFragmentTag</string>
 
     <string name="keys_json_username">username</string>
     <string name="keys_json_password">password</string>

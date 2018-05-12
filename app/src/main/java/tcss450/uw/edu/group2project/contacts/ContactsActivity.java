@@ -2,6 +2,10 @@ package tcss450.uw.edu.group2project.contacts;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -149,8 +153,10 @@ public class ContactsActivity extends AppCompatActivity {
                 adapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onContactItemClick(ContactFeedItem item) {
-                        Toast.makeText(ContactsActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
-
+                        Toast.makeText(ContactsActivity.this, item.getTitle()
+                                , Toast.LENGTH_LONG).show();
+                        loadFragment(new ContactDetailsFragment()
+                                , getString(R.string.keys_fragment_contact_details));
                     }
                 });
 
@@ -158,13 +164,6 @@ public class ContactsActivity extends AppCompatActivity {
                 Toast.makeText(ContactsActivity.this, "Failed to fetch data!", Toast.LENGTH_SHORT).show();
             }//to here from tut GH
 
-//                adapter = new MyRecyclerViewAdapter(
-//                            ContactsActivity.this, mContactFeedItemList);
-//                    mRecyclerView.setAdapter(adapter);
-//          } else {
-//                    Toast.makeText(ContactsActivity.this
-//                            , "Failed to fetch data!", Toast.LENGTH_SHORT).show();
-//            } //commented out for testing
         } catch(JSONException e){
                 //It appears that the web service didn’t return a JSON formatted String
                 //or it didn’t have what we expected in it.
@@ -230,6 +229,23 @@ public class ContactsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    private void loadFragment(Fragment frag, String tag){
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, frag, tag)
+                .addToBackStack(tag);
+        // Commit the transaction
+        transaction.commit();
+    }
+//    @Override
+//    public void onBackPressed() {
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
 
 
 }
