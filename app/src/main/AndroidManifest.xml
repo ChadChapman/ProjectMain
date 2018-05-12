@@ -31,7 +31,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".contacts.ContactsActivity"></activity>
-    </application>
+        <activity android:name=".contacts.ContactsActivity"
+            android:parentActivityName=".chatApp.ChatActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".chatApp.ChatActivity" />
+        </activity> </application>
 
 </manifest>
