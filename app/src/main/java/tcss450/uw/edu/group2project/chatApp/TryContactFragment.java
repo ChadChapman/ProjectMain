@@ -1,13 +1,16 @@
-package tcss450.uw.edu.group2project.contacts;
+package tcss450.uw.edu.group2project.chatApp;
 
+
+import android.annotation.SuppressLint;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -15,23 +18,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.contacts.ContactsActivity;
+import tcss450.uw.edu.group2project.model.ChatContact;
 import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.model.FeedItem;
 import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
 import tcss450.uw.edu.group2project.utils.OnItemClickListener;
-import tcss450.uw.edu.group2project.model.ChatContact;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
-
-public class ContactsActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class TryContactFragment extends Fragment {
     private static final String TAG = "RecyclerViewExample";
     private List<FeedItem> feedsList;
     private RecyclerView mRecyclerView;
@@ -42,24 +44,29 @@ public class ContactsActivity extends AppCompatActivity {
     private int mUserMemberID;
     private String mUserMemberIDStr;
     private Uri mContactsUri;
+    private View v;
+
+    public TryContactFragment() {
+        // Required empty public constructor
+    }
+
+    @SuppressLint("ValidFragment")
+    public TryContactFragment(String mID) {
+        // Required empty public constructor
+        mUserMemberID = new Integer(mID);
+
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contacts);
-        //grab the memberid from the intent that got us here
-        Bundle extras = getIntent().getExtras();
-        if (extras != null){
-            mUserMemberIDStr = extras.getString("mUserMemberID");
-        }
-        Integer userIDInt = new Integer(mUserMemberID);
-        String userIDStr = userIDInt.toString();
-        Log.e("MEMBERID:", mUserMemberIDStr);
-        //adapter =new MyRecyclerViewAdapter(this, feedsList);
-        //adapter =new MyRecyclerViewAdapter(this, mContactFeedItemList);  commented this out for testing
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        v = inflater.inflate(R.layout.fragment_try_contact, container, false);
+        // Inflate the layout for this fragment
+
+        mUserMemberIDStr = Integer.toString(mUserMemberID);
+        mRecyclerView = (RecyclerView) (v.findViewById(R.id.try_recycle_view));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        progressBar = (ProgressBar) (v.findViewById(R.id.try_progress_bar));
         mContactsUri = buildHerokuAddress(); //TODO start using this uri instead
         //mContactsUri = buildHerokuAddress(); //TODO start using this uri instead
         //mContactFeedItemList = new ArrayList<>(); done in parseHerokuResult
@@ -67,22 +74,10 @@ public class ContactsActivity extends AppCompatActivity {
         //new DownloadTask().execute(url);
         //new DownloadTask().execute(mContactsUri.toString()); //commented out trying to get away from tut
         loadVerifiedContacts();
-//        adapter.setOnItemClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onItemClick(FeedItem item) {
-//                Toast.makeText(ContactsActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
-//
-//            }
-//        });
-
-//        adapter.setOnItemClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onContactItemClick(ContactFeedItem item) {
-//                Toast.makeText(ContactsActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
-//
-//            }
-//        }); alos commented out for testing
+        return v;
     }
+
+
 
     public void loadVerifiedContacts(){
         JSONObject jsonObject = createVerifiedContactsRequestObject();
@@ -144,18 +139,18 @@ public class ContactsActivity extends AppCompatActivity {
                 //need to populate the contacts list before passing it to the adapter
                 parseHerokuResult(result);
                 //added from here
-                adapter = new MyRecyclerViewAdapter(ContactsActivity.this, mContactFeedItemList);
+                adapter = new MyRecyclerViewAdapter(getContext(), mContactFeedItemList);
                 mRecyclerView.setAdapter(adapter);
                 adapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onContactItemClick(ContactFeedItem item) {
-                        Toast.makeText(ContactsActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
 
                     }
                 });
 
             } else {
-                Toast.makeText(ContactsActivity.this, "Failed to fetch data!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
             }//to here from tut GH
 
 //                adapter = new MyRecyclerViewAdapter(
@@ -166,13 +161,13 @@ public class ContactsActivity extends AppCompatActivity {
 //                            , "Failed to fetch data!", Toast.LENGTH_SHORT).show();
 //            } //commented out for testing
         } catch(JSONException e){
-                //It appears that the web service didn’t return a JSON formatted String
-                //or it didn’t have what we expected in it.
-                Log.e("JSON_PARSE_ERROR", result
-                        + System.lineSeparator()
-                        + e.getMessage());
-            }
+            //It appears that the web service didn’t return a JSON formatted String
+            //or it didn’t have what we expected in it.
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
         }
+    }
 
 
     //on click should be -> load detail fag of that contact
@@ -230,6 +225,5 @@ public class ContactsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 
 }

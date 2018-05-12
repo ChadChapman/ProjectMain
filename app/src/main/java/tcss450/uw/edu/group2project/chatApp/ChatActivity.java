@@ -158,7 +158,8 @@ public class ChatActivity extends AppCompatActivity
             loadFragment(new ChatFragment(),getString(R.string.keys_fragment_chat));
         } else if (id == R.id.nav_contacts) { //switch to Contacts Activity
             //loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts)); original
-            loadContactsActivity();
+            //loadContactsActivity();
+            loadFragment(new TryContactFragment(mUserMemberID),getString(R.string.keys_fragment_contacts));
         } else if (id == R.id.nav_profile) {
             loadFragment(new ProfileFragment(),getString(R.string.keys_fragment_profile));
         } else if (id == R.id.nav_settings) {
