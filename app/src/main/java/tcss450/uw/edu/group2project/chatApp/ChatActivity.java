@@ -35,7 +35,6 @@ import tcss450.uw.edu.group2project.utils.UITheme;
 
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        LandingFragment.OnLandingFragmentInteractionListener,
         SettingFragment.OnSettingFragmentInteractionListener {
     private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
@@ -83,7 +82,7 @@ public class ChatActivity extends AppCompatActivity
                 .commit();
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null){
+        if (extras != null) {
             mUserMemberID = extras.getString("userMemberID");
         }
         //let's just make an sqlite db and be done with it
@@ -91,25 +90,24 @@ public class ChatActivity extends AppCompatActivity
 //        setupDeviceDatabase();
 
 
+    }
 
-       }
-
-       @Override
-       public void onStart(){
+    @Override
+    public void onStart() {
         super.onStart();
-           //grab the memberid from the intent that got us here
-           //this may need to go into onCreate?
+        //grab the memberid from the intent that got us here
+        //this may need to go into onCreate?
 
-            //use memberid to update contacts on device
-          // asyncContactsDBQuery(mUserMemberID);
-           //create an array to pass to contacts activity to populate it
+        //use memberid to update contacts on device
+        // asyncContactsDBQuery(mUserMemberID);
+        //create an array to pass to contacts activity to populate it
 //           mContactsBundle = createChatContactsBundle(mUserMemberID);
 
-       }
+    }
 
 //}
 
-    private void loadFragment(Fragment frag,String tag){
+    private void loadFragment(Fragment frag, String tag) {
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, frag, tag)
@@ -117,6 +115,7 @@ public class ChatActivity extends AppCompatActivity
         // Commit the transaction
         transaction.commit();
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -143,7 +142,9 @@ public class ChatActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            loadFragment(new SettingFragment(),getString(R.string.keys_fragment_settings));
+            loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
+        }else if(id == R.id.action_logout){
+            onLogout();
         }
 
         return super.onOptionsItemSelected(item);
@@ -155,16 +156,16 @@ public class ChatActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_chat) {
-            loadFragment(new ChatFragment(),getString(R.string.keys_fragment_chat));
+            loadFragment(new ChatFragment(), getString(R.string.keys_fragment_chat));
         } else if (id == R.id.nav_contacts) { //switch to Contacts Activity
             //loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts)); original
             //loadContactsActivity();
-            loadFragment(new TryContactFragment(mUserMemberID),getString(R.string.keys_fragment_contacts));
+            loadFragment(new TryContactFragment(mUserMemberID), getString(R.string.keys_fragment_contacts));
         } else if (id == R.id.nav_profile) {
-            loadFragment(new ProfileFragment(),getString(R.string.keys_fragment_profile));
+            loadFragment(new ProfileFragment(), getString(R.string.keys_fragment_profile));
         } else if (id == R.id.nav_settings) {
-            loadFragment(new SettingFragment(),getString(R.string.keys_fragment_settings));
-        }else if (id == R.id.nav_logout) {
+            loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
+        } else if (id == R.id.nav_logout) {
             onLogout();
         }
 
@@ -173,13 +174,13 @@ public class ChatActivity extends AppCompatActivity
         return true;
     }
 
-    private void loadContactsActivity(){
+    private void loadContactsActivity() {
         Intent intent = new Intent(this, ContactsActivity.class);
         intent.putExtra("mUserMemberID", mUserMemberID);
         startActivity(intent);
     }
 
-    @Override
+
     public void onLogout() {
         SharedPreferences prefs =
                 getSharedPreferences(
@@ -198,7 +199,6 @@ public class ChatActivity extends AppCompatActivity
     }
 
 
-
     //should make one database to pass around
     public static SQLiteDatabase getmAppDB() {
         return mAppDB;
@@ -206,7 +206,7 @@ public class ChatActivity extends AppCompatActivity
 
     @Override
     public void onSettingThemeButtonClicked(int color) {
-        switch(color) {
+        switch (color) {
             case 1:
                 changeTheme(UITheme.THEME_ONE);
                 break;

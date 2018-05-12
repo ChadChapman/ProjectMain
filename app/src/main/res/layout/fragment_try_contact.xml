@@ -24,12 +24,14 @@
         android:id="@+id/tryContactsToggleButtonPending"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:text="@string/contacts_frag_toggle_button_pending"
         android:textOff="@string/contacts_frag_toggle_button_pending"
         android:textOn="@string/contacts_frag_toggle_button_pending"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tryContactsToggleButtonSent"
+        app:layout_constraintStart_toEndOf="@+id/tryContactsToggleButtonFriends"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ToggleButton
@@ -56,5 +58,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.498" />
+
+    <ToggleButton
+        android:id="@+id/tryContactsToggleButtonFriends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/contacts_frag_toggle_button_friends"
+        android:textOff="@string/contacts_frag_toggle_button_friends"
+        android:textOn="@string/contacts_frag_toggle_button_friends"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -34,30 +34,27 @@ public class LandingFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-
-        SharedPreferences prefs =
-                getActivity().getSharedPreferences(
-                        getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
-
-        if (prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in), false)) {
-            getView().findViewById(R.id.landing_button_logout)
-                    .setOnClickListener(v -> mListener.onLogout());
-        } else {
-            getView().findViewById(R.id.landing_button_logout).setVisibility(View.GONE);
-        }
+//        SharedPreferences prefs =
+//                getActivity().getSharedPreferences(
+//                        getString(R.string.keys_shared_prefs),
+//                        Context.MODE_PRIVATE);
+//        if (prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in), false)) {
+//            getView().findViewById(R.id.landing_button_logout)
+//                    .setOnClickListener(v -> mListener.onLogout());
+//        } else {
+//            getView().findViewById(R.id.landing_button_logout).setVisibility(View.GONE);
+//        }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnLandingFragmentInteractionListener) {
-            mListener = (OnLandingFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnRegisterFragmentInteractionListener");
-        }
+//        if (context instanceof OnLandingFragmentInteractionListener) {
+//            mListener = (OnLandingFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnRegisterFragmentInteractionListener");
+//        }
     }
 
     @Override
