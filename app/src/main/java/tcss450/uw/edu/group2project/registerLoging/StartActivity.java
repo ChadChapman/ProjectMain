@@ -203,9 +203,31 @@ public class StartActivity extends AppCompatActivity
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) {
-                //Login was successful. Switch to the loadSuccessFragment.
-                getSupportFragmentManager().popBackStack();
-                loadLandingFragment();
+                //Store the user's verification code
+                int vCode = resultsJSON.getInt("message");
+                //build the web service URL
+                Uri uri = new Uri.Builder()
+                        .scheme("https")
+                        .appendPath(getString(R.string.ep_base_url))
+                        .appendPath(getString(R.string.ep_register))
+                        .appendPath(getString(R.string.ep_register_saveVerificationCode))
+                        .build();
+                //Create a JSONObject to use the saveVerificationCode ep
+                JSONObject msg = new JSONObject();
+                try {
+                    msg.put("memberid", mUserMemberIDInt);
+                    msg.put("message", vCode);
+
+                    //Now call the endpoint to save the code in the db
+                    new SendPostAsyncTask.Builder(uri.toString(), msg)
+                            .onPostExecute(this::handleVerifyOnPost)
+                            .onCancelled(this::handleErrorsInTask)
+                            .build().execute();
+                } catch (JSONException e) {
+                    Log.wtf("saveVerificationCode", "Error creating JSON: " + e.getMessage());
+                }
+
+
             } else {
                 //Login was unsuccessful. Don’t switch fragments and inform the user
                 RegisterFragment frag =
@@ -215,6 +237,34 @@ public class StartActivity extends AppCompatActivity
                 frag.setError("Register unsuccessful");
             }
 
+        } catch (JSONException e) {
+            //It appears that the web service didn’t return a JSON formatted String
+            //or it didn’t have what we expected in it.
+            Log.e("JSON_PARSE_ERROR Register", result
+                    + System.lineSeparator()
+                    + e.getMessage());
+        }
+    }
+
+    public void handleVerifyOnPost(String result) {
+        try {
+            JSONObject resultsJSON = new JSONObject(result);
+            boolean success = resultsJSON.getBoolean("success");
+
+            if (success) {
+                //Code is save in db so go to login screen and let them know to check email
+                LoginFragment login = new LoginFragment();
+                login.setError("Check your email for a verification code");
+                FragmentTransaction transaction = getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.start_constraint_layout, login, getString(R.string.keys_fragment_login))
+                        .addToBackStack(null);
+
+                // Commit the transaction
+                transaction.commit();
+            } else {
+                Log.e("Verify", "We should not reach this");
+            }
         } catch (JSONException e) {
             //It appears that the web service didn’t return a JSON formatted String
             //or it didn’t have what we expected in it.
