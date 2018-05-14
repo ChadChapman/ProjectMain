@@ -27,7 +27,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/colorPrimary3"
-            android:button="@null"
             android:checked="true"
             android:text="RadioButton" />
 
@@ -42,7 +41,6 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@color/colorPrimary3"
-            android:button="@null"
             android:text="RadioButton" />
 
         <Space
@@ -56,7 +54,6 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@color/colorPrimary3"
-            android:button="@null"
             android:text="RadioButton" />
     </RadioGroup>
 </android.support.constraint.ConstraintLayout>

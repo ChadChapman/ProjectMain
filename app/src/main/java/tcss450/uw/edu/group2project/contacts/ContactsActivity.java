@@ -97,6 +97,7 @@ public class ContactsActivity extends AppCompatActivity {
         JSONObject msg = new JSONObject();
         try {
             msg.put("memberid", mUserMemberID);
+            msg.put("verified", 1);
 
         } catch (JSONException e) {
             Log.wtf("CONTACTS VERIFIED ALL", "Error creating JSON: " + e.getMessage());
@@ -118,7 +119,7 @@ public class ContactsActivity extends AppCompatActivity {
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_contacts))
-                .appendPath(getString(R.string.ep_verified))
+                .appendPath(getString(R.string.ep_contacts_verified))
                 .build();
         return uri;
     }

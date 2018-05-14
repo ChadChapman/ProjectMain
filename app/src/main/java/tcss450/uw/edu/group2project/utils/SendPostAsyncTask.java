@@ -1,5 +1,6 @@
 package tcss450.uw.edu.group2project.utils;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 
 import org.json.JSONObject;
@@ -11,6 +12,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.function.Consumer;
+
+import tcss450.uw.edu.group2project.R;
 
 /**
  * Implemented AsyncTask that sends a JSON string via POST to a web service.  Builds the Task

@@ -3,15 +3,21 @@
     <string name="ep_base_url">rabbitchat-backend.herokuapp.com</string>
     <string name="ep_login">login</string>
     <string name="ep_register">register</string>
-    <string name="ep_contacts">contacts</string>
-    <string name="ep_chats">chats</string>
+
+
     <string name="ep_profile">profile</string>
+    //profile
     <string name="ep_getinfo">getinfo</string>
-    <string name="ep_contacts_sent_requests">contacts/sent</string>
-    <string name="ep_contacts_pending_requests">contacts/pending</string>
+    //Contacts
+    <string name="ep_contacts_sent_requests">sentRequest</string>
+    <string name="ep_contacts">contacts</string>
+    <string name="ep_contacts_pending_requests">pendingRequest</string>
     <string name="ep_contacts_find_new">contacts/find</string>
-    <string name="ep_verified">verified</string>
+    <string name="ep_contacts_verified">verified</string>
+    <string name="ep_contacts_add">createContact</string>
+
+    //Messages
     <string name="ep_send_message">sendMessages</string>
     <string name="ep_get_message">getMessages</string>
-
+    <string name="ep_chats">chats</string>
     </resources>
