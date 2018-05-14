@@ -42,7 +42,7 @@ public class MyMsgRecyclerViewAdapter extends
             onCreateViewHolder(ViewGroup viewGroup, int i) {
 
                 View view = LayoutInflater.from(viewGroup.getContext())
-                        .inflate(R.layout.list_row, null);
+                        .inflate(R.layout.messaging_list_rows, null);
 
                 tcss450.uw.edu.group2project.utils.MyMsgRecyclerViewAdapter.CustomViewHolder viewHolder
                         = new tcss450.uw.edu.group2project.utils.MyMsgRecyclerViewAdapter.CustomViewHolder(view);
@@ -57,16 +57,9 @@ public class MyMsgRecyclerViewAdapter extends
             //FeedItem feedItem = feedItemList.get(i);
             MessageFeedItem feedItem = messageFeedItemList.get(i);
 
-            //Render image using Picasso library
-            if (!TextUtils.isEmpty(feedItem.getThumbnail())) {
-                Picasso.with(mContext).load(feedItem.getThumbnail())
-                        .error(R.drawable.contacts_image_error)
-                        .placeholder(R.drawable.contacts_image_placeholder)
-                        .into(customViewHolder.imageView);
-            }
-
             //Setting text view title
-            customViewHolder.textView.setText(Html.fromHtml(feedItem.getTitle()));
+            customViewHolder.username.setText(Html.fromHtml(feedItem.getUsername()));
+            customViewHolder.message.setText(Html.fromHtml(feedItem.getMessage()));
 
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
@@ -74,15 +67,15 @@ public class MyMsgRecyclerViewAdapter extends
                     onMsgClickListener.onMsgItemClick(feedItem);
                 }
             };
-            customViewHolder.imageView.setOnClickListener(listener);
-            customViewHolder.textView.setOnClickListener(listener);
+            customViewHolder.username.setOnClickListener(listener);
+            customViewHolder.message.setOnClickListener(listener);
         }
 
         public OnMsgClickListener getOnItemClickListener() {
             return onMsgClickListener;
         }
 
-        public void setOnMsgClickListener(OnItemClickListener onItemClickListener) {
+        public void setOnMsgClickListener(OnMsgClickListener onItemClickListener) {
             this.onMsgClickListener = onMsgClickListener;
         }
 
@@ -92,13 +85,13 @@ public class MyMsgRecyclerViewAdapter extends
         }
 
         public class CustomViewHolder extends RecyclerView.ViewHolder {
-            protected ImageView imageView;
-            protected TextView textView;
+            protected TextView username;
+            protected TextView message;
 
             public CustomViewHolder(View view) {
                 super(view);
-                this.imageView = (ImageView) view.findViewById(R.id.thumbnail);
-                this.textView = (TextView) view.findViewById(R.id.title);
+                this.username = (TextView) view.findViewById(R.id.username);
+                this.message = (TextView) view.findViewById(R.id.message);
             }
         }
 
