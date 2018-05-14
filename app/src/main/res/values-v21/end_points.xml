@@ -19,5 +19,6 @@
     //Messages
     <string name="ep_send_message">sendMessages</string>
     <string name="ep_get_message">getMessages</string>
-    <string name="ep_chats">chats</string>
+    <string name="ep_get_recent_chat">getRecentChat</string>
+    <string name="ep_chat">chat</string>
     </resources>

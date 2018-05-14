@@ -22,15 +22,8 @@ import tcss450.uw.edu.group2project.model.MessageFeedItem;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.CustomViewHolder> {
     private List<ContactFeedItem> feedItemList;
-    private List<MessageFeedItem> messageFeedItemList;
-    //private List<FeedItem>  feedItemList;
     private Context mContext;
     private OnItemClickListener onItemClickListener;
-
-//    public MyRecyclerViewAdapter(Context context, List<FeedItem> feedItemList) {
-//        this.feedItemList = feedItemList;
-//        this.mContext = context;
-//    }
 
     //this constructor is for contacts
     public MyRecyclerViewAdapter(Context context, List<ContactFeedItem> feedItemList) {

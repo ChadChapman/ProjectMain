@@ -163,7 +163,7 @@ public class ChatActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_chat) {
-            loadFragment(new ChatFragment(), getString(R.string.keys_fragment_chat));
+            loadFragment(new ChatListFragment(mUserMemberID), getString(R.string.keys_fragment_chat_list));
         } else if (id == R.id.nav_contacts) { //switch to Contacts Activity
             //loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts)); original
             //loadContactsActivity();

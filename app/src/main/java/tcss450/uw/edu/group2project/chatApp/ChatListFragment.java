@@ -67,17 +67,19 @@ public class ChatListFragment extends Fragment {
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.message_recycler_view));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         progressBar = (ProgressBar) (v.findViewById(R.id.message_progressBar));
+        mContactsUri = buildHerokuAddress(getString(R.string.ep_get_recent_chat));
         loadMessages();
         return v;
     }
+
     /**
-     *   For building a url address.
+     * For building a url address.
      */
     public Uri buildHerokuAddress(String ep) {
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
-                .appendPath(getString(R.string.ep_chats))
+                .appendPath(getString(R.string.ep_chat))
                 .appendPath(ep)
                 .build();
         return uri;
@@ -102,7 +104,7 @@ public class ChatListFragment extends Fragment {
         JSONObject msg = new JSONObject();
         try {
             //Todo need args for json
-            msg.put("need shit","need shit");
+            msg.put("memberid", mUserMemberID);
         } catch (JSONException e) {
             Log.wtf("CONTACTS VERIFIED ALL", "Error creating JSON: " + e.getMessage());
         }
@@ -116,17 +118,17 @@ public class ChatListFragment extends Fragment {
         //String imgAddress = "https://www.logoground.com/uploads/2017108832017-04-203705844rabbitchat.jpg";
         //maybe add an array of images?
         //String imgAddress = "http://2.bp.blogspot.com/-BvXcUdArvGk/UK54mxYSUOI/AAAAAAAAbg8/XycJSQH_IrU/s640/funny-animal-captions-005-020.jpg";
-        String imgAddress = "http://ajax.googleapis.com/ajax/services/search/images?q=%s&v=1.0&rsz=large&start=1";
+        //String imgAddress = "http://ajax.googleapis.com/ajax/services/search/images?q=%s&v=1.0&rsz=large&start=1";
         try {
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray(getString(R.string.contacts));
             mContactFeedItemList = new ArrayList<>();
-
+            Log.e("Length", String.valueOf(posts.length()) + " memberid = " + mUserMemberID);
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
                 MessageFeedItem item = new MessageFeedItem();
-                item.setUsername(post.optString(getString(R.string.username)));
-                item.setMessage(post.optString(getString(R.string.username)));
+                item.setChatid(post.optString(getString(R.string.chatid)));
+                item.setMessage(post.optString(getString(R.string.message)));
                 mContactFeedItemList.add(item);
             }
         } catch (JSONException e) {
@@ -156,7 +158,13 @@ public class ChatListFragment extends Fragment {
                 adapter.setOnMsgClickListener(new OnMsgClickListener() {
                     @Override
                     public void onMsgItemClick(MessageFeedItem item) {
-                        Toast.makeText(getContext(), item.getUsername(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(), item.getChatid(), Toast.LENGTH_LONG).show();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragmentContainer, new ChatFragment(new Integer(item.getChatid())), getString(R.string.keys_fragment_chat))
+                                .addToBackStack(null);
+                        // Commit the transaction
+                        transaction.commit();
                     }
                 });
 
@@ -179,6 +187,7 @@ public class ChatListFragment extends Fragment {
                     + e.getMessage());
         }
     }
+
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
