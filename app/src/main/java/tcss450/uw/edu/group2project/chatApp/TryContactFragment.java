@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -217,8 +218,13 @@ public class TryContactFragment extends Fragment {
                 adapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onContactItemClick(ContactFeedItem item) {
-                        Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
-
+                        //Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragmentContainer, new FriendProfileFragment(item), "friend")
+                                .addToBackStack(null);
+                        // Commit the transaction
+                        transaction.commit();
                     }
                 });
 
@@ -264,14 +270,16 @@ public class TryContactFragment extends Fragment {
         String imgAddress = "http://ajax.googleapis.com/ajax/services/search/images?q=%s&v=1.0&rsz=large&start=1";
         try {
             JSONObject response = new JSONObject(result);
-            JSONArray posts = response.optJSONArray("contacts");
+            JSONArray posts = response.optJSONArray(getString(R.string.contacts));
             mContactFeedItemList = new ArrayList<>();
 
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
                 ContactFeedItem item = new ContactFeedItem();
-                item.setTitle(post.optString("username"));
+                item.setTitle(post.optString(getString(R.string.username)));
                 item.setThumbnail(imgAddress);
+                item.setFname(post.optString(getString(R.string.firstname)));
+                item.setLname(post.optString(getString(R.string.lastname)));
                 mContactFeedItemList.add(item);
             }
         } catch (JSONException e) {

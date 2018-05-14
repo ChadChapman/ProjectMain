@@ -6,6 +6,11 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="action_logout">Logout</string>
+    <string name="username">username</string>
+    <string name="memberid">memberid</string>
+    <string name="contacts">contacts</string>
+    <string name="firstname">firstname</string>
+    <string name="lastname">lastname</string>
 
     <!-- Login Fragment -->
     <string name="login_register_text_view_welcome">Welcome!!</string>
@@ -29,6 +34,7 @@
     <string name="contacts_frag_toggle_button_friends">Friends</string>
     <string name="contacts_frag_toggle_button_pending">Pending</string>
     <string name="contacts_frag_toggle_button_sent">Sent</string>
+
 
     <!-- Chat Activity -->
 
