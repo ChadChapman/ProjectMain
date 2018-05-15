@@ -28,6 +28,7 @@
     <string name="register_edit_text_email">Email</string>
     <string name="contacts_textview_fragheader">Chat Contacts</string>s
 
+    <string name="chat_start_new_chat_button">new chat</string>
 
     <!-- Landing Fragment -->
     <string name="landing_button_logout">Logout</string>
