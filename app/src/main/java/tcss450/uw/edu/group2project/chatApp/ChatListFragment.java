@@ -124,7 +124,6 @@ public class ChatListFragment extends Fragment {
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray(getString(R.string.contacts));
             mContactFeedItemList = new ArrayList<>();
-            Log.e("Length", String.valueOf(posts.length()) + " memberid = " + mUserMemberID);
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
                 MessageFeedItem item = new MessageFeedItem();
@@ -135,7 +134,6 @@ public class ChatListFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.e("CONTACTS BODY PARSED, LIST [0]: ", mContactFeedItemList.get(0).toString());
         //return mContactFeedItemList;
     }
 

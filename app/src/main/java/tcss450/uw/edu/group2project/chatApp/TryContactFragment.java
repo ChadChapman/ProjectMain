@@ -111,7 +111,6 @@ public class TryContactFragment extends Fragment {
         mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_add));
         String friend = ((EditText) (getActivity().findViewById(R.id.add_editText))).getText().toString();
         JSONObject msg = new JSONObject();
-        Log.d("names", "id = " + mUserMemberID + "friend = " + friend);
         try {
             msg.put("memberid", mUserMemberID);
             msg.put("username_b", friend);
@@ -285,7 +284,6 @@ public class TryContactFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.e("CONTACTS BODY PARSED, LIST [0]: ", mContactFeedItemList.get(0).toString());
         //return mContactFeedItemList;
     }
 
