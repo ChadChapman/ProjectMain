@@ -4,6 +4,20 @@
     <color name="colorPrimaryDark">#3a303f9f</color>
     <color name="colorAccent">#2cff4081</color>
 
-    <color name="change">#800080</color>
-    <color name="black">#00000000</color>
+    <!-- Other Colors for App Theme -->
+    <color name="colorPrimary2">#2196f3</color>
+    <color name="colorPrimaryDark2">#1976d2</color>
+    <color name="colorAccent2">#ff5722</color>
+
+    <color name="colorPrimary3">#9c27b0</color>
+    <color name="colorPrimaryDark3">#7b1fa2</color>
+    <color name="colorAccent3">#7c4dff</color>
+
+    <color name="colorPrimary4">#4caf50</color>
+    <color name="colorPrimaryDark4">#388e3c</color>
+    <color name="colorAccent4">#ffeb3b</color>
+
+    <color name="border">#000000</color>
+    <color name="fill">#CCCCCC</color>
+
 </resources>

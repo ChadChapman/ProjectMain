@@ -33,6 +33,7 @@ public class LoginFragment extends Fragment {
     EditText userEdit;
     EditText passEdit;
     ProgressBar mProgressBar;
+    Button b;
 
     private OnLoginFragmentInteractionListener mListener;
 
@@ -49,10 +50,10 @@ public class LoginFragment extends Fragment {
         mProgressBar = (ProgressBar)view.findViewById(R.id.loginProgressBar);
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
-        Button b = (Button) view.findViewById(R.id.login_button_login);
+        b = (Button) view.findViewById(R.id.login_button_login);
         b.setOnClickListener(this::attemptLogin);
-        b = (Button) view.findViewById(R.id.login_button_register);
-        b.setOnClickListener(this::registerOpen);
+        Button c = (Button) view.findViewById(R.id.login_button_register);
+        c.setOnClickListener(this::registerOpen);
         return view;
     }
 
@@ -82,6 +83,7 @@ public class LoginFragment extends Fragment {
     public void attemptLogin(View view) {
         if (mListener != null) {
             mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            b.setEnabled(false);
             SharedPreferences prefs =
                     getActivity().getSharedPreferences(
                             getString(R.string.keys_shared_prefs),
@@ -119,6 +121,8 @@ public class LoginFragment extends Fragment {
     public void setError(String err) {
         //Log in unsuccessful for reason: err. Try again.
         //you may want to add error stuffs for the user here.
+        b.setEnabled(true);
+        mProgressBar.setVisibility(ProgressBar.GONE);
         ((TextView) getView().findViewById(R.id.login_edit_text_username))
                 .setError("Login Unsuccessful");
     }

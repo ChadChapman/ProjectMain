@@ -2,28 +2,28 @@ package tcss450.uw.edu.group2project.model;
 
 public class MessageFeedItem {
 
-    private String title;
-    private String thumbnail;
+    private String chatid;
+    private String message;
 
-    public String getTitle() {
-        return title;
+    public String getChatid() {
+        return chatid;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setChatid(String chatid) {
+        this.chatid = chatid;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
+    public String getMessage() {
+        return message;
     }
 
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
+    public void setMessage(String thumbnail) {
+        this.message = thumbnail;
     }
 
     @Override
     public String toString() {
-        return getTitle() + " " + getThumbnail();
+        return getChatid() + " " + getMessage();
     }
 
 }

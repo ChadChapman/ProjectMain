@@ -1,6 +1,7 @@
 package tcss450.uw.edu.group2project.chatApp;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -10,9 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -20,7 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.utils.ListenManager;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
@@ -28,6 +26,7 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
  * A simple {@link Fragment} subclass.
  */
 public class ChatFragment extends Fragment{
+    private int mUserChatID;
     private String mUsername;
     private String mSendUrl;
     private TextView mOutputTextView;
@@ -39,11 +38,15 @@ public class ChatFragment extends Fragment{
     public ChatFragment() {
         // Required empty public constructor
     }
-
+    @SuppressLint("ValidFragment")
+    public ChatFragment(int chatID) {
+        // Required empty public constructor
+        mUserChatID = chatID;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                  Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
 
         v.findViewById(R.id.chatSendButton).setOnClickListener(this::sendMessage);
@@ -79,7 +82,7 @@ public class ChatFragment extends Fragment{
                 .scheme("https")
                 .authority(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_get_message))
-                .appendQueryParameter("chatId", "1")
+                .appendQueryParameter("chatId", String.valueOf(mUserChatID))
                 .build();
 
 
@@ -144,7 +147,7 @@ public class ChatFragment extends Fragment{
         try {
             messageJson.put(getString(R.string.keys_json_username), mUsername);
             messageJson.put(getString(R.string.keys_json_message), msg);
-            messageJson.put(getString(R.string.keys_json_chat_id), 1);
+            messageJson.put(getString(R.string.keys_json_chat_id), mUserChatID);
         } catch (JSONException e) {
             e.printStackTrace();
         }

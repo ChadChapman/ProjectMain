@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+
     <string name="keys_shared_prefs">edu.uw.tcss450.challengeapp.PREFS</string>
+    <string name="keys_shared_setting_prefs">Setting Preferences</string>
 
     <string name="keys_prefs_username">username</string>
     <string name="keys_prefs_stay_logged_in">loggedIn</string>
@@ -10,6 +13,7 @@
     <string name="keys_fragment_register">registerFragmentTag</string>
     <string name="keys_fragment_landing">landingFragmentTag</string>
     <string name="keys_fragment_chat">chatFragmentTag</string>
+    <string name="keys_fragment_chat_list">chatListFragmentTag</string>
     <string name="keys_fragment_profile">profileFragmentTag</string>
     <string name="keys_fragment_contacts">contactsFragmentTag</string>
     <string name="keys_fragment_settings">settingsFragmentTag</string>
@@ -23,7 +27,7 @@
     <string name="keys_json_message">message</string>
     <string name="keys_json_messages">messages</string>
     <string name="keys_json_success">success</string>
-    <string name="keys_json_chat_id">chatId</string>
+    <string name="keys_json_chat_id">chatid</string>
     <string name="keys_json_success_value_true">true</string>
     <string name="keys_json_success_value_false">false</string>
 

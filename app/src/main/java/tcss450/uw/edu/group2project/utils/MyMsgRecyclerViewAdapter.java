@@ -20,87 +20,73 @@ import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.model.MessageFeedItem;
 
 
-
-
 public class MyMsgRecyclerViewAdapter extends
-            RecyclerView.Adapter<tcss450.uw.edu.group2project.utils.MyMsgRecyclerViewAdapter.CustomViewHolder> {
+        RecyclerView.Adapter<MyMsgRecyclerViewAdapter.CustomViewHolder> {
+    private List<MessageFeedItem> messageFeedItemList;
+    private Context mContext;
+    private OnMsgClickListener onMsgClickListener;
 
-        private List<MessageFeedItem> messageFeedItemList;
-
-        private Context mContext;
-        private OnMsgClickListener onMsgClickListener;
-
-        //this constructor is for contacts
-        public MyMsgRecyclerViewAdapter(Context context, List<MessageFeedItem> feedItemList) {
-            this.messageFeedItemList = feedItemList;
-            this.mContext = context;
-            Log.e("MESSAGES ADAPTER CREATED FROM: ", "SUCCESS");
-        }
-
-        @Override
-        public tcss450.uw.edu.group2project.utils.MyMsgRecyclerViewAdapter.CustomViewHolder
-            onCreateViewHolder(ViewGroup viewGroup, int i) {
-
-                View view = LayoutInflater.from(viewGroup.getContext())
-                        .inflate(R.layout.list_row, null);
-
-                tcss450.uw.edu.group2project.utils.MyMsgRecyclerViewAdapter.CustomViewHolder viewHolder
-                        = new tcss450.uw.edu.group2project.utils.MyMsgRecyclerViewAdapter.CustomViewHolder(view);
-            return viewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(
-                tcss450.uw.edu.group2project.utils.MyMsgRecyclerViewAdapter.CustomViewHolder
-                        customViewHolder, int i) {
-
-            //FeedItem feedItem = feedItemList.get(i);
-            MessageFeedItem feedItem = messageFeedItemList.get(i);
-
-            //Render image using Picasso library
-            if (!TextUtils.isEmpty(feedItem.getThumbnail())) {
-                Picasso.with(mContext).load(feedItem.getThumbnail())
-                        .error(R.drawable.contacts_image_error)
-                        .placeholder(R.drawable.contacts_image_placeholder)
-                        .into(customViewHolder.imageView);
-            }
-
-            //Setting text view title
-            customViewHolder.textView.setText(Html.fromHtml(feedItem.getTitle()));
-
-            View.OnClickListener listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onMsgClickListener.onMsgItemClick(feedItem);
-                }
-            };
-            customViewHolder.imageView.setOnClickListener(listener);
-            customViewHolder.textView.setOnClickListener(listener);
-        }
-
-        public OnMsgClickListener getOnItemClickListener() {
-            return onMsgClickListener;
-        }
-
-        public void setOnMsgClickListener(OnItemClickListener onItemClickListener) {
-            this.onMsgClickListener = onMsgClickListener;
-        }
-
-        @Override
-        public int getItemCount() {
-            return (null != messageFeedItemList ? messageFeedItemList.size() : 0);
-        }
-
-        public class CustomViewHolder extends RecyclerView.ViewHolder {
-            protected ImageView imageView;
-            protected TextView textView;
-
-            public CustomViewHolder(View view) {
-                super(view);
-                this.imageView = (ImageView) view.findViewById(R.id.thumbnail);
-                this.textView = (TextView) view.findViewById(R.id.title);
-            }
-        }
-
+    //this constructor is for contacts
+    public MyMsgRecyclerViewAdapter(Context context, List<MessageFeedItem> feedItemList) {
+        this.messageFeedItemList = feedItemList;
+        this.mContext = context;
+        Log.e("MESSAGES ADAPTER CREATED FROM: ", "SUCCESS");
     }
+
+    @Override
+    public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.messaging_list_rows, null);
+
+        CustomViewHolder viewHolder = new CustomViewHolder(view);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(
+            CustomViewHolder customViewHolder, int i) {
+
+        //FeedItem feedItem = feedItemList.get(i);
+        MessageFeedItem feedItem = messageFeedItemList.get(i);
+
+        //Setting text view title
+        customViewHolder.chatid.setText(Html.fromHtml(feedItem.getChatid()));
+        customViewHolder.message.setText(Html.fromHtml(feedItem.getMessage()));
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onMsgClickListener.onMsgItemClick(feedItem);
+            }
+        };
+        customViewHolder.chatid.setOnClickListener(listener);
+        customViewHolder.message.setOnClickListener(listener);
+    }
+
+    public OnMsgClickListener getOnItemClickListener() {
+        return onMsgClickListener;
+    }
+
+    public void setOnMsgClickListener(OnMsgClickListener onItemClickListener) {
+        this.onMsgClickListener = onItemClickListener;
+    }
+
+    @Override
+    public int getItemCount() {
+        return (null != messageFeedItemList ? messageFeedItemList.size() : 0);
+    }
+
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
+        protected TextView chatid;
+        protected TextView message;
+
+        public CustomViewHolder(View view) {
+            super(view);
+            this.chatid = (TextView) view.findViewById(R.id.username);
+            this.message = (TextView) view.findViewById(R.id.message);
+        }
+    }
+
+}
 //}
