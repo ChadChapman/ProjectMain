@@ -26,7 +26,12 @@
     <string name="register_edit_text_first_name">First Name</string>
     <string name="register_edit_text_last_name">Last Name</string>
     <string name="register_edit_text_email">Email</string>
-    <string name="contacts_textview_fragheader">Chat Contacts</string>s
+    <string name="contacts_textview_fragheader">Chat Contacts</string>
+
+    <!--Verify Fragment -->
+    <string name="verify_textview">Enter your verification code</string>
+    <string name="verify_edittext">Ex: 1234</string>
+    <string name="verify_check_button">Submit Code</string>
 
     <string name="chat_start_new_chat_button">new chat</string>
 

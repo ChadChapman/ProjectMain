@@ -123,7 +123,7 @@ public class LoginFragment extends Fragment {
         //you may want to add error stuffs for the user here.
         b.setEnabled(true);
         mProgressBar.setVisibility(ProgressBar.GONE);
-        ((TextView) getView().findViewById(R.id.login_edit_text_username))
+        ((TextView) getActivity().findViewById(R.id.login_edit_text_username))
                 .setError("Login Unsuccessful");
     }
 
