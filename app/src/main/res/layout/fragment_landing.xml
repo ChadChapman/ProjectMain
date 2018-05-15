@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".chatApp.LandingFragment">
+    tools:context=".chatApp.LandingFragment"
+    tools:layout_editor_absoluteY="25dp">
 
     <!-- TODO: Update blank fragment layout -->
 
     <RadioGroup
+        android:id="@+id/radioGroup2"
         android:layout_width="368dp"
         android:layout_height="50dp"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:orientation='horizontal'
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -56,4 +57,21 @@
             android:background="@color/colorPrimary3"
             android:text="RadioButton" />
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/weatherTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:text="5 day forecast"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup2" />
+
+    <ListView
+        android:id="@+id/idListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/radioGroup2" />
 </android.support.constraint.ConstraintLayout>
