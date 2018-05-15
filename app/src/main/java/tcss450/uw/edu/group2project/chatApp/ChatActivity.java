@@ -23,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +49,7 @@ public class ChatActivity extends AppCompatActivity
     //private int mUserMemberIDInt;
     private ArrayList<ChatContact> mChatContactsArrList;
     //private String mUsername;
-
+    private Button mNewChatButton;
     Bundle mContactsBundle;
 
     public static int mTheme = UITheme.THEME_ONE;
@@ -92,6 +93,12 @@ public class ChatActivity extends AppCompatActivity
         if (extras != null) {
             mUserMemberID = extras.getString("userMemberID");
         }
+
+        mNewChatButton = findViewById(R.id.buttonStartNewChat);
+
+        mNewChatButton.setOnClickListener(button -> {
+            startNewChat(mNewChatButton);
+        });
         //let's just make an sqlite db and be done with it
         //mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
 //        setupDeviceDatabase();
@@ -113,6 +120,21 @@ public class ChatActivity extends AppCompatActivity
     }
 
 //}
+
+    public void startNewChat(Button paramButton) {
+        //load blank chat frag
+        //add this frag to the back stack
+
+        //start a new chat with at least one other person
+        //load list of contacts to click on one to start a new chat
+        //
+        //get the other memberID
+        //hit endpoint to create a new chat
+        //on success load a fragment for a new chat
+        //on fail, return to this frag and give a long toast that signals failure
+
+
+    }
 
     private void loadFragment(Fragment frag, String tag) {
         FragmentTransaction transaction = getSupportFragmentManager()

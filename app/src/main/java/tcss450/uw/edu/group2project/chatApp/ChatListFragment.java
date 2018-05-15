@@ -48,7 +48,7 @@ public class ChatListFragment extends Fragment {
     private String mUserMemberIDStr;
     private Uri mContactsUri;
     private View v;
-    private Button mNewChatButton;
+
 
     public ChatListFragment() {
         // Required empty public constructor
@@ -73,22 +73,7 @@ public class ChatListFragment extends Fragment {
         mContactsUri = buildHerokuAddress(getString(R.string.ep_get_recent_chat));
         loadMessages();
 
-        mNewChatButton = v.findViewById(R.id.buttonStartNewChat);
-
-        mNewChatButton.setOnClickListener(button -> {
-            startNewChat(mNewChatButton);
-        });
         return v;
-    }
-
-    public void startNewChat(Button paramButton) {
-        //start a new chat with at least one other person
-        //get the other memberID
-        //hit endpoint to create a new chat
-        //on success load a fragment for a new chat
-            //on fail, return to this frag and give a long toast that signals failure
-        
-
     }
 
     /**
