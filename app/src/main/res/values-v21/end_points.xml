@@ -1,19 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="ep_weather_api_key">QpnGCFMmidZOuQtwNIbt3ZnFknggEqRj</string>
+    <string name="ep_weather_base_url">dataservice.accuweather.com</string>
+    <string name="ep_weather_api">api</string>
+    <string name="ep_weather_api_param">apikey</string>
+    <string name="ep_weather_current_conditions">currentconditions</string>
+    <string name="ep_weather_v1">v1</string>
+    <string name="ep_weather_tacoma_key">331423</string>
+
+
+
     <string name="ep_base_url">rabbitchat-backend.herokuapp.com</string>
     <string name="ep_login">login</string>
     <string name="ep_email">email</string>
     <string name="ep_register">register</string>
     <string name="ep_register_saveVerificationCode">saveVerificationCode</string>
     <string name="ep_contacts">contacts</string>
-    <string name="ep_chat">chat</string>
+
+
     <string name="ep_profile">profile</string>
+    //profile
     <string name="ep_getinfo">getinfo</string>
-    <string name="ep_contacts_sent_requests">contacts/sent</string>
-    <string name="ep_contacts_pending_requests">contacts/pending</string>
+    //Contacts
+    <string name="ep_contacts_sent_requests">sentRequest</string>
+    <string name="ep_contacts_pending_requests">pendingRequest</string>
     <string name="ep_contacts_find_new">contacts/find</string>
-    <string name="ep_verified">verified</string>
+    <string name="ep_contacts_verified">verified</string>
+    <string name="ep_contacts_add">createContact</string>
+
+    //Messages
     <string name="ep_send_message">sendMessages</string>
     <string name="ep_get_message">getMessages</string>
-
+    <string name="ep_get_recent_chat">getRecentChat</string>
+    <string name="ep_chat">chat</string>
     </resources>

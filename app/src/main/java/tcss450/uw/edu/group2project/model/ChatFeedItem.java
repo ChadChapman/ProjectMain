@@ -1,16 +1,16 @@
 package tcss450.uw.edu.group2project.model;
 
-public class MessageFeedItem {
+public class ChatFeedItem {
 
-    private String chatid;
+    private String username;
     private String message;
 
-    public String getChatid() {
-        return chatid;
+    public String getUsername() {
+        return username;
     }
 
-    public void setChatid(String chatid) {
-        this.chatid = chatid;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getMessage() {
@@ -23,7 +23,7 @@ public class MessageFeedItem {
 
     @Override
     public String toString() {
-        return getChatid() + " " + getMessage();
+        return getUsername() + " " + getMessage();
     }
 
 }

@@ -17,17 +17,17 @@ import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
 
-import tcss450.uw.edu.group2project.model.MessageFeedItem;
+import tcss450.uw.edu.group2project.model.ChatFeedItem;
 
 
-public class MyMsgRecyclerViewAdapter extends
-        RecyclerView.Adapter<MyMsgRecyclerViewAdapter.CustomViewHolder> {
-    private List<MessageFeedItem> messageFeedItemList;
+public class MyChatRecyclerViewAdapter extends
+        RecyclerView.Adapter<MyChatRecyclerViewAdapter.CustomViewHolder> {
+    private List<ChatFeedItem> messageFeedItemList;
     private Context mContext;
-    private OnMsgClickListener onMsgClickListener;
+    private OnChatClickListener onChatClickListener;
 
     //this constructor is for contacts
-    public MyMsgRecyclerViewAdapter(Context context, List<MessageFeedItem> feedItemList) {
+    public MyChatRecyclerViewAdapter(Context context, List<ChatFeedItem> feedItemList) {
         this.messageFeedItemList = feedItemList;
         this.mContext = context;
         Log.e("MESSAGES ADAPTER CREATED FROM: ", "SUCCESS");
@@ -37,7 +37,7 @@ public class MyMsgRecyclerViewAdapter extends
     public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.messaging_list_rows, null);
+                .inflate(R.layout.chats_list_rows, null);
 
         CustomViewHolder viewHolder = new CustomViewHolder(view);
         return viewHolder;
@@ -48,28 +48,28 @@ public class MyMsgRecyclerViewAdapter extends
             CustomViewHolder customViewHolder, int i) {
 
         //FeedItem feedItem = feedItemList.get(i);
-        MessageFeedItem feedItem = messageFeedItemList.get(i);
+        ChatFeedItem feedItem = messageFeedItemList.get(i);
 
         //Setting text view title
-        customViewHolder.chatid.setText(Html.fromHtml(feedItem.getChatid()));
+        customViewHolder.username.setText(Html.fromHtml(feedItem.getUsername()));
         customViewHolder.message.setText(Html.fromHtml(feedItem.getMessage()));
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onMsgClickListener.onMsgItemClick(feedItem);
+                onChatClickListener.OnChatClickListener(feedItem);
             }
         };
-        customViewHolder.chatid.setOnClickListener(listener);
+        customViewHolder.username.setOnClickListener(listener);
         customViewHolder.message.setOnClickListener(listener);
     }
 
-    public OnMsgClickListener getOnItemClickListener() {
-        return onMsgClickListener;
+    public OnChatClickListener getOnItemClickListener() {
+        return onChatClickListener;
     }
 
-    public void setOnMsgClickListener(OnMsgClickListener onItemClickListener) {
-        this.onMsgClickListener = onItemClickListener;
+    public void setOnChatClickListener(OnChatClickListener onItemClickListener) {
+        this.onChatClickListener = onItemClickListener;
     }
 
     @Override
@@ -78,13 +78,13 @@ public class MyMsgRecyclerViewAdapter extends
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        protected TextView chatid;
+        protected TextView username;
         protected TextView message;
 
         public CustomViewHolder(View view) {
             super(view);
-            this.chatid = (TextView) view.findViewById(R.id.username);
-            this.message = (TextView) view.findViewById(R.id.message);
+            this.username = (TextView) view.findViewById(R.id.chat_username_textview);
+            this.message = (TextView) view.findViewById(R.id.chat_message_textview);
         }
     }
 

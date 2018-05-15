@@ -117,8 +117,8 @@ public class ContactDetailsFragment extends Fragment {
                 for (int i = 0; i < posts.length(); i++) {
                     JSONObject post = posts.optJSONObject(i);
                     MessageFeedItem item = new MessageFeedItem();
-                    item.setTitle(post.optString("msgContent"));
-                    item.setThumbnail(imgAddress);
+//                    item.setTitle(post.optString("msgContent"));
+//                    item.setThumbnail(imgAddress);
                     mMessageList.add(item);
                 }
             } catch (JSONException e) {

@@ -2,16 +2,21 @@ package tcss450.uw.edu.group2project.chatApp;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -62,19 +67,93 @@ public class TryContactFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_try_contact, container, false);
         // Inflate the layout for this fragment
-
         mUserMemberIDStr = Integer.toString(mUserMemberID);
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.try_recycle_view));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         progressBar = (ProgressBar) (v.findViewById(R.id.try_progress_bar));
-        mContactsUri = buildHerokuAddress(); //TODO start using this uri instead
+        mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_verified)); //TODO start using this uri instead
+        //mContactsUri = buildLocalAddress(); //TODO start using this uri instead
         loadVerifiedContacts();
+
+        RadioButton rb = (RadioButton) v.findViewById(R.id.friends_radioButton);
+        rb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRadioButtonClicked(view);
+            }
+        });
+        rb = (RadioButton) v.findViewById(R.id.pending_radioButton);
+        rb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRadioButtonClicked(view);
+            }
+        });
+        rb = (RadioButton) v.findViewById(R.id.sent_radioButton);
+        rb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRadioButtonClicked(view);
+            }
+        });
+        Button add = (Button) v.findViewById(R.id.add_button);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAddButtonClicked(view);
+            }
+        });
         return v;
     }
 
+    //add a friend
+    private void onAddButtonClicked(View view) {
+        mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_add));
+        String friend = ((EditText) (getActivity().findViewById(R.id.add_editText))).getText().toString();
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("memberid", mUserMemberID);
+            msg.put("username_b", friend);
+
+        } catch (JSONException e) {
+            Log.wtf("CONTACTS VERIFIED ALL", "Error creating JSON: " + e.getMessage());
+        }
+        new SendPostAsyncTask.Builder(mContactsUri.toString(), msg)
+                .onPostExecute(this::handleAddOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    //switch between list
+    private void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+        // Check which radio button was clicked
+        switch (view.getId()) {
+            case R.id.friends_radioButton:
+                if (checked)
+                    mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_verified));
+                    getActivity().findViewById(R.id.add_editText).setVisibility(View.GONE);
+                    getActivity().findViewById(R.id.add_button).setVisibility(View.GONE);
+                break;
+            case R.id.pending_radioButton:
+                if (checked)
+                    mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_pending_requests));
+                    getActivity().findViewById(R.id.add_editText).setVisibility(View.GONE);
+                    getActivity().findViewById(R.id.add_button).setVisibility(View.GONE);
+                break;
+            case R.id.sent_radioButton:
+                if (checked)
+                    mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_sent_requests));
+                    getActivity().findViewById(R.id.add_editText).setVisibility(View.VISIBLE);
+                    getActivity().findViewById(R.id.add_button).setVisibility(View.VISIBLE);
+                break;
+        }
+        loadVerifiedContacts();
+    }
 
 
-    public void loadVerifiedContacts(){
+    public void loadVerifiedContacts() {
         JSONObject jsonObject = createVerifiedContactsRequestObject();
         //now json obj is built, time ot send it off
         new SendPostAsyncTask.Builder(mContactsUri.toString(), jsonObject)
@@ -87,7 +166,6 @@ public class TryContactFragment extends Fragment {
         JSONObject msg = new JSONObject();
         try {
             msg.put("memberid", mUserMemberID);
-
         } catch (JSONException e) {
             Log.wtf("CONTACTS VERIFIED ALL", "Error creating JSON: " + e.getMessage());
         }
@@ -103,17 +181,17 @@ public class TryContactFragment extends Fragment {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
 
-    public Uri buildHerokuAddress(){
+    public Uri buildHerokuAddress(String ep) {
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_contacts))
-                .appendPath(getString(R.string.ep_verified))
+                .appendPath(ep)
                 .build();
         return uri;
     }
 
-    public Uri buildLocalAddress(){
+    public Uri buildLocalAddress() {
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath("localhost:5000")
@@ -139,8 +217,13 @@ public class TryContactFragment extends Fragment {
                 adapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onContactItemClick(ContactFeedItem item) {
-                        Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
-
+                        //Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragmentContainer, new FriendProfileFragment(item), "friend")
+                                .addToBackStack(null);
+                        // Commit the transaction
+                        transaction.commit();
                     }
                 });
 
@@ -155,7 +238,7 @@ public class TryContactFragment extends Fragment {
 //                    Toast.makeText(ContactsActivity.this
 //                            , "Failed to fetch data!", Toast.LENGTH_SHORT).show();
 //            } //commented out for testing
-        } catch(JSONException e){
+        } catch (JSONException e) {
             //It appears that the web service didn’t return a JSON formatted String
             //or it didn’t have what we expected in it.
             Log.e("JSON_PARSE_ERROR", result
@@ -186,20 +269,21 @@ public class TryContactFragment extends Fragment {
         String imgAddress = "http://ajax.googleapis.com/ajax/services/search/images?q=%s&v=1.0&rsz=large&start=1";
         try {
             JSONObject response = new JSONObject(result);
-            JSONArray posts = response.optJSONArray("contacts");
+            JSONArray posts = response.optJSONArray(getString(R.string.contacts));
             mContactFeedItemList = new ArrayList<>();
 
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
                 ContactFeedItem item = new ContactFeedItem();
-                item.setTitle(post.optString("username"));
+                item.setTitle(post.optString(getString(R.string.username)));
                 item.setThumbnail(imgAddress);
+                item.setFname(post.optString(getString(R.string.firstname)));
+                item.setLname(post.optString(getString(R.string.lastname)));
                 mContactFeedItemList.add(item);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.e("CONTACTS BODY PARSED, LIST [0]: ", mContactFeedItemList.get(0).toString());
         //return mContactFeedItemList;
     }
 
@@ -221,4 +305,24 @@ public class TryContactFragment extends Fragment {
         }
     }
 
+    public void handleAddOnPost(String result) {
+
+        try {
+            JSONObject resultsJSON = new JSONObject(result);
+            boolean success = resultsJSON.getBoolean("success");
+
+            if (success) {
+                Toast.makeText(getContext(), "Sent", Toast.LENGTH_SHORT).show();
+                loadVerifiedContacts();
+            } else {
+                Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            //It appears that the web service didn’t return a JSON formatted String
+            //or it didn’t have what we expected in it.
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
+        }
+    }
 }

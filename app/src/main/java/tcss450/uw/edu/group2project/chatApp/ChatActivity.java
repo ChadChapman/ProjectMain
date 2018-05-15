@@ -163,7 +163,7 @@ public class ChatActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_chat) {
-            loadFragment(new ChatFragment(), getString(R.string.keys_fragment_chat));
+            loadFragment(new ChatListFragment(mUserMemberID), getString(R.string.keys_fragment_chat_list));
         } else if (id == R.id.nav_contacts) { //switch to Contacts Activity
             //loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts)); original
             //loadContactsActivity();
@@ -182,13 +182,6 @@ public class ChatActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    private void loadContactsActivity() {
-        Intent intent = new Intent(this, ContactsActivity.class);
-        intent.putExtra("mUserMemberID", mUserMemberID);
-        startActivity(intent);
-    }
-
 
     public void onLogout() {
         SharedPreferences prefs =
@@ -252,7 +245,6 @@ public class ChatActivity extends AppCompatActivity
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_getinfo))
                 .build();
-        //build the JSONObject
         //build the JSONObject
         JSONObject msg = new JSONObject();
         try {
