@@ -2,6 +2,7 @@
 <resources>
     <string name="ep_base_url">rabbitchat-backend.herokuapp.com</string>
     <string name="ep_login">login</string>
+    <string name="ep_email">email</string>
     <string name="ep_register">register</string>
     <string name="ep_register_saveVerificationCode">saveVerificationCode</string>
     <string name="ep_contacts">contacts</string>

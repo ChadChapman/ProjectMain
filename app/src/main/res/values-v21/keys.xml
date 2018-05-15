@@ -7,6 +7,8 @@
     <string name="keys_prefs_stay_logged_in">loggedIn</string>
     <string name="keys_prefs_time_stamp">ts key</string>
 
+    <string name="keys_bundle_vcode">vCode</string>
+
     <string name="keys_fragment_login">loginFragmentTag</string>
     <string name="keys_fragment_register">registerFragmentTag</string>
     <string name="keys_fragment_landing">landingFragmentTag</string>
