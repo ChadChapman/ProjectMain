@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="ep_weather_api_key">QpnGCFMmidZOuQtwNIbt3ZnFknggEqRj</string>
+    <string name="ep_weather_base_url">dataservice.accuweather.com</string>
+    <string name="ep_weather_api">api</string>
+    <string name="ep_weather_api_param">apikey</string>
+    <string name="ep_weather_current_conditions">currentconditions</string>
+    <string name="ep_weather_v1">v1</string>
+    <string name="ep_weather_tacoma_key">331423</string>
+
+
+
     <string name="ep_base_url">rabbitchat-backend.herokuapp.com</string>
     <string name="ep_login">login</string>
     <string name="ep_register">register</string>
