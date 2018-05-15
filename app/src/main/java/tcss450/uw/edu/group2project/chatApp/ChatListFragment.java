@@ -65,7 +65,8 @@ public class ChatListFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_chat_list, container, false);
         mUserMemberIDStr = Integer.toString(mUserMemberID);
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.message_recycler_view));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
         progressBar = (ProgressBar) (v.findViewById(R.id.message_progressBar));
         mContactsUri = buildHerokuAddress(getString(R.string.ep_get_recent_chat));
         loadMessages();
