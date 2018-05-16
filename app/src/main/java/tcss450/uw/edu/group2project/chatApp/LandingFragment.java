@@ -57,8 +57,6 @@ public class LandingFragment extends Fragment {
 
         listView = v.findViewById(R.id.idListView);
 
-
-
         URL weatherUrl = NetworkUtils.buildUrlForWeather();
         new FetchWeatherDetails().execute(weatherUrl);
         Log.i(TAG, "onCreate: weatherURL: " + weatherUrl);
@@ -68,34 +66,14 @@ public class LandingFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-
-
-
-//        SharedPreferences prefs =
-//                getActivity().getSharedPreferences(
-//                        getString(R.string.keys_shared_prefs),
-//                        Context.MODE_PRIVATE);
-//        if (prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in), false)) {
-//            getView().findViewById(R.id.landing_button_logout)
-//                    .setOnClickListener(v -> mListener.onLogout());
-//        } else {
-//            getView().findViewById(R.id.landing_button_logout).setVisibility(View.GONE);
-//        }
     }
+
     private void handleError(Exception e) {
         Log.e("LISTEN ERROR", e.getMessage());
     }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-//        if (context instanceof OnLandingFragmentInteractionListener) {
-//            mListener = (OnLandingFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnRegisterFragmentInteractionListener");
-//        }
     }
 
     @Override
@@ -107,6 +85,7 @@ public class LandingFragment extends Fragment {
     public interface OnLandingFragmentInteractionListener {
         void onLogout();
     }
+
     private class FetchWeatherDetails extends AsyncTask<URL, Void, String>{
         @Override
         protected void onPreExecute(){
@@ -161,12 +140,7 @@ public class LandingFragment extends Fragment {
                     String link = resultsObj.getString("Link");
                     weather.setLink(link);
 
-
                     weatherArrayList.add(weather);
-
-
-
-
                 }
                 if(weatherArrayList != null){
                     WeatherAdapter weatherAdapter = new WeatherAdapter(getContext(), weatherArrayList);
@@ -179,6 +153,6 @@ public class LandingFragment extends Fragment {
             }
         }
         return null;
-    }
+    }//end pJ
 
-}
+}//end class LF

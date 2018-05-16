@@ -22,7 +22,19 @@
     <ListView
         android:id="@+id/idListView"
         android:layout_width="match_parent"
+        android:layout_height="443dp"
+        android:layout_marginBottom="8dp"
+        android:footerDividersEnabled="true"
+        app:layout_constraintBottom_toTopOf="@+id/createNewChatButton"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <ImageButton
+        android:id="@+id/createNewChatButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@mipmap/ic_rabbit_logo_this_round"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>

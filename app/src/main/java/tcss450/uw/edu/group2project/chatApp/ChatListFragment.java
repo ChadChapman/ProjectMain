@@ -84,7 +84,7 @@ public class ChatListFragment extends Fragment {
 
     public void createNewChat(Button paramButton) {
 
-        loadFragment(new ChatFragment(), );
+       // loadFragment(new ChatFragment(), );
 
     }
 
