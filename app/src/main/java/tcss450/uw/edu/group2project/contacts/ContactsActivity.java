@@ -65,27 +65,9 @@ public class ContactsActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mContactsUri = buildHerokuAddress(); //TODO start using this uri instead
-        //mContactsUri = buildHerokuAddress(); //TODO start using this uri instead
-        //mContactFeedItemList = new ArrayList<>(); done in parseHerokuResult
         //String url = "http://stacktips.com/?json=get_category_posts&slug=news&count=30";
-        //new DownloadTask().execute(url);
-        //new DownloadTask().execute(mContactsUri.toString()); //commented out trying to get away from tut
         loadVerifiedContacts();
-//        adapter.setOnItemClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onItemClick(FeedItem item) {
-//                Toast.makeText(ContactsActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
-//
-//            }
-//        });
 
-//        adapter.setOnItemClickListener(new OnItemClickListener() {
-//            @Override
-//            public void onContactItemClick(ContactFeedItem item) {
-//                Toast.makeText(ContactsActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
-//
-//            }
-//        }); alos commented out for testing
     }
 
     public void loadVerifiedContacts(){
@@ -230,6 +212,7 @@ public class ContactsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     private void loadFragment(Fragment frag, String tag){
         FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
@@ -238,15 +221,5 @@ public class ContactsActivity extends AppCompatActivity {
         // Commit the transaction
         transaction.commit();
     }
-//    @Override
-//    public void onBackPressed() {
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
-
 
 }
