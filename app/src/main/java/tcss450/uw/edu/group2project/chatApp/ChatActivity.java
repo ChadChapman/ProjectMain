@@ -44,13 +44,11 @@ import tcss450.uw.edu.group2project.utils.UITheme;
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         SettingFragment.OnSettingFragmentInteractionListener {
+
     private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
-    //private int mUserMemberIDInt;
     private ArrayList<ChatContact> mChatContactsArrList;
-    //private String mUsername;
     private Button mNewChatButton;
-    Bundle mContactsBundle;
 
     public static int mTheme = UITheme.THEME_ONE;
 
@@ -122,6 +120,10 @@ public class ChatActivity extends AppCompatActivity
 
 //}
 
+    /**
+     *
+     * @param paramButton
+     */
     public void startNewChat(Button paramButton) {
         //load blank chat frag
         //add this frag to the back stack
@@ -301,6 +303,7 @@ public class ChatActivity extends AppCompatActivity
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
+
     private void handleOnGetInfoPost(String result) {
         try {
             Log.e("",result);
