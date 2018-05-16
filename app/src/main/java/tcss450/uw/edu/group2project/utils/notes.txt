@@ -1,3 +1,6 @@
 url for the recyclerview tutorial used: http://stacktips.com/tutorials/android/android-recyclerview-example
 postgres cheat site:https://www.tutorialspoint.com/postgresql/postgresql_insert_query.htm
 sqlite3 cheat site:https://www.tutorialspoint.com/android/android_sqlite_database.htm
+
+we load and populate a list of contacts a number of times, we should maybe just have one stored somethere and
+retrieve that ech time?  or just pass the same one around?s
