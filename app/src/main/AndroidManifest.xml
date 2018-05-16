@@ -24,7 +24,7 @@
         <activity
             android:name=".chatApp.ChatActivity"
             android:label="@string/title_activity_chat"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".contacts.ContactsActivity"
             android:parentActivityName=".chatApp.ChatActivity">
@@ -32,6 +32,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".chatApp.ChatActivity" />
         </activity>
+        <activity
+            android:name=".createchat.ScrollingActivity"
+            android:label="@string/title_activity_scrolling"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
