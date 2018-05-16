@@ -105,6 +105,10 @@ public class ChatActivity extends AppCompatActivity
 
     }
 
+    /**
+     * For now this is just being overridden but i think once we use an internal db, we will want to
+     * use it since the db should already be created
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -121,8 +125,12 @@ public class ChatActivity extends AppCompatActivity
 //}
 
     /**
+     * Begin a new chat conversation with verified contact or friend.
+     * This process begins with selecting a person to chat with from a list of verified contacts.
+     * Once a user has been selected, a request is sent to that user to notify they have a new chat open.
+     * At that point, everything should be handed off.
      *
-     * @param paramButton
+     * @param paramButton which button will be used to create a new chat
      */
     public void startNewChat(Button paramButton) {
         //load blank chat frag

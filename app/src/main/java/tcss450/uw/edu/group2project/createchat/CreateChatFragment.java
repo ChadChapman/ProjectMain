@@ -1,4 +1,4 @@
-package tcss450.uw.edu.group2project.chatApp;
+package tcss450.uw.edu.group2project.createchat;
 
 import android.content.Context;
 import android.net.Uri;
