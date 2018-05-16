@@ -48,7 +48,8 @@ public class ChatListFragment extends Fragment {
     private String mUserMemberIDStr;
     private Uri mContactsUri;
     private View v;
-
+    private Button mCreateNewChatButton;
+    private static final String TAG = ChatListFragment.class.getSimpleName();
 
     public ChatListFragment() {
         // Required empty public constructor
@@ -57,7 +58,9 @@ public class ChatListFragment extends Fragment {
     @SuppressLint("ValidFragment")
     public ChatListFragment(String mID) {
         // Required empty public constructor
-        mUserMemberID = new Integer(mID);
+
+        //mUserMemberID = new Integer.(mID);
+        mUserMemberIDStr = mID;
 
     }
 
@@ -72,10 +75,27 @@ public class ChatListFragment extends Fragment {
         progressBar = (ProgressBar) (v.findViewById(R.id.message_progressBar));
         mContactsUri = buildHerokuAddress(getString(R.string.ep_get_recent_chat));
         loadMessages();
-
+        mCreateNewChatButton = v.findViewById(R.id.createNewChatButton);
+        mCreateNewChatButton.setOnClickListener(button -> {
+            createNewChat(mCreateNewChatButton);
+        });
         return v;
     }
 
+    public void createNewChat(Button paramButton) {
+
+        loadFragment(new ChatFragment(), );
+
+    }
+
+    private void loadFragment(Fragment frag, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, frag, tag)
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
+    }
     /**
      * For building a url address.
      */

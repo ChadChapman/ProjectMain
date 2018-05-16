@@ -26,11 +26,14 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
  * A simple {@link Fragment} subclass.
  */
 public class ChatFragment extends Fragment{
+    private static final String TAG = ChatFragment.class.getSimpleName();
+
     private int mUserChatID;
     private String mUsername;
     private String mSendUrl;
     private TextView mOutputTextView;
     private ListenManager mListenManager;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -215,6 +218,11 @@ public class ChatFragment extends Fragment{
 
         }
     }
+
+//    //@Override
+//    public String getTag() {
+//        return TAG;
+//    }
 
 
 
