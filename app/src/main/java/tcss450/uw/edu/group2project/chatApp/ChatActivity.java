@@ -94,11 +94,11 @@ public class ChatActivity extends AppCompatActivity
             mUserMemberID = extras.getString("userMemberID");
         }
 
-        mNewChatButton = findViewById(R.id.buttonStartNewChat);
-
-        mNewChatButton.setOnClickListener(button -> {
-            startNewChat(mNewChatButton);
-        });
+//        mNewChatButton = findViewById(R.id.buttonStartNewChat);
+//
+//        mNewChatButton.setOnClickListener(button -> {
+//            startNewChat(mNewChatButton);
+//        });
         //let's just make an sqlite db and be done with it
         //mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
 //        setupDeviceDatabase();
