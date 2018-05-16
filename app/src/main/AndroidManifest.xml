@@ -32,10 +32,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".chatApp.ChatActivity" />
         </activity>
-        <activity
-            android:name=".createchat.ScrollingActivity"
-            android:label="@string/title_activity_scrolling"
-            android:theme="@style/AppTheme"></activity>
+        <activity android:name=".createchat.CreateNewChatActivity"></activity>
     </application>
 
 </manifest>
