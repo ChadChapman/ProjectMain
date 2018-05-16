@@ -238,6 +238,10 @@ public class ContactsActivity extends AppCompatActivity {
         // Commit the transaction
         transaction.commit();
     }
+
+    public List<ContactFeedItem> getContactsList() {
+        return mContactFeedItemList;
+    }
 //    @Override
 //    public void onBackPressed() {
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
