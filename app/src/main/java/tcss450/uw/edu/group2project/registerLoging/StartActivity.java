@@ -55,7 +55,7 @@ public class StartActivity extends AppCompatActivity
 
                 if (prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in),
                         false)) {
-                    loadLandingFragment();
+                    loadVerifiedUserLandingActivity();
                 } else {
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.start_constraint_layout,
@@ -68,14 +68,13 @@ public class StartActivity extends AppCompatActivity
     }
 
 
-    void loadLandingFragment() {
-//        LandingFragment landingFragment = new LandingFragment();
-//
-//        FragmentTransaction transaction = getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.start_constraint_layout, landingFragment, getString(R.string.keys_fragment_landing));
-//        // Commit the transaction
-//        transaction.commit();
+    /**
+     * Previously named loadLandingFragment, shit you not.
+     * Since this begins a new activity, now it's name reflects that.
+     *
+     * everything worked and now we are going into the app, starting with the chat activity
+     */
+    void loadVerifiedUserLandingActivity() {
 
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("userMemberID", mUserMemberIDStr);
@@ -205,7 +204,7 @@ public class StartActivity extends AppCompatActivity
                 checkStayLoggedIn();
                 int vCode = resultsJSON.getInt("code");
                 if (vCode == 1) {
-                    loadLandingFragment();
+                    loadVerifiedUserLandingActivity();
                 } else if (vCode == 0) {
                     sendEmail();
                     LoginFragment fragment = new LoginFragment();
@@ -308,7 +307,7 @@ public class StartActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction() {
-        loadLandingFragment();
+        loadVerifiedUserLandingActivity();
     }
 
 
