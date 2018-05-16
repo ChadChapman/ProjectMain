@@ -63,7 +63,7 @@ public class ChatActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //uncomment when we decide what to do with the floating action button
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
