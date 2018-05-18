@@ -38,6 +38,7 @@ import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
 import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
+import tcss450.uw.edu.group2project.utils.UITextSize;
 import tcss450.uw.edu.group2project.utils.UITheme;
 
 public class ChatActivity extends AppCompatActivity
@@ -52,6 +53,7 @@ public class ChatActivity extends AppCompatActivity
     Bundle mContactsBundle;
 
     public static int mTheme = UITheme.THEME_ONE;
+    public static int mTextSize = UITextSize.SIZE_MEDIUM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,9 @@ public class ChatActivity extends AppCompatActivity
 
         // Update theme color
         setTheme(UITheme.getThemeId(mTheme));
+
+        // Update text size
+        setTheme(UITextSize.getSizeId(mTextSize));
 
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -234,6 +239,34 @@ public class ChatActivity extends AppCompatActivity
         int duration = Toast.LENGTH_SHORT;
         Context context = this.getBaseContext();
         Toast toast = Toast.makeText(context, "Changed to Theme " + theme, duration);
+        toast.show();
+    }
+
+    @Override
+    public void onSettingTextSizeButtonClicked(int size) {
+        switch (size) {
+            case 1:
+                changeTextSize(UITextSize.SIZE_SMALL);
+                break;
+            case 2:
+                changeTextSize(UITextSize.SIZE_MEDIUM);
+                break;
+            case 3:
+                changeTextSize(UITextSize.SIZE_LARGE);
+                break;
+        }
+    }
+
+    public void changeTextSize(final int size) {
+        // Handles theme changes to activity
+        mTextSize = size;
+        setTheme(mTextSize);
+
+        ChatActivity.this.recreate();
+
+        int duration = Toast.LENGTH_SHORT;
+        Context context = this.getBaseContext();
+        Toast toast = Toast.makeText(context, "Changed to Size " + size, duration);
         toast.show();
     }
 

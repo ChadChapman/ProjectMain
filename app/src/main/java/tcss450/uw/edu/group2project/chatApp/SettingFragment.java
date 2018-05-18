@@ -34,6 +34,7 @@ public class SettingFragment extends Fragment {
         SharedPreferences sharedPreferences = this.getActivity()
                 .getSharedPreferences(getString(R.string.keys_shared_setting_prefs), Context.MODE_PRIVATE);
 
+        /* THEME COLOR BUTTONS */
         Button b = (Button) v.findViewById(R.id.setting_button_theme_1);
         b.setOnClickListener(this::onThemeOneButtonClicked);
 
@@ -45,6 +46,16 @@ public class SettingFragment extends Fragment {
 
         b = (Button) v.findViewById(R.id.setting_button_theme_4);
         b.setOnClickListener(this::onThemeFourButtonClicked);
+
+        /* TEXT SIZE BUTTONS */
+        b = (Button) v.findViewById(R.id.setting_button_text_small);
+        b.setOnClickListener(this::onSmallTextSizeButtonClicked);
+
+        b = (Button) v.findViewById(R.id.setting_button_text_medium);
+        b.setOnClickListener(this::onMediumTextSizeButtonClicked);
+
+        b = (Button) v.findViewById(R.id.setting_button_text_large);
+        b.setOnClickListener(this::onLargeTextSizeButtonClicked);
 
         // Inflate the layout for this fragment
         return v;
@@ -91,8 +102,27 @@ public class SettingFragment extends Fragment {
         }
     }
 
+    private void onSmallTextSizeButtonClicked(View v) {
+        if (mListener != null) {
+            mListener.onSettingTextSizeButtonClicked(1);
+        }
+    }
+
+    private void onMediumTextSizeButtonClicked(View v) {
+        if (mListener != null) {
+            mListener.onSettingTextSizeButtonClicked(2);
+        }
+    }
+
+    private void onLargeTextSizeButtonClicked(View v) {
+        if (mListener != null) {
+            mListener.onSettingTextSizeButtonClicked(3);
+        }
+    }
+
     public interface OnSettingFragmentInteractionListener {
         void onSettingThemeButtonClicked(int color);
+        void onSettingTextSizeButtonClicked(int size);
     }
 
 
