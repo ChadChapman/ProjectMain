@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,10 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.chatApp.FriendProfileFragment;
-import tcss450.uw.edu.group2project.model.ChatContact;
+import tcss450.uw.edu.group2project.chatApp.ChatFragment;
 import tcss450.uw.edu.group2project.model.ContactFeedItem;
-import tcss450.uw.edu.group2project.model.FeedItem;
 import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
 import tcss450.uw.edu.group2project.utils.OnItemClickListener;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
@@ -44,6 +43,7 @@ public class CreateChatFragment extends Fragment {
     private Uri mNewChatUri;
     private View v;
     private List<String> mNewChatIncludedUsernamesList;
+    private ImageButton createButton;
 
     public CreateChatFragment() {
         // Required empty public constructor
@@ -59,6 +59,11 @@ public class CreateChatFragment extends Fragment {
        mNewChatUri = buildHerokuNewChatUri();
        progressBar = v.findViewById(R.id.progress_bar);
        loadVerifiedContacts();
+       createButton = v.findViewById(R.id.createNewChatFragNewChatButton);
+       createButton.setOnClickListener(view -> {
+
+       });
+
 
        return v;
     }
@@ -101,7 +106,6 @@ public class CreateChatFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //return mContactFeedItemList;
     }
 
     //on post exec should be -> handle successful contacts query
@@ -116,7 +120,7 @@ public class CreateChatFragment extends Fragment {
                 mNewChatIncludedUsernamesList = new ArrayList<>();
                 //need to populate the contacts list before passing it to the adapter
                 parseHerokuResult(result);
-                //added from here
+
                 adapter = new MyRecyclerViewAdapter(getContext(), mContactFeedItemList);
                 mRecyclerView.setAdapter(adapter);
                 adapter.setOnItemClickListener(new OnItemClickListener() {
@@ -168,6 +172,59 @@ public class CreateChatFragment extends Fragment {
         }
     }
 
+    //on post exec should be -> handle successful contacts query
+    public void handleNewChatCreatedOnPost(String result) {
+        try {
+
+            JSONObject resultsJSON = new JSONObject(result);
+            boolean success = resultsJSON.getBoolean("success");
+
+            if (success) {
+
+                //chat creation was successful
+                progressBar.setVisibility(View.GONE);
+
+                //inform user a new chat was created
+                Toast.makeText(this.getContext(), "NEW RABBIT CHAT CREATED!", Toast.LENGTH_SHORT).show();
+
+                //may need to pass params in to here later? not sure yet
+                kickOffNewChat();
+
+            } else {
+
+                Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
+
+            }
+
+        } catch (JSONException e) {
+            //It appears that the web service didn’t return a JSON formatted String
+            //or it didn’t have what we expected in it.
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
+        }
+    }
+
+    /**
+     * New Chat has been created from selected members.  This method should handle any logic
+     * associated with any further actions, eg: going to a different fragment, sending out notifications,
+     * writing to the internal db, etc.
+     */
+    public void kickOffNewChat() {
+        loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+        //now need a way to make sure all members are added ot this chat
+//>>>   stopped here
+    }
+
+    private void loadNewChatFrag(Fragment frag, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, frag, tag)
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
+    }
+
     /**
      * Handle errors that may occur during the AsyncTask.
      *
@@ -189,15 +246,36 @@ public class CreateChatFragment extends Fragment {
 
     public JSONObject createNewChatRequestObject() {
         JSONObject msg = new JSONObject();
-        JSONArray usersArr = new JSONArray(mNewChatIncludedUsernamesList);
-        try {
-            msg.put("memberid", mUserMemberID);
-            msg.put("members_in_chat", usersArr);
-        } catch (JSONException e) {
-            Log.wtf("CREATE NEW CHAT OBJECT", "Error creating JSON: " + e.getMessage());
+
+        if (mNewChatIncludedUsernamesList.size() < 1) { //nobody added to the list
+            Toast.makeText(this.getContext()
+                    , "PLEASE ADD AT LEAST ONE PERSON TO CHAT WITH"
+                    ,Toast.LENGTH_LONG );
+        } else { //make the chat name from names of all members, like we agreed on
+            StringBuilder sb = new StringBuilder();
+            for (String s : mNewChatIncludedUsernamesList) {
+                sb.append(s);
+            }
+            try {
+                //msg.put("memberid", mUserMemberID);
+                msg.put("chatname", sb.toString());
+            } catch (JSONException e) {
+                Log.wtf("CREATE NEW CHAT OBJECT", "Error creating JSON: " + e.getMessage());
+            }
+
         }
         return msg;
     }
+
+    private void sendNewChatRequest() {
+        JSONObject requestObject = createNewChatRequestObject();
+        new SendPostAsyncTask.Builder(mNewChatUri.toString(), requestObject)
+                .onPostExecute(this::handleNewChatCreatedOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+
 
     private Uri buildHerokuNewChatUri(){
         Uri uri = new Uri.Builder()

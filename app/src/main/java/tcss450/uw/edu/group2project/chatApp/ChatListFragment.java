@@ -25,12 +25,9 @@ import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.model.ChatContact;
-import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.model.FeedItem;
 import tcss450.uw.edu.group2project.model.MessageFeedItem;
 import tcss450.uw.edu.group2project.utils.MyMsgRecyclerViewAdapter;
-import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
-import tcss450.uw.edu.group2project.utils.OnItemClickListener;
 import tcss450.uw.edu.group2project.utils.OnMsgClickListener;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
@@ -75,7 +72,7 @@ public class ChatListFragment extends Fragment {
         progressBar = (ProgressBar) (v.findViewById(R.id.message_progressBar));
         mContactsUri = buildHerokuAddress(getString(R.string.ep_get_recent_chat));
         loadMessages();
-        mCreateNewChatButton = v.findViewById(R.id.createNewChatButton);
+        mCreateNewChatButton = v.findViewById(R.id.createNewChatFragNewChatButton);
         mCreateNewChatButton.setOnClickListener(button -> {
             createNewChat(mCreateNewChatButton);
         });

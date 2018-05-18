@@ -25,11 +25,11 @@
         android:layout_height="443dp"
         android:layout_marginBottom="8dp"
         android:footerDividersEnabled="true"
-        app:layout_constraintBottom_toTopOf="@+id/createNewChatButton"
+        app:layout_constraintBottom_toTopOf="@+id/createNewChatFragNewChatButton"
         tools:layout_editor_absoluteX="0dp" />
 
     <ImageButton
-        android:id="@+id/createNewChatButton"
+        android:id="@+id/createNewChatFragNewChatButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
