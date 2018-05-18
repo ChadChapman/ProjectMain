@@ -6,15 +6,10 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -44,6 +39,7 @@ public class ChatActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         // Update theme color
         setTheme(UITheme.getThemeId(mTheme));
@@ -138,7 +134,7 @@ public class ChatActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
-        } else if (id == R.id.action_logout) {
+        }else if(id == R.id.action_logout){
             onLogout();
         }
 
@@ -284,10 +280,9 @@ public class ChatActivity extends AppCompatActivity
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
-
     private void handleOnGetInfoPost(String result) {
         try {
-            Log.e("", result);
+            Log.e("",result);
             JSONObject msg = new JSONObject(result);
             ((TextView) findViewById(R.id.profile_text_view_username)).setText(msg.getString("username"));
             ((TextView) findViewById(R.id.profile_text_view_firstname)).setText(msg.getString("firstname"));
