@@ -6,6 +6,9 @@ public class ContactFeedItem {
     private String thumbnail;
     private String fname;
     private String lname;
+    private boolean isSelected = false;
+    private String username;
+
 
     public String getTitle() {
         return title;
@@ -31,6 +34,22 @@ public class ContactFeedItem {
     public String getLname() {return fname;    }
 
     public void setLname(String lname) {this.fname = lname; }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     @Override
     public String toString() {

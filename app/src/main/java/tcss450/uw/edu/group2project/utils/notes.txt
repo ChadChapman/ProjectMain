@@ -8,3 +8,4 @@ retrieve that ech time?  or just pass the same one around?s
 ended with still needing to go: button -> create new chat (activity) -> get other user(s) memberID
 or username -> begin new chat with that user -> load chatting fragment to allow it -> send a notification
 to other user they have been invited -> invite takes them to the same chat frag (not same instance obv)
+

@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -61,12 +63,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 //onItemClickListener.onContactItemClick(feedItem);
                 onItemClickListener.onContactItemClick(feedItem);
 
+
             }
         };
 
         customViewHolder.imageView.setOnClickListener(listener);
         customViewHolder.textView.setOnClickListener(listener);
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -80,11 +85,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected ImageView imageView;
         protected TextView textView;
+        //protected RelativeLayout rowRelativeLayout;
 
         public CustomViewHolder(View view) {
             super(view);
-            this.imageView = (ImageView) view.findViewById(R.id.thumbnail);
-            this.textView = (TextView) view.findViewById(R.id.title);
+            this.imageView = view.findViewById(R.id.thumbnail);
+            this.textView = view.findViewById(R.id.title);
+            //this.rowRelativeLayout = view.findViewById(R.id.listRowRelativeLayout);
         }
     }//end internal class CVH
 
