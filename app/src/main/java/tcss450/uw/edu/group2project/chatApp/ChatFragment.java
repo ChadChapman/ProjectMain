@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +20,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.model.Feeders.ChatFeedItem;
+import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
 import tcss450.uw.edu.group2project.utils.GetPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.ListenManager;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
@@ -29,8 +37,12 @@ public class ChatFragment extends Fragment {
     private String mUserChatIDStr;
     private String mUsername;
     private String mSendUrl;
-    private TextView mOutputTextView;
     private ListenManager mListenManager;
+
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter adapter;
+    private List<ChatFeedItem> messageFeedItemList;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -39,10 +51,14 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_chat, container, false);
-        v.findViewById(R.id.chatSendButton).setOnClickListener(this::sendMessage);
-        mOutputTextView = v.findViewById(R.id.chatOutputTextView);
+        View v = inflater.inflate(R.layout.fragment_chat_1, container, false);
+        v.findViewById(R.id.trychatSendButton).setOnClickListener(this::sendMessage);
+        messageFeedItemList = new ArrayList<>();
         mUserChatIDStr = getArguments().getString("chatID");
+        mRecyclerView = (RecyclerView) (v.findViewById(R.id.trychat_recyclerview));
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        mLayoutManager.setStackFromEnd(true);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         return v;
     }
 
@@ -165,34 +181,70 @@ public class ChatFragment extends Fragment {
     }
 
     private void publishProgress(JSONObject messages) {
-        final String[] msgs;
-        if (messages.has(getString(R.string.keys_json_messages))) {
+                if (messages.has(getString(R.string.keys_json_messages))) {
             try {
                 JSONArray jMessages =
                         messages.getJSONArray((getString(R.string.keys_json_messages)));
-                msgs = new String[jMessages.length()];
                 for (int i = 0; i < jMessages.length(); i++) {
                     JSONObject msg = jMessages.getJSONObject(i);
-                    String username =
-                            msg.get(getString(R.string.keys_json_username)).toString();
-                    String userMessage =
-                            msg.get(getString(R.string.keys_json_message)).toString();
-                    msgs[i] = username + ":" + userMessage;
+                    ChatFeedItem item = new ChatFeedItem();
+                    item.setUsername(msg.optString(getString(R.string.username)));
+                    item.setMessage(msg.optString(getString(R.string.message)));
+                    messageFeedItemList.add(item);
                 }
+
+
+                adapter = new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                    @NonNull
+                    @Override
+                    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+                        View view = LayoutInflater.from(viewGroup.getContext())
+                                .inflate(R.layout.messaging_list_rows, null);
+                        return new CustomViewHolder(view);
+                    }
+
+                    @Override
+                    public void onBindViewHolder(RecyclerView.ViewHolder customViewHolder, int i) {
+                        //FeedItem feedItem = feedItemList.get(i);
+                        ChatFeedItem feedItem = messageFeedItemList.get(i);
+
+                        //Setting text view title
+                        ((CustomViewHolder) customViewHolder).chatid.setText(feedItem.getUsername());
+                        ((CustomViewHolder) customViewHolder).message.setText(feedItem.getMessage());
+
+//                        View.OnClickListener listener = new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                onMsgItemClick(feedItem);
+//                            }
+//                        };
+                        //((CustomViewHolder) customViewHolder).chatid.setOnClickListener(listener);
+                        //((CustomViewHolder) customViewHolder).message.setOnClickListener(listener);
+                    }
+
+                    @Override
+                    public int getItemCount() {
+                        return (null != messageFeedItemList ? messageFeedItemList.size() : 0);
+                    }
+                };
+                mRecyclerView.setAdapter(adapter);
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
                 return;
             }
 
             getActivity().runOnUiThread(() -> {
-                for (String msg : msgs) {
-                    mOutputTextView.append(msg);
-                    mOutputTextView.append(System.lineSeparator());
+                for (ChatFeedItem msg : messageFeedItemList) {
+//                    mOutputTextView.append(msg);
+//                    mOutputTextView.append(System.lineSeparator());
                 }
             });
 
         }
     }
+
     //retrieve the previous messages
     private void getMessages() {
         String myMsg = new Uri.Builder()
@@ -213,12 +265,23 @@ public class ChatFragment extends Fragment {
 
     }
 
-    private void getReport(String messages){
+    private void getReport(String messages) {
 
         try {
             publishProgress(new JSONObject(messages));
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
+        protected TextView chatid;
+        protected TextView message;
+
+        public CustomViewHolder(View view) {
+            super(view);
+            this.chatid = (TextView) view.findViewById(R.id.username);
+            this.message = (TextView) view.findViewById(R.id.message);
         }
     }
 }
