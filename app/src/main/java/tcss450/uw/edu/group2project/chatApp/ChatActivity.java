@@ -6,10 +6,15 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -133,7 +138,7 @@ public class ChatActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
-        }else if(id == R.id.action_logout){
+        } else if (id == R.id.action_logout) {
             onLogout();
         }
 
@@ -144,23 +149,25 @@ public class ChatActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_chat) {
+        if (id == R.id.nav_home) {
+            loadFragment(new LandingFragment(), getString(R.string.keys_fragment_landing));
+        } else if (id == R.id.nav_chat) {
             Bundle bundle = new Bundle();
-            bundle.putString("memberID",mUserMemberID);
+            bundle.putString("memberID", mUserMemberID);
             Fragment chats = new ChatListFragment();
             chats.setArguments(bundle);
             loadFragment(chats, getString(R.string.keys_fragment_chat_list));
 
         } else if (id == R.id.nav_contacts) {
             Bundle bundle = new Bundle();
-            bundle.putString("memberID",mUserMemberID);
+            bundle.putString("memberID", mUserMemberID);
             Fragment contacts = new ContactFragment();
             contacts.setArguments(bundle);
-            loadFragment(contacts,getString(R.string.keys_fragment_contacts));
+            loadFragment(contacts, getString(R.string.keys_fragment_contacts));
         } else if (id == R.id.nav_profile) {
             loadFragment(new ProfileFragment(), getString(R.string.keys_fragment_profile));
             loadInfo();
+
         } else if (id == R.id.nav_settings) {
             loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
         } else if (id == R.id.nav_logout) {
@@ -217,12 +224,22 @@ public class ChatActivity extends AppCompatActivity
         // Handles theme changes to activity
         mTheme = theme;
         setTheme(mTheme);
+        String themeName = " ";
+        if(theme == 1){
+            themeName = getString(R.string.setting_button_theme_1);
+        }else if(theme == 2){
+            themeName = getString(R.string.setting_button_theme_2);
+        }else if(theme == 3){
+            themeName = getString(R.string.setting_button_theme_3);
+        }else if(theme == 4){
+            themeName = getString(R.string.setting_button_theme_4);
+        }
 
         ChatActivity.this.recreate();
 
         int duration = Toast.LENGTH_SHORT;
         Context context = this.getBaseContext();
-        Toast toast = Toast.makeText(context, "Changed to Theme " + theme, duration);
+        Toast toast = Toast.makeText(context, "Changed theme to " + themeName, duration);
         toast.show();
     }
 
@@ -267,9 +284,10 @@ public class ChatActivity extends AppCompatActivity
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
+
     private void handleOnGetInfoPost(String result) {
         try {
-            Log.e("",result);
+            Log.e("", result);
             JSONObject msg = new JSONObject(result);
             ((TextView) findViewById(R.id.profile_text_view_username)).setText(msg.getString("username"));
             ((TextView) findViewById(R.id.profile_text_view_firstname)).setText(msg.getString("firstname"));
