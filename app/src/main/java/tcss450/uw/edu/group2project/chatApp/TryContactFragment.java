@@ -229,15 +229,7 @@ public class TryContactFragment extends Fragment {
 
             } else {
                 Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
-            }//to here from tut GH
-
-//                adapter = new MyRecyclerViewAdapter(
-//                            ContactsActivity.this, mContactFeedItemList);
-//                    mRecyclerView.setAdapter(adapter);
-//          } else {
-//                    Toast.makeText(ContactsActivity.this
-//                            , "Failed to fetch data!", Toast.LENGTH_SHORT).show();
-//            } //commented out for testing
+            }
         } catch (JSONException e) {
             //It appears that the web service didn’t return a JSON formatted String
             //or it didn’t have what we expected in it.
