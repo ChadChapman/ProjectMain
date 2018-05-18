@@ -1,7 +1,6 @@
 package tcss450.uw.edu.group2project.chatApp;
 
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -19,13 +18,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.utils.GetPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.ListenManager;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChatFragment extends Fragment{
+public class ChatFragment extends Fragment {
     private String mUserChatIDStr;
     private String mUsername;
     private String mSendUrl;
@@ -76,8 +76,7 @@ public class ChatFragment extends Fragment{
                 .build();
 
 
-
-        if(prefs.contains(getString(R.string.keys_prefs_time_stamp))){
+        if (prefs.contains(getString(R.string.keys_prefs_time_stamp))) {
             //ignore all of the seen messages. You may want to store these messages locally
             mListenManager = new ListenManager.Builder(retrieve.toString(),
                     this::publishProgress)
@@ -85,7 +84,7 @@ public class ChatFragment extends Fragment{
                     .setExceptionHandler(this::handleError)
                     .setDelay(1000)
                     .build();
-        }else {
+        } else {
             //no record of a saved timestamp. must be a first time login
             mListenManager = new ListenManager.Builder(retrieve.toString(),
                     this::publishProgress)
@@ -94,6 +93,7 @@ public class ChatFragment extends Fragment{
                     .build();
 
         }
+        getMessages();
     }
 
     private void handleError(Exception e) {
@@ -102,13 +102,13 @@ public class ChatFragment extends Fragment{
 
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         mListenManager.startListening();
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
         String latestMessage = mListenManager.stopListening();
         SharedPreferences prefs =
@@ -124,7 +124,7 @@ public class ChatFragment extends Fragment{
 
 
         JSONObject messageJson = new JSONObject();
-        String msg = ((EditText) getView().findViewById(R.id.chatInputEditText))
+        String msg = ((EditText) getView().findViewById(R.id.trychatInputEditText))
                 .getText().toString();
 
 
@@ -144,7 +144,6 @@ public class ChatFragment extends Fragment{
     }
 
 
-
     private void handleError(final String msg) {
         Log.e("CHAT ERROR!!!", msg.toString());
     }
@@ -154,28 +153,25 @@ public class ChatFragment extends Fragment{
         try {
             JSONObject res = new JSONObject(result);
 
-            if(res.get(getString(R.string.keys_json_success)).toString()
+            if (res.get(getString(R.string.keys_json_success)).toString()
                     .equals(getString(R.string.keys_json_success_value_true))) {
 
-                ((EditText) getView().findViewById(R.id.chatInputEditText))
+                ((EditText) getView().findViewById(R.id.trychatInputEditText))
                         .setText("");
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-    public interface OnFragmentInteractionListener{
-        void onFragmentInteraction(Uri uri);
-    }
 
     private void publishProgress(JSONObject messages) {
         final String[] msgs;
-        if(messages.has(getString(R.string.keys_json_messages))){
-            try{
+        if (messages.has(getString(R.string.keys_json_messages))) {
+            try {
                 JSONArray jMessages =
                         messages.getJSONArray((getString(R.string.keys_json_messages)));
                 msgs = new String[jMessages.length()];
-                for(int i = 0; i < jMessages.length(); i++){
+                for (int i = 0; i < jMessages.length(); i++) {
                     JSONObject msg = jMessages.getJSONObject(i);
                     String username =
                             msg.get(getString(R.string.keys_json_username)).toString();
@@ -183,23 +179,46 @@ public class ChatFragment extends Fragment{
                             msg.get(getString(R.string.keys_json_message)).toString();
                     msgs[i] = username + ":" + userMessage;
                 }
-            }catch (JSONException e){
+            } catch (JSONException e) {
                 e.printStackTrace();
                 return;
             }
 
             getActivity().runOnUiThread(() -> {
-                for(String msg: msgs) {
-
+                for (String msg : msgs) {
                     mOutputTextView.append(msg);
-
                     mOutputTextView.append(System.lineSeparator());
                 }
             });
 
         }
     }
+    //retrieve the previous messages
+    private void getMessages() {
+        String myMsg = new Uri.Builder()
+                .scheme("https")
+                .authority(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_get_message))
+                .appendQueryParameter("chatId", mUserChatIDStr)
+                .appendQueryParameter("after", "2010-05-15 21:43:05.407269+00")
+                .build()
+                .toString();
+
+        JSONObject messageJson = new JSONObject();
+        new GetPostAsyncTask.Builder(myMsg, messageJson)
+                .onPostExecute(this::getReport)
+                .onCancelled(this::handleError)
+                .build().execute();
 
 
+    }
 
+    private void getReport(String messages){
+
+        try {
+            publishProgress(new JSONObject(messages));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }
