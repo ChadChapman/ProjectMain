@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.chatApp.ChatFragment;
 import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
 import tcss450.uw.edu.group2project.utils.OnItemClickListener;
@@ -104,7 +106,6 @@ public class CreateChatFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //return mContactFeedItemList;
     }
 
     //on post exec should be -> handle successful contacts query
@@ -171,6 +172,59 @@ public class CreateChatFragment extends Fragment {
         }
     }
 
+    //on post exec should be -> handle successful contacts query
+    public void handleNewChatCreatedOnPost(String result) {
+        try {
+
+            JSONObject resultsJSON = new JSONObject(result);
+            boolean success = resultsJSON.getBoolean("success");
+
+            if (success) {
+
+                //chat creation was successful
+                progressBar.setVisibility(View.GONE);
+
+                //inform user a new chat was created
+                Toast.makeText(this.getContext(), "NEW RABBIT CHAT CREATED!", Toast.LENGTH_SHORT).show();
+
+                //may need to pass params in to here later? not sure yet
+                kickOffNewChat();
+
+            } else {
+
+                Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
+
+            }
+
+        } catch (JSONException e) {
+            //It appears that the web service didn’t return a JSON formatted String
+            //or it didn’t have what we expected in it.
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
+        }
+    }
+
+    /**
+     * New Chat has been created from selected members.  This method should handle any logic
+     * associated with any further actions, eg: going to a different fragment, sending out notifications,
+     * writing to the internal db, etc.
+     */
+    public void kickOffNewChat() {
+        loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+        //now need a way to make sure all members are added ot this chat
+//>>>   stopped here
+    }
+
+    private void loadNewChatFrag(Fragment frag, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, frag, tag)
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
+    }
+
     /**
      * Handle errors that may occur during the AsyncTask.
      *
@@ -214,8 +268,13 @@ public class CreateChatFragment extends Fragment {
     }
 
     private void sendNewChatRequest() {
-
+        JSONObject requestObject = createNewChatRequestObject();
+        new SendPostAsyncTask.Builder(mNewChatUri.toString(), requestObject)
+                .onPostExecute(this::handleNewChatCreatedOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
     }
+
 
 
     private Uri buildHerokuNewChatUri(){
