@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -42,12 +43,11 @@ public class CreateChatFragment extends Fragment {
     private String mUserMemberIDStr;
     private Uri mNewChatUri;
     private View v;
-
+    private List<String> mNewChatIncludedUsernamesList;
 
     public CreateChatFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,11 +109,11 @@ public class CreateChatFragment extends Fragment {
         try {
             JSONObject resultsJSON = new JSONObject(result);
             boolean success = resultsJSON.getBoolean("success");
-
+            TextView usernamesTextView = v.findViewById(R.id.createChatUsernamesDisplay);
             if (success) {
                 //Query was successful
                 progressBar.setVisibility(View.GONE);
-
+                mNewChatIncludedUsernamesList = new ArrayList<>();
                 //need to populate the contacts list before passing it to the adapter
                 parseHerokuResult(result);
                 //added from here
@@ -122,13 +122,37 @@ public class CreateChatFragment extends Fragment {
                 adapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onContactItemClick(ContactFeedItem item) {
+                        //toggle the contact's display card
+                        //if the friend has already been added to the list for a new chat:
+                        //on the second click, they get removed
+                        if (item.isSelected()) {
+                            if(mNewChatIncludedUsernamesList.contains(item.getUsername())) {
+                                mNewChatIncludedUsernamesList.remove(item.getUsername());
+                                //Text views don't have a way to just redraw themselves?
+                                //guess I will have to iterate through this entire list?
+                                //usernamesTextView.setText("");
+                                StringBuilder sb = new StringBuilder();
+                                for (String s : mNewChatIncludedUsernamesList) {
+                                    sb.append(s);
+                                    sb.append("\n");
+                                }
+                                usernamesTextView.setText(sb.toString());
+
+                            }
+                            // do the color changes later?
+                        //some number of clicks where: (n % 2 = 1), so they get added to the list
+                        //of friends to have in a new chat
+                        } else {
+                            mNewChatIncludedUsernamesList.add(item.getUsername());
+                            usernamesTextView.append(item.getUsername());
+                        }
                         //Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragmentContainer, new FriendProfileFragment(item), "friend")
-                                .addToBackStack(null);
+//                        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+//                                .beginTransaction()
+//                                .replace(R.id.fragmentContainer, new FriendProfileFragment(item), "friend")
+//                                .addToBackStack(null);
                         // Commit the transaction
-                        transaction.commit();
+                        //transaction.commit();
                     }
                 });
 
@@ -163,8 +187,17 @@ public class CreateChatFragment extends Fragment {
         return msg;
     }
 
-
-
+    public JSONObject createNewChatRequestObject() {
+        JSONObject msg = new JSONObject();
+        JSONArray usersArr = new JSONArray(mNewChatIncludedUsernamesList);
+        try {
+            msg.put("memberid", mUserMemberID);
+            msg.put("members_in_chat", usersArr);
+        } catch (JSONException e) {
+            Log.wtf("CREATE NEW CHAT OBJECT", "Error creating JSON: " + e.getMessage());
+        }
+        return msg;
+    }
 
     private Uri buildHerokuNewChatUri(){
         Uri uri = new Uri.Builder()
