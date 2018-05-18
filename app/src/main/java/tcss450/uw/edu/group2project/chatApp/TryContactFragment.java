@@ -218,12 +218,11 @@ public class TryContactFragment extends Fragment {
                     @Override
                     public void onContactItemClick(ContactFeedItem item) {
                         //Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragmentContainer, new FriendProfileFragment(item), "friend")
-                                .addToBackStack(null);
-                        // Commit the transaction
-                        transaction.commit();
+                        //check if toggled on or not
+                            //if on, check for and remove that name from text view above, go back to
+                                //original color, remove from list of chat members
+                            //if off, add name to text view, change color, add name to list of chat
+                                //members
                     }
                 });
 
