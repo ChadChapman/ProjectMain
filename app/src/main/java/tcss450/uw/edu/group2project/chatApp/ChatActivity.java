@@ -155,7 +155,7 @@ public class ChatActivity extends AppCompatActivity
         } else if (id == R.id.nav_contacts) {
             Bundle bundle = new Bundle();
             bundle.putString("memberID",mUserMemberID);
-            Fragment contacts = new TryContactFragment();
+            Fragment contacts = new ContactFragment();
             contacts.setArguments(bundle);
             loadFragment(contacts,getString(R.string.keys_fragment_contacts));
         } else if (id == R.id.nav_profile) {

@@ -39,7 +39,7 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TryContactFragment extends Fragment {
+public class ContactFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
     private ProgressBar progressBar;
@@ -48,14 +48,14 @@ public class TryContactFragment extends Fragment {
     private Uri mContactsUri;
     private View v;
 
-    public TryContactFragment() {
+    public ContactFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_try_contact, container, false);
+        v = inflater.inflate(R.layout.fragment_contact, container, false);
         // Inflate the layout for this fragment
         mUserMemberIDStr = getArguments().getString("memberID");
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.try_recycle_view));
@@ -202,7 +202,7 @@ public class TryContactFragment extends Fragment {
                         }
 
                         //Setting text view title
-                        ((CustomViewHolder) customViewHolder).textView.setText(Html.fromHtml(feedItem.getTitle()));
+                        ((CustomViewHolder) customViewHolder).textView.setText(feedItem.getTitle());
 
                         View.OnClickListener listener = new View.OnClickListener() {
                             @Override
