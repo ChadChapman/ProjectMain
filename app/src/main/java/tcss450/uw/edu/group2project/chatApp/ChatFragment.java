@@ -109,6 +109,40 @@ public class ChatFragment extends Fragment {
                     .build();
 
         }
+        adapter = new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+            @NonNull
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+                View view = LayoutInflater.from(viewGroup.getContext())
+                        .inflate(R.layout.messaging_list_rows, null);
+                return new CustomViewHolder(view);
+            }
+
+            @Override
+            public void onBindViewHolder(RecyclerView.ViewHolder customViewHolder, int i) {
+                //FeedItem feedItem = feedItemList.get(i);
+                ChatFeedItem feedItem = messageFeedItemList.get(i);
+
+                //Setting text view title
+                ((CustomViewHolder) customViewHolder).chatid.setText(feedItem.getUsername());
+                ((CustomViewHolder) customViewHolder).message.setText(feedItem.getMessage());
+
+//                        View.OnClickListener listener = new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                onMsgItemClick(feedItem);
+//                            }
+//                        };
+                //((CustomViewHolder) customViewHolder).chatid.setOnClickListener(listener);
+                //((CustomViewHolder) customViewHolder).message.setOnClickListener(listener);
+            }
+
+            @Override
+            public int getItemCount() {
+                return (null != messageFeedItemList ? messageFeedItemList.size() : 0);
+            }
+        };
+        mRecyclerView.setAdapter(adapter);
         getMessages();
     }
 
@@ -194,42 +228,6 @@ public class ChatFragment extends Fragment {
                 }
 
 
-                adapter = new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-                    @NonNull
-                    @Override
-                    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-                        View view = LayoutInflater.from(viewGroup.getContext())
-                                .inflate(R.layout.messaging_list_rows, null);
-                        return new CustomViewHolder(view);
-                    }
-
-                    @Override
-                    public void onBindViewHolder(RecyclerView.ViewHolder customViewHolder, int i) {
-                        //FeedItem feedItem = feedItemList.get(i);
-                        ChatFeedItem feedItem = messageFeedItemList.get(i);
-
-                        //Setting text view title
-                        ((CustomViewHolder) customViewHolder).chatid.setText(feedItem.getUsername());
-                        ((CustomViewHolder) customViewHolder).message.setText(feedItem.getMessage());
-
-//                        View.OnClickListener listener = new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                onMsgItemClick(feedItem);
-//                            }
-//                        };
-                        //((CustomViewHolder) customViewHolder).chatid.setOnClickListener(listener);
-                        //((CustomViewHolder) customViewHolder).message.setOnClickListener(listener);
-                    }
-
-                    @Override
-                    public int getItemCount() {
-                        return (null != messageFeedItemList ? messageFeedItemList.size() : 0);
-                    }
-                };
-                mRecyclerView.setAdapter(adapter);
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
                 return;
@@ -239,6 +237,8 @@ public class ChatFragment extends Fragment {
                 for (ChatFeedItem msg : messageFeedItemList) {
 //                    mOutputTextView.append(msg);
 //                    mOutputTextView.append(System.lineSeparator());
+                    adapter.notifyDataSetChanged();
+                    mRecyclerView.smoothScrollToPosition(adapter.getItemCount());
                 }
             });
 
