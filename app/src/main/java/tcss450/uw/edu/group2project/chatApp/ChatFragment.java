@@ -26,33 +26,23 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
  * A simple {@link Fragment} subclass.
  */
 public class ChatFragment extends Fragment{
-    private int mUserChatID;
+    private String mUserChatIDStr;
     private String mUsername;
     private String mSendUrl;
     private TextView mOutputTextView;
     private ListenManager mListenManager;
 
-    private OnFragmentInteractionListener mListener;
-
-
     public ChatFragment() {
         // Required empty public constructor
-    }
-    @SuppressLint("ValidFragment")
-    public ChatFragment(int chatID) {
-        // Required empty public constructor
-        mUserChatID = chatID;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
-
         v.findViewById(R.id.chatSendButton).setOnClickListener(this::sendMessage);
-
         mOutputTextView = v.findViewById(R.id.chatOutputTextView);
-
+        mUserChatIDStr = getArguments().getString("chatID");
         return v;
     }
 
@@ -82,7 +72,7 @@ public class ChatFragment extends Fragment{
                 .scheme("https")
                 .authority(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_get_message))
-                .appendQueryParameter("chatId", String.valueOf(mUserChatID))
+                .appendQueryParameter("chatId", mUserChatIDStr)
                 .build();
 
 
@@ -111,12 +101,6 @@ public class ChatFragment extends Fragment{
     }
 
 
-
-    @Override
-    public void onDetach(){
-        super.onDetach();
-        mListener = null;
-    }
     @Override
     public void onResume(){
         super.onResume();
@@ -147,7 +131,7 @@ public class ChatFragment extends Fragment{
         try {
             messageJson.put(getString(R.string.keys_json_username), mUsername);
             messageJson.put(getString(R.string.keys_json_message), msg);
-            messageJson.put(getString(R.string.keys_json_chat_id), mUserChatID);
+            messageJson.put(getString(R.string.keys_json_chat_id), mUserChatIDStr);
         } catch (JSONException e) {
             e.printStackTrace();
         }
