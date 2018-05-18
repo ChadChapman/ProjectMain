@@ -28,6 +28,7 @@ public class Credentials implements Serializable {
 
     private final String mUsername;
     private final Editable mPassword;
+    private final Editable mConfirmPassword;
 
     private String mFirstName;
     private String mLastName;
@@ -41,6 +42,7 @@ public class Credentials implements Serializable {
     public static class Builder {
         private final String mUsername;
         private final Editable mPassword;
+        private final Editable mConfirmPassword;
 
         private String mFirstName = "";
         private String mLastName = "";
@@ -54,9 +56,16 @@ public class Credentials implements Serializable {
          * @param username the username
          * @param password the password
          */
+        public Builder(String username, Editable password, Editable confirmPassword) {
+            mUsername = username;
+            mPassword = password;
+            mConfirmPassword = confirmPassword;
+        }
+
         public Builder(String username, Editable password) {
             mUsername = username;
             mPassword = password;
+            mConfirmPassword = null;
         }
 
 
@@ -107,6 +116,11 @@ public class Credentials implements Serializable {
     private Credentials(final Builder builder) {
         mUsername = builder.mUsername;
         mPassword = builder.mPassword;
+        if (builder.mConfirmPassword != null) {
+            mConfirmPassword = builder.mConfirmPassword;
+        } else {
+            mConfirmPassword = null;
+        }
         mFirstName = builder.mFirstName;
         mLastName = builder.mLastName;
         mEmail = builder.mEmail;
@@ -180,6 +194,7 @@ public class Credentials implements Serializable {
         try {
             msg.put("username", getUsername());
             msg.put("password", mPassword);
+            msg.put("confirmPassword", mConfirmPassword);
             msg.put("first", getFirstName());
             msg.put("last", getLastName());
             msg.put("email", getEmail());

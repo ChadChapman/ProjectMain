@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+            <!-- >>>>>> DB QUERY STRINGS  <<<<<< -->
+            <!-- naming: <db type>_<query actions> -->
+
+<resources>
+    <!-- >>>>>> SQLITE3 INTERNAL DEVICE DB QUERY STRINGS GO HERE <<<<<< -->
+    <!-- >>>>>> naming example: sqlite_create_table_ChatContact <<<<<< -->
+    <!-- <string name="sqlite_create_table_ChatContact">CREATE TABLE IF NOT EXISTS
+        RabbitChatDB.ChatContact ( memberid INTEGER PRIMARY KEY,  username TEXT UNIQUE NOT NULL
+        , fname TEXT, lname TEXT, created_at TEXT, last_modified TEXT, verified TEXT
+        , image_link TEXT , display_color TEXT</string>
+-->
+
+    <!-- >>>>>> HEROKU POSTGRES DB QUERY STRINGS GO HERE <<<<<< -->
+
+</resources>

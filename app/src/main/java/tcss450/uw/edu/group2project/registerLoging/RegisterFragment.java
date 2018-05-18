@@ -119,7 +119,8 @@ public class RegisterFragment extends Fragment {
                 //we need another method to verify email then run this code... but for now we
                 //dont verify email.
                 Editable pwd = (Editable) ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_password1)).getText();
-                mListener.onRegisterAttempt(new Credentials.Builder(uName, pwd)
+                Editable cPwd = (Editable) ((TextView) getActivity().findViewById(R.id.registerfrag_edittext_password2)).getText();
+                mListener.onRegisterAttempt(new Credentials.Builder(uName, pwd, cPwd)
                         .addEmail(email)
                         .addFirstName(fName)
                         .addLastName(lName)
@@ -152,7 +153,7 @@ public class RegisterFragment extends Fragment {
         //Log in unsuccessful for reason: err. Try again.
         //you may want to add error stuffs for the user here.
         ((TextView) getView().findViewById(R.id.registerfrag_edittext_username))
-                .setError("Login Unsuccessful");
+                .setError(err);
     }
 
     public interface OnFragmentInteractionListener {

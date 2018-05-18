@@ -10,10 +10,13 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,14 +29,21 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 public class StartActivity extends AppCompatActivity
         implements LoginFragment.OnLoginFragmentInteractionListener,
-        RegisterFragment.OnFragmentInteractionListener {
+        RegisterFragment.OnFragmentInteractionListener,
+        VerifyFragment.OnFragmentInteractionListener
+{
 
-    Credentials mCredentials;
+    private Credentials mCredentials;
+    //private int mUserMemberID;
+    private String mUserMemberIDStr;
+    private int mUserMemberIDInt;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
 
 
         if (savedInstanceState == null) {
@@ -58,7 +68,7 @@ public class StartActivity extends AppCompatActivity
     }
 
 
-    private void loadLandingFragment() {
+    void loadLandingFragment() {
 //        LandingFragment landingFragment = new LandingFragment();
 //
 //        FragmentTransaction transaction = getSupportFragmentManager()
@@ -68,8 +78,30 @@ public class StartActivity extends AppCompatActivity
 //        transaction.commit();
 
         Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("userMemberID", mUserMemberIDStr);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
+    }
+
+    private void sendEmail() {
+        //build the web service URL
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_login))
+                .appendPath(getString(R.string.ep_email))
+                .build();
+
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("memberid", mUserMemberIDInt);
+        } catch (JSONException e) {
+            Log.e("StartActivity", "Email problem");
+        }
+        Toast.makeText(this, "Sending new email", Toast.LENGTH_SHORT).show();
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .build().execute();
     }
 
     /*
@@ -105,6 +137,7 @@ public class StartActivity extends AppCompatActivity
 
     @Override
     public void onLoginAttempt(Credentials credentials) {
+
         //build the web service URL
         Uri uri = new Uri.Builder()
                 .scheme("https")
@@ -116,6 +149,7 @@ public class StartActivity extends AppCompatActivity
         JSONObject msg = credentials.asJSONObject();
 
         mCredentials = credentials;
+
 
         //instantiate and execute the AsyncTask.
         //Feel free to add a handler for onPreExecution so that a progress bar
@@ -159,14 +193,41 @@ public class StartActivity extends AppCompatActivity
      * @param result the JSON formatted String response from the web service
      */
     private void handleLoginOnPost(String result) {
+
         try {
             JSONObject resultsJSON = new JSONObject(result);
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) {
                 //Login was successful. Switch to the loadSuccessFragment.
+                mUserMemberIDStr = resultsJSON.getString("message");
+                Log.e("MEMBERID WAS: ", mUserMemberIDStr);
                 checkStayLoggedIn();
-                loadLandingFragment();
+                int vCode = resultsJSON.getInt("code");
+                if (vCode == 1) {
+                    loadLandingFragment();
+                } else if (vCode == 0) {
+                    sendEmail();
+                    LoginFragment fragment = new LoginFragment();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.start_constraint_layout, fragment, "Login");
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    //frag.setError("Log in unsuccessful");
+                } else {
+                    Log.d("LoggingTest","vCode = " + vCode);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable(getString(R.string.keys_bundle_vcode), vCode);
+
+                    VerifyFragment fragment = new VerifyFragment();
+                    fragment.setArguments(bundle);
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.start_constraint_layout, fragment, "VerifyFragment");
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                }
             } else {
                 //Login was unsuccessful. Don’t switch fragments and inform the user
                 LoginFragment frag =
@@ -191,9 +252,16 @@ public class StartActivity extends AppCompatActivity
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) {
-                //Login was successful. Switch to the loadSuccessFragment.
-                getSupportFragmentManager().popBackStack();
-                loadLandingFragment();
+                mUserMemberIDInt = resultsJSON.getInt("memberid");
+                System.out.println(mUserMemberIDInt);
+                //now we return to login and let the user know to check email
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.start_constraint_layout,
+                                new LoginFragment())
+                        .addToBackStack(null)
+                        .commit();
+
+
             } else {
                 //Login was unsuccessful. Don’t switch fragments and inform the user
                 RegisterFragment frag =
@@ -206,7 +274,7 @@ public class StartActivity extends AppCompatActivity
         } catch (JSONException e) {
             //It appears that the web service didn’t return a JSON formatted String
             //or it didn’t have what we expected in it.
-            Log.e("JSON_PARSE_ERROR", result
+            Log.e("JSON_PARSE_ERROR Register", result
                     + System.lineSeparator()
                     + e.getMessage());
         }
@@ -236,6 +304,26 @@ public class StartActivity extends AppCompatActivity
                     true)
                     .apply();
         }
+    }
+
+    @Override
+    public void onFragmentInteraction() {
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_login))
+                .appendPath(getString(R.string.ep_verify))
+                .build();
+
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("memberid", mUserMemberIDStr);
+            new SendPostAsyncTask.Builder(uri.toString(), msg)
+                    .build().execute();
+        } catch (JSONException e) {
+            Log.wtf("Verify", "Error creating JSON " + e.getMessage());
+        }
+        loadLandingFragment();
     }
 
 
