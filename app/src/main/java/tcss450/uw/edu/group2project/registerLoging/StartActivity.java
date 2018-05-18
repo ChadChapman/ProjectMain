@@ -308,6 +308,21 @@ public class StartActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction() {
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_login))
+                .appendPath(getString(R.string.ep_verify))
+                .build();
+
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("memberid", mUserMemberIDStr);
+            new SendPostAsyncTask.Builder(uri.toString(), msg)
+                    .build().execute();
+        } catch (JSONException e) {
+            Log.wtf("Verify", "Error creating JSON " + e.getMessage());
+        }
         loadLandingFragment();
     }
 
