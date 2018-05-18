@@ -15,6 +15,10 @@
     <string name="firstname">firstname</string>
     <string name="lastname">lastname</string>
 
+    <!--Friend Fragment-->
+    <string name="friend_accept_button">accept</string>
+    <string name="friend_deny_button">deny</string>
+
     <!-- Login Fragment -->
     <string name="login_register_text_view_welcome">Welcome!!</string>
     <string name="login_edit_text_hint">Please log in or register</string>
