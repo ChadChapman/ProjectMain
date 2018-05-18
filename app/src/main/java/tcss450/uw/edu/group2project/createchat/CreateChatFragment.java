@@ -4,13 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,10 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.chatApp.FriendProfileFragment;
-import tcss450.uw.edu.group2project.model.ChatContact;
 import tcss450.uw.edu.group2project.model.ContactFeedItem;
-import tcss450.uw.edu.group2project.model.FeedItem;
 import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
 import tcss450.uw.edu.group2project.utils.OnItemClickListener;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
@@ -44,6 +41,7 @@ public class CreateChatFragment extends Fragment {
     private Uri mNewChatUri;
     private View v;
     private List<String> mNewChatIncludedUsernamesList;
+    private ImageButton createButton;
 
     public CreateChatFragment() {
         // Required empty public constructor
@@ -59,6 +57,11 @@ public class CreateChatFragment extends Fragment {
        mNewChatUri = buildHerokuNewChatUri();
        progressBar = v.findViewById(R.id.progress_bar);
        loadVerifiedContacts();
+       createButton = v.findViewById(R.id.createNewChatFragNewChatButton);
+       createButton.setOnClickListener(view -> {
+
+       });
+
 
        return v;
     }
@@ -116,7 +119,7 @@ public class CreateChatFragment extends Fragment {
                 mNewChatIncludedUsernamesList = new ArrayList<>();
                 //need to populate the contacts list before passing it to the adapter
                 parseHerokuResult(result);
-                //added from here
+
                 adapter = new MyRecyclerViewAdapter(getContext(), mContactFeedItemList);
                 mRecyclerView.setAdapter(adapter);
                 adapter.setOnItemClickListener(new OnItemClickListener() {
@@ -189,15 +192,31 @@ public class CreateChatFragment extends Fragment {
 
     public JSONObject createNewChatRequestObject() {
         JSONObject msg = new JSONObject();
-        JSONArray usersArr = new JSONArray(mNewChatIncludedUsernamesList);
-        try {
-            msg.put("memberid", mUserMemberID);
-            msg.put("members_in_chat", usersArr);
-        } catch (JSONException e) {
-            Log.wtf("CREATE NEW CHAT OBJECT", "Error creating JSON: " + e.getMessage());
+
+        if (mNewChatIncludedUsernamesList.size() < 1) { //nobody added to the list
+            Toast.makeText(this.getContext()
+                    , "PLEASE ADD AT LEAST ONE PERSON TO CHAT WITH"
+                    ,Toast.LENGTH_LONG );
+        } else { //make the chat name from names of all members, like we agreed on
+            StringBuilder sb = new StringBuilder();
+            for (String s : mNewChatIncludedUsernamesList) {
+                sb.append(s);
+            }
+            try {
+                //msg.put("memberid", mUserMemberID);
+                msg.put("chatname", sb.toString());
+            } catch (JSONException e) {
+                Log.wtf("CREATE NEW CHAT OBJECT", "Error creating JSON: " + e.getMessage());
+            }
+
         }
         return msg;
     }
+
+    private void sendNewChatRequest() {
+
+    }
+
 
     private Uri buildHerokuNewChatUri(){
         Uri uri = new Uri.Builder()
