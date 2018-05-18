@@ -6,15 +6,10 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,13 +24,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.contacts.ContactsActivity;
-import tcss450.uw.edu.group2project.model.ChatContact;
-import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
-import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.UITheme;
@@ -45,12 +34,6 @@ public class ChatActivity extends AppCompatActivity
         SettingFragment.OnSettingFragmentInteractionListener {
     private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
-    //private int mUserMemberIDInt;
-    private ArrayList<ChatContact> mChatContactsArrList;
-    //private String mUsername;
-
-    Bundle mContactsBundle;
-
     public static int mTheme = UITheme.THEME_ONE;
 
     @Override
@@ -162,14 +145,21 @@ public class ChatActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if(id == R.id.nav_home){
+        if (id == R.id.nav_home) {
             loadFragment(new LandingFragment(), getString(R.string.keys_fragment_landing));
         } else if (id == R.id.nav_chat) {
-            loadFragment(new ChatListFragment(mUserMemberID), getString(R.string.keys_fragment_chat_list));
-        } else if (id == R.id.nav_contacts) { //switch to Contacts Activity
-            //loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts)); original
-            //loadContactsActivity();
-            loadFragment(new TryContactFragment(mUserMemberID), getString(R.string.keys_fragment_contacts));
+            Bundle bundle = new Bundle();
+            bundle.putString("memberID", mUserMemberID);
+            Fragment chats = new ChatListFragment();
+            chats.setArguments(bundle);
+            loadFragment(chats, getString(R.string.keys_fragment_chat_list));
+
+        } else if (id == R.id.nav_contacts) {
+            Bundle bundle = new Bundle();
+            bundle.putString("memberID", mUserMemberID);
+            Fragment contacts = new ContactFragment();
+            contacts.setArguments(bundle);
+            loadFragment(contacts, getString(R.string.keys_fragment_contacts));
         } else if (id == R.id.nav_profile) {
             loadFragment(new ProfileFragment(), getString(R.string.keys_fragment_profile));
             loadInfo();

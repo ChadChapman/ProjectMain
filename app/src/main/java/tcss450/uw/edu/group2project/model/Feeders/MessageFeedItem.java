@@ -1,4 +1,4 @@
-package tcss450.uw.edu.group2project.model;
+package tcss450.uw.edu.group2project.model.Feeders;
 
 public class MessageFeedItem {
 

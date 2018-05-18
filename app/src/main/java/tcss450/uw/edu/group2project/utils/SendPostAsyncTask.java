@@ -206,7 +206,6 @@ public class SendPostAsyncTask extends AsyncTask<Void, String, String> {
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
         mOnProgress.accept(values);
-
     }
 
     @Override

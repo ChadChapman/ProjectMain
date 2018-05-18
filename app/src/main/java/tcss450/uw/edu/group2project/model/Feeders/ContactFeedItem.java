@@ -1,4 +1,4 @@
-package tcss450.uw.edu.group2project.model;
+package tcss450.uw.edu.group2project.model.Feeders;
 
 public class ContactFeedItem {
 
@@ -28,9 +28,10 @@ public class ContactFeedItem {
     }
 
     public void setFname(String fname) {this.fname = fname; }
-    public String getLname() {return fname;    }
 
-    public void setLname(String lname) {this.fname = lname; }
+    public String getLname() {return lname;    }
+
+    public void setLname(String lname) {this.lname = lname; }
 
     @Override
     public String toString() {
