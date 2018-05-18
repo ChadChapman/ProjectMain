@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.model.ContactFeedItem;
+import tcss450.uw.edu.group2project.model.Feeders.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 /**

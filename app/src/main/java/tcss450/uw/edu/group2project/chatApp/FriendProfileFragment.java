@@ -1,7 +1,6 @@
 package tcss450.uw.edu.group2project.chatApp;
 
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.model.ContactFeedItem;
 
 /**
  * A simple {@link Fragment} subclass.
