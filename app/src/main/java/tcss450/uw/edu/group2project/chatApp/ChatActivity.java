@@ -162,8 +162,9 @@ public class ChatActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_chat) {
+        if(id == R.id.nav_home){
+            loadFragment(new LandingFragment(), getString(R.string.keys_fragment_landing));
+        } else if (id == R.id.nav_chat) {
             loadFragment(new ChatListFragment(mUserMemberID), getString(R.string.keys_fragment_chat_list));
         } else if (id == R.id.nav_contacts) { //switch to Contacts Activity
             //loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts)); original
