@@ -24,8 +24,10 @@
 
     <Button
         android:id="@+id/setting_button_theme_1"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="120dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         android:text="@string/setting_button_theme_1"
@@ -35,8 +37,10 @@
 
     <Button
         android:id="@+id/setting_button_theme_2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="120dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary2"
         android:text="@string/setting_button_theme_2"
@@ -46,8 +50,10 @@
 
     <Button
         android:id="@+id/setting_button_theme_3"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="120dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary3"
         android:text="@string/setting_button_theme_3"
@@ -57,8 +63,10 @@
 
     <Button
         android:id="@+id/setting_button_theme_4"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="120dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary4"
         android:text="@string/setting_button_theme_4"

@@ -58,10 +58,10 @@
 
     <!-- Setting Fragment -->
     <string name="setting_text_view_theme">Select App Theme</string>
-    <string name="setting_button_theme_1">Theme 1</string>
-    <string name="setting_button_theme_2">Theme 2</string>
-    <string name="setting_button_theme_3">Theme 3</string>
-    <string name="setting_button_theme_4">Theme 4</string>
+    <string name="setting_button_theme_1">Underwater Haze</string>
+    <string name="setting_button_theme_2">Arctic Blast</string>
+    <string name="setting_button_theme_3">Magentalman</string>
+    <string name="setting_button_theme_4">Minty Breeze</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
