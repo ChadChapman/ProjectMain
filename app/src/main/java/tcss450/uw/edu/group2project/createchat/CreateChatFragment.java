@@ -39,7 +39,7 @@ public class CreateChatFragment extends Fragment {
     private ProgressBar progressBar;
     private List<ContactFeedItem> mContactFeedItemList;
     private int mUserMemberID;
-    private String mUserMemberIDStr;
+    private String mNewChatIDStr;
     private Uri mNewChatUri;
     private Uri mContactsUri;
     private View v;
@@ -47,6 +47,7 @@ public class CreateChatFragment extends Fragment {
     private ImageButton createButton;
     private TextView mUsernamesDisplayTextView;
     private int mNewChatIDFromResponse;
+
 
     public CreateChatFragment() {
         // Required empty public constructor
@@ -211,7 +212,7 @@ public class CreateChatFragment extends Fragment {
         Uri uri = new Uri.Builder().scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_chat))
-                .appendPath(getString(R.string.ep_create_new))
+                .appendPath(getString(R.string.ep_new_chat))
                 .build();
         return uri;
     }
@@ -272,7 +273,12 @@ public class CreateChatFragment extends Fragment {
 
                 //inform user a new chat was created
                 Toast.makeText(this.getContext(), "NEW RABBIT CHAT CREATED!", Toast.LENGTH_SHORT).show();
-                mNewChatIDFromResponse = resultsJSON.getInt("chatid");
+                //mNewChatIDFromResponse = resultsJSON.getInt("chatid");
+                //Integer chatid = mNewChatIDFromResponse;
+                //Log.e("LOG ID IS: ", chatid.toString());
+                mNewChatIDStr = resultsJSON.getString("message");
+                //Log.e("LOG ID IS: ", chatid.toString());
+                Log.e("LOG ID IS: ", mNewChatIDStr);
                 //may need to pass params in to here later? not sure yet
                 kickOffNewChat();
 
@@ -297,7 +303,8 @@ public class CreateChatFragment extends Fragment {
      * writing to the internal db, etc.
      */
     public void kickOffNewChat() {
-        loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+        Log.e("KICK OFF NEW CHAT: ", "TRUE");
+        //loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
         //now need a way to make sure all members are added ot this chat
 //>>>   stopped here
     }
