@@ -45,6 +45,7 @@ public class CreateChatFragment extends Fragment {
     private View v;
     private List<String> mNewChatIncludedUsernamesList;
     private ImageButton createButton;
+    private TextView mUsernamesDisplayTextView;
 
     public CreateChatFragment() {
         // Required empty public constructor
@@ -60,6 +61,8 @@ public class CreateChatFragment extends Fragment {
        mNewChatUri = buildHerokuNewChatUri();
        mContactsUri = buildHerokuVerifiedContactsUri();
        progressBar = v.findViewById(R.id.create_chat_progress_bar);
+       mUsernamesDisplayTextView = v.findViewById(R.id.createChatUsernamesDisplay);
+       Log.e("CURRENTLY INTHE TEXTVIEW: ", mUsernamesDisplayTextView.getText().toString());
        Bundle bundle = this.getArguments();
        if (bundle != null) {
            mUserMemberID = Integer.parseInt(bundle.getString("memberid"));
@@ -120,7 +123,7 @@ public class CreateChatFragment extends Fragment {
         try {
             JSONObject resultsJSON = new JSONObject(result);
             boolean success = resultsJSON.getBoolean("success");
-            TextView usernamesTextView = v.findViewById(R.id.createChatUsernamesDisplay);
+
             if (success) {
                 //Query was successful
                 progressBar.setVisibility(View.GONE);
@@ -132,41 +135,8 @@ public class CreateChatFragment extends Fragment {
 
                 adapter = new MyRecyclerViewAdapter(getContext(), mContactFeedItemList);
                 mRecyclerView.setAdapter(adapter);
-                adapter.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onContactItemClick(ContactFeedItem item) {
-                        //toggle the contact's display card
-                        //if the friend has already been added to the list for a new chat:
-                        //on the second click, they get removed
-                        if (item.isSelected()) {
-                            if(mNewChatIncludedUsernamesList.contains(item.getUsername())) {
-                                mNewChatIncludedUsernamesList.remove(item.getUsername());
-                                //Text views don't have a way to just redraw themselves?
-                                //guess I will have to iterate through this entire list?
-                                //usernamesTextView.setText("");
-                                StringBuilder sb = new StringBuilder();
-                                for (String s : mNewChatIncludedUsernamesList) {
-                                    sb.append(s);
-                                    sb.append("\n");
-                                }
-                                usernamesTextView.setText(sb.toString());
-
-                            }
-                            // do the color changes later?
-                        //some number of clicks where: (n % 2 = 1), so they get added to the list
-                        //of friends to have in a new chat
-                        } else {
-                            mNewChatIncludedUsernamesList.add(item.getUsername());
-                            usernamesTextView.append(item.getUsername());
-                        }
-                        //Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
-//                        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-//                                .beginTransaction()
-//                                .replace(R.id.fragmentContainer, new FriendProfileFragment(item), "friend")
-//                                .addToBackStack(null);
-                        // Commit the transaction
-                        //transaction.commit();
-                    }
+                adapter.setOnItemClickListener(item -> {
+                    handleChatMembersAddRemove(item);
                 });
 
             } else {
@@ -180,6 +150,42 @@ public class CreateChatFragment extends Fragment {
                     + e.getMessage());
         }
     }
+
+
+    private void handleChatMembersAddRemove(ContactFeedItem item) {
+        StringBuilder sb = new StringBuilder();
+        //toggle the contact's display card
+            //if the friend has already been added to the list for a new chat:
+            //on the second click, they get removed
+            if (item.isSelected()) {
+                mNewChatIncludedUsernamesList.remove(item.getUsername());
+                item.setSelected(false);
+
+            } else {
+                //mNewChatIncludedUsernamesList.add(item.getUsername());
+                //mUsernamesDisplayTextView.append(item.getUsername());
+                mNewChatIncludedUsernamesList.add(item.getUsername());
+                item.setSelected(true);
+            }
+
+            Integer users = mNewChatIncludedUsernamesList.size();
+            Log.e("SIZE OF FRIENDS LIST FOR NEW CHAT:", users.toString());
+            for (String s : mNewChatIncludedUsernamesList) {
+                sb.append(s);
+                sb.append(" ");
+            }
+            Integer sbsize = sb.length();
+            Log.e("STRING BUILDER SIZE: ", sbsize.toString());
+            mUsernamesDisplayTextView.setText(sb.toString());
+            //Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
+//                        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+//                                .beginTransaction()
+//                                .replace(R.id.fragmentContainer, new FriendProfileFragment(item), "friend")
+//                                .addToBackStack(null);
+            // Commit the transaction
+            //transaction.commit();
+        }
+
 
     public JSONObject createVerifiedContactsRequestObject() {
         JSONObject msg = new JSONObject();
