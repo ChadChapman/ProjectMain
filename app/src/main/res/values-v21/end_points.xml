@@ -33,7 +33,8 @@
     <string name="ep_get_message">getMessages</string>
     <string name="ep_get_recent_chat">getRecentChat</string>
     <string name="ep_chat">chat</string>
-    <string name="ep_create_new">createNew</string>
+    <string name="ep_new_chat">newChat</string>
+    <string name="ep_new_chat_add_all_members">addNewChatMembers</string>
 
 
     </resources>

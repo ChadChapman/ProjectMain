@@ -1,6 +1,7 @@
 package tcss450.uw.edu.group2project.createchat;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,14 +40,15 @@ public class CreateChatFragment extends Fragment {
     private ProgressBar progressBar;
     private List<ContactFeedItem> mContactFeedItemList;
     private int mUserMemberID;
-    private String mUserMemberIDStr;
+    private String mNewChatIDStr;
     private Uri mNewChatUri;
     private Uri mContactsUri;
     private View v;
     private List<String> mNewChatIncludedUsernamesList;
     private ImageButton createButton;
     private TextView mUsernamesDisplayTextView;
-    private int newChatIDFromResponse;
+    private int mNewChatIDFromResponse;
+
 
     public CreateChatFragment() {
         // Required empty public constructor
@@ -211,7 +213,7 @@ public class CreateChatFragment extends Fragment {
         Uri uri = new Uri.Builder().scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_chat))
-                .appendPath(getString(R.string.ep_create_new))
+                .appendPath(getString(R.string.ep_new_chat))
                 .build();
         return uri;
     }
@@ -223,12 +225,27 @@ public class CreateChatFragment extends Fragment {
             Toast.makeText(this.getContext()
                     , "PLEASE ADD AT LEAST ONE PERSON TO CHAT WITH"
                     ,Toast.LENGTH_LONG );
+            return msg;
         } else { //make the chat name from names of all members, like we agreed on
             StringBuilder sb = new StringBuilder();
             for (String s : mNewChatIncludedUsernamesList) {
                 sb.append(s);
+                sb.append('+');
             }
-// >>>  ended here
+            //SharedPreferences prefs = getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
+            SharedPreferences prefs =
+                    getActivity().getSharedPreferences(
+                            getString(R.string.keys_shared_prefs),
+                            Context.MODE_PRIVATE);
+            String thisUsername = prefs.getString("username", "USERNAME NOT FOUND IN PREFS!");
+            if (!mNewChatIncludedUsernamesList.contains(thisUsername)) {
+                //should be added last so easy to remove
+                mNewChatIncludedUsernamesList.add(thisUsername);
+                sb.append(thisUsername);
+            } else {
+                Log.e("ADDING THIS USERNAME TO CHAT ERROR:", "USERNAME WAS ALREADY IN THE CHATNAME");
+            }
+
             Log.e("NEW CHAT WILL BE NAMED: ", sb.toString());
             try {
                 //msg.put("memberid", mUserMemberID);
@@ -249,7 +266,16 @@ public class CreateChatFragment extends Fragment {
                 .build().execute();
     }
 
-    //on post exec should be -> handle successful contacts query
+    //-------------------------------------------------------------------------
+    //-----------------------END CREATE NEW CHAT REQUEST-----------------------
+    //-------------------------------------------------------------------------
+    //----------------BEGIN HANDLING THE RESPONSE AND INCLUDING MEMBERS--------
+    //-------------------------------------------------------------------------
+
+    //make response handler method init the int for the newly created chatid
+    //notify? add all members in the chat to the chat, use the arraylist of chosen members
+
+    //on post exec should be -> handle successful new chat creation
     public void handleNewChatCreatedOnPost(String result) {
         try {
 
@@ -263,7 +289,12 @@ public class CreateChatFragment extends Fragment {
 
                 //inform user a new chat was created
                 Toast.makeText(this.getContext(), "NEW RABBIT CHAT CREATED!", Toast.LENGTH_SHORT).show();
-
+                //mNewChatIDFromResponse = resultsJSON.getInt("chatid");
+                //Integer chatid = mNewChatIDFromResponse;
+                //Log.e("LOG ID IS: ", chatid.toString());
+                mNewChatIDStr = resultsJSON.getString("message");
+                //Log.e("LOG ID IS: ", chatid.toString());
+                Log.e("LOG ID IS: ", mNewChatIDStr);
                 //may need to pass params in to here later? not sure yet
                 kickOffNewChat();
 
@@ -288,9 +319,23 @@ public class CreateChatFragment extends Fragment {
      * writing to the internal db, etc.
      */
     public void kickOffNewChat() {
-        loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+        Log.e("KICK OFF NEW CHAT: ", "TRUE");
         //now need a way to make sure all members are added ot this chat
+        JSONArray jsonArray = new JSONArray(mNewChatIncludedUsernamesList);
+        Uri addNewChatMembersUri = buildHerokuAddNewChatMembersUri();
+        //loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+
 //>>>   stopped here
+    }
+
+    private Uri buildHerokuAddNewChatMembersUri(){
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_chat))
+                .appendPath(getString(R.string.ep_new_chat_add_all_members))
+                .build();
+        return uri;
     }
 
     private void loadNewChatFrag(Fragment frag, String tag) {
@@ -301,16 +346,6 @@ public class CreateChatFragment extends Fragment {
         // Commit the transaction
         transaction.commit();
     }
-
-    //-------------------------------------------------------------------------
-    //-----------------------END CREATE NEW CHAT REQUEST-----------------------
-    //-------------------------------------------------------------------------
-    //-----------------------BEGIN INCLUDING MEMBERS---------------------------
-    //-------------------------------------------------------------------------
-
-    //make response handler method init the int for the newly created chatid
-    //notify? add all members in the chat to the chat, use the arraylist of chosen members
-    
 
 
     //-------------------------------------------------------------------------
