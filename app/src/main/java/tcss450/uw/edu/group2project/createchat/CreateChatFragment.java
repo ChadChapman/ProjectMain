@@ -30,6 +30,7 @@ import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
 import tcss450.uw.edu.group2project.utils.OnItemClickListener;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
+import tcss450.uw.edu.group2project.utils.SendPostAsyncTaskWithArray;
 
 
 public class CreateChatFragment extends Fragment {
@@ -323,9 +324,19 @@ public class CreateChatFragment extends Fragment {
         //now need a way to make sure all members are added ot this chat
         JSONArray jsonArray = new JSONArray(mNewChatIncludedUsernamesList);
         Uri addNewChatMembersUri = buildHerokuAddNewChatMembersUri();
+        Log.e("JSON ARRAY OF USERNAMES TO ADD TO NEW CHAT : ", jsonArray.toString());
+        sendNewChatAddAllMembersRequest(jsonArray, addNewChatMembersUri);
         //loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
 
 //>>>   stopped here
+    }
+
+    private void sendNewChatAddAllMembersRequest(JSONArray jsonArr, Uri paramUri) {
+
+        new SendPostAsyncTaskWithArray.Builder(paramUri.toString(), jsonArr)
+                .onPostExecute(this::handleNewChatCreatedOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
     }
 
     private Uri buildHerokuAddNewChatMembersUri(){
