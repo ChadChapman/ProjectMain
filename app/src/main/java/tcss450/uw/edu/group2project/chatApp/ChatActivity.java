@@ -6,15 +6,10 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -32,10 +27,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.contacts.ContactsActivity;
 import tcss450.uw.edu.group2project.model.ChatContact;
-import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
-import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.UITextSize;
@@ -43,6 +35,7 @@ import tcss450.uw.edu.group2project.utils.UITheme;
 
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
+        SearchFragment.OnSearchFragmentInteractionListener,
         SettingFragment.OnSettingFragmentInteractionListener {
     private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
@@ -176,7 +169,9 @@ public class ChatActivity extends AppCompatActivity
         } else if (id == R.id.nav_profile) {
             loadFragment(new ProfileFragment(), getString(R.string.keys_fragment_profile));
             loadInfo();
-
+        } else if (id == R.id.nav_search) {
+            loadFragment(new SearchFragment(), getString(R.string.keys_fragment_search));
+            loadInfo();
         } else if (id == R.id.nav_settings) {
             loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
         } else if (id == R.id.nav_logout) {
@@ -268,6 +263,22 @@ public class ChatActivity extends AppCompatActivity
         Context context = this.getBaseContext();
         Toast toast = Toast.makeText(context, "Changed to Size " + size, duration);
         toast.show();
+    }
+
+    // Handle searches
+    @Override
+    public void onSearchByEmailButtonClicked(String email) {
+
+    }
+
+    @Override
+    public void onSearchByUsernameButtonClicked(String searchInfo) {
+
+    }
+
+    @Override
+    public void onSearchByNameButtonClicked(String firstname, String lastname) {
+
     }
 
     //load the profile info

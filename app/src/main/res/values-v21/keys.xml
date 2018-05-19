@@ -18,6 +18,7 @@
     <string name="keys_fragment_chat_list">chatListFragmentTag</string>
     <string name="keys_fragment_profile">profileFragmentTag</string>
     <string name="keys_fragment_contacts">contactsFragmentTag</string>
+    <string name="keys_fragment_search">searchFragmentTag</string>
     <string name="keys_fragment_settings">settingsFragmentTag</string>
 
     <string name="keys_json_username">username</string>

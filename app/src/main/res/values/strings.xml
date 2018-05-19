@@ -68,6 +68,13 @@
     <string name="setting_button_text_size_medium">Medium</string>
     <string name="setting_button_text_size_large">Large</string>
 
+    <!-- Search Fragment -->
+    <string name="search_text_view_username">Username</string>
+    <string name="search_text_view_email">Email</string>
+    <string name="search_text_view_first_name">First Name</string>
+    <string name="search_text_view_last_name">Last Name</string>
+    <string name="search_button_search">Search</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
