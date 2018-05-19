@@ -20,6 +20,10 @@
         android:icon="@drawable/ic_menu_settings"
         android:title="Settings" />
     <item
+        android:id="@+id/nav_new_chat"
+        android:icon="@drawable/ic_menu_settings"
+        android:title="New Chat" />s
+    <item
         android:id="@+id/nav_logout"
         android:title="Logout" />
 
