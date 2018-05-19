@@ -46,6 +46,7 @@ public class CreateChatFragment extends Fragment {
     private List<String> mNewChatIncludedUsernamesList;
     private ImageButton createButton;
     private TextView mUsernamesDisplayTextView;
+    private int newChatIDFromResponse;
 
     public CreateChatFragment() {
         // Required empty public constructor
@@ -55,14 +56,14 @@ public class CreateChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        v = inflater.inflate(R.layout.fragment_create_chat, container, false);
+       v = inflater.inflate(R.layout.fragment_create_chat, container, false);
        mRecyclerView = v.findViewById(R.id.create_chat_recycle_view);
        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
        mNewChatUri = buildHerokuNewChatUri();
        mContactsUri = buildHerokuVerifiedContactsUri();
        progressBar = v.findViewById(R.id.create_chat_progress_bar);
        mUsernamesDisplayTextView = v.findViewById(R.id.createChatUsernamesDisplay);
-       Log.e("CURRENTLY INTHE TEXTVIEW: ", mUsernamesDisplayTextView.getText().toString());
+//       Log.e("CURRENTLY INTHE TEXTVIEW: ", mUsernamesDisplayTextView.getText().toString());
        Bundle bundle = this.getArguments();
        if (bundle != null) {
            mUserMemberID = Integer.parseInt(bundle.getString("memberid"));
@@ -75,13 +76,6 @@ public class CreateChatFragment extends Fragment {
 
        return v;
     }
-
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
 
     public void loadVerifiedContacts() {
         JSONObject jsonObject = createVerifiedContactsRequestObject();
@@ -153,17 +147,20 @@ public class CreateChatFragment extends Fragment {
 
 
     private void handleChatMembersAddRemove(ContactFeedItem item) {
-        StringBuilder sb = new StringBuilder();
-        //toggle the contact's display card
-            //if the friend has already been added to the list for a new chat:
-            //on the second click, they get removed
-            if (item.isSelected()) {
-                mNewChatIncludedUsernamesList.remove(item.getTitle());
-                item.setSelected(false);
 
-            } else {
-                //mNewChatIncludedUsernamesList.add(item.getUsername());
-                //mUsernamesDisplayTextView.append(item.getUsername());
+        StringBuilder sb = new StringBuilder();
+
+        //toggle the contact's display card
+        //if the friend has already been added to the list for a new chat:
+        //on the second click, they get removed
+
+        if (item.isSelected()) {
+
+            mNewChatIncludedUsernamesList.remove(item.getTitle());
+            item.setSelected(false);
+
+        } else {
+
                 mNewChatIncludedUsernamesList.add(item.getTitle());
                 item.setSelected(true);
             }
@@ -174,16 +171,11 @@ public class CreateChatFragment extends Fragment {
                 sb.append(s);
                 sb.append(" ");
             }
+
             Integer sbsize = sb.length();
             Log.e("STRING BUILDER SIZE: ", sbsize.toString());
             mUsernamesDisplayTextView.setText(sb.toString());
-            //Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
-//                        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-//                                .beginTransaction()
-//                                .replace(R.id.fragmentContainer, new FriendProfileFragment(item), "friend")
-//                                .addToBackStack(null);
-            // Commit the transaction
-            //transaction.commit();
+
         }
 
 
@@ -236,6 +228,8 @@ public class CreateChatFragment extends Fragment {
             for (String s : mNewChatIncludedUsernamesList) {
                 sb.append(s);
             }
+// >>>  ended here
+            Log.e("NEW CHAT WILL BE NAMED: ", sb.toString());
             try {
                 //msg.put("memberid", mUserMemberID);
                 msg.put("chatname", sb.toString());
@@ -307,6 +301,17 @@ public class CreateChatFragment extends Fragment {
         // Commit the transaction
         transaction.commit();
     }
+
+    //-------------------------------------------------------------------------
+    //-----------------------END CREATE NEW CHAT REQUEST-----------------------
+    //-------------------------------------------------------------------------
+    //-----------------------BEGIN INCLUDING MEMBERS---------------------------
+    //-------------------------------------------------------------------------
+
+    //make response handler method init the int for the newly created chatid
+    //notify? add all members in the chat to the chat, use the arraylist of chosen members
+    
+
 
     //-------------------------------------------------------------------------
     //-----------------------END CREATE NEW CHAT-------------------------------
