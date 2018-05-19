@@ -34,7 +34,7 @@ import tcss450.uw.edu.group2project.R;
  * @author Charles Bryan
  * @version 4/15/2018
  */
-public class SendPostAsyncTask extends AsyncTask<Void, String, String> {
+public class GetPostAsyncTask extends AsyncTask<Void, String, String> {
 
     private final String mUrl;
     private final JSONObject mJsonMsg;
@@ -130,8 +130,8 @@ public class SendPostAsyncTask extends AsyncTask<Void, String, String> {
          *
          * @return a SendPostAsyncTask with the current attributes
          */
-        public SendPostAsyncTask build() {
-            return new SendPostAsyncTask(this);
+        public GetPostAsyncTask build() {
+            return new GetPostAsyncTask(this);
         }
 
     }
@@ -141,7 +141,7 @@ public class SendPostAsyncTask extends AsyncTask<Void, String, String> {
      *
      * @param builder the builder used to construct this object
      */
-    private SendPostAsyncTask(final Builder builder) {
+    private GetPostAsyncTask(final Builder builder) {
         mUrl = builder.mUrl;
         mJsonMsg = builder.mJsonMsg;
 
@@ -166,15 +166,6 @@ public class SendPostAsyncTask extends AsyncTask<Void, String, String> {
         try {
             URL urlObject = new URL(mUrl);
             urlConnection = (HttpURLConnection) urlObject.openConnection();
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setRequestProperty("Content-Type", "application/json");
-            urlConnection.setDoOutput(true);
-            OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
-
-            wr.write(mJsonMsg.toString());
-            wr.flush();
-            wr.close();
-
             InputStream content = urlConnection.getInputStream();
             BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
             String s = "";
