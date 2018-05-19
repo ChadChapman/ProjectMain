@@ -60,12 +60,15 @@ public class CreateChatFragment extends Fragment {
        mNewChatUri = buildHerokuNewChatUri();
        mContactsUri = buildHerokuVerifiedContactsUri();
        progressBar = v.findViewById(R.id.create_chat_progress_bar);
+       Bundle bundle = this.getArguments();
+       if (bundle != null) {
+           mUserMemberID = Integer.parseInt(bundle.getString("memberid"));
+       }
        loadVerifiedContacts();
        createButton = v.findViewById(R.id.createNewChatFragNewChatButton);
        createButton.setOnClickListener(view -> {
             sendNewChatRequest();
        });
-
 
        return v;
     }
@@ -80,7 +83,7 @@ public class CreateChatFragment extends Fragment {
     public void loadVerifiedContacts() {
         JSONObject jsonObject = createVerifiedContactsRequestObject();
         //now json obj is built, time ot send it off
-        new SendPostAsyncTask.Builder(mNewChatUri.toString(), jsonObject)
+        new SendPostAsyncTask.Builder(mContactsUri.toString(), jsonObject)
                 .onPostExecute(this::handleContactsQueryResponseOnPostExec)
                 .onCancelled(this::handleErrorsInTask)
                 .build().execute();
@@ -94,6 +97,8 @@ public class CreateChatFragment extends Fragment {
         try {
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray(getString(R.string.contacts));
+            Integer jsonArrSize = posts.length();
+            Log.e("SIZE OF RETURNED JSON ARRAY", jsonArrSize.toString());
             mContactFeedItemList = new ArrayList<>();
 
             for (int i = 0; i < posts.length(); i++) {
@@ -122,6 +127,8 @@ public class CreateChatFragment extends Fragment {
                 mNewChatIncludedUsernamesList = new ArrayList<>();
                 //need to populate the contacts list before passing it to the adapter
                 parseHerokuResult(result);
+                Integer numContacts = mContactFeedItemList.size();
+                Log.e("NUMBER OF CONTACTS RETURNED: ", numContacts.toString());
 
                 adapter = new MyRecyclerViewAdapter(getContext(), mContactFeedItemList);
                 mRecyclerView.setAdapter(adapter);
@@ -172,6 +179,74 @@ public class CreateChatFragment extends Fragment {
                     + System.lineSeparator()
                     + e.getMessage());
         }
+    }
+
+    public JSONObject createVerifiedContactsRequestObject() {
+        JSONObject msg = new JSONObject();
+        try {
+            msg.put("memberid", mUserMemberID);
+            Integer id = mUserMemberID;
+            Log.e("MEMBER ID BEING PASSED TO BACK END: ", id.toString());
+        } catch (JSONException e) {
+            Log.wtf("CREATE NEW CHAT OBJECT", "Error creating JSON: " + e.getMessage());
+        }
+        return msg;
+    }
+
+    private Uri buildHerokuVerifiedContactsUri() {
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_contacts))
+                .appendPath(getString(R.string.ep_contacts_verified))
+                .build();
+        return uri;
+    }
+
+    //-------------------------------------------------------------------------
+    //-----------------------END LOAD CONTACTS---------------------------------
+    //-------------------------------------------------------------------------
+    //-----------------------BEGIN CREATE NEW CHAT-----------------------------
+    //-------------------------------------------------------------------------
+
+    private Uri buildHerokuNewChatUri() {
+        Uri uri = new Uri.Builder().scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_chat))
+                .appendPath(getString(R.string.ep_create_new))
+                .build();
+        return uri;
+    }
+
+    public JSONObject createNewChatRequestObject() {
+        JSONObject msg = new JSONObject();
+
+        if (mNewChatIncludedUsernamesList.size() < 1) { //nobody added to the list
+            Toast.makeText(this.getContext()
+                    , "PLEASE ADD AT LEAST ONE PERSON TO CHAT WITH"
+                    ,Toast.LENGTH_LONG );
+        } else { //make the chat name from names of all members, like we agreed on
+            StringBuilder sb = new StringBuilder();
+            for (String s : mNewChatIncludedUsernamesList) {
+                sb.append(s);
+            }
+            try {
+                //msg.put("memberid", mUserMemberID);
+                msg.put("chatname", sb.toString());
+            } catch (JSONException e) {
+                Log.wtf("CREATE NEW CHAT OBJECT", "Error creating JSON: " + e.getMessage());
+            }
+
+        }
+        return msg;
+    }
+
+    private void sendNewChatRequest() {
+        JSONObject requestObject = createNewChatRequestObject();
+        new SendPostAsyncTask.Builder(mNewChatUri.toString(), requestObject)
+                .onPostExecute(this::handleNewChatCreatedOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
     }
 
     //on post exec should be -> handle successful contacts query
@@ -227,70 +302,11 @@ public class CreateChatFragment extends Fragment {
         transaction.commit();
     }
 
-
-
-    public JSONObject createVerifiedContactsRequestObject() {
-        JSONObject msg = new JSONObject();
-        try {
-            msg.put("memberid", mUserMemberID);
-        } catch (JSONException e) {
-            Log.wtf("CREATE NEW CHAT OBJECT", "Error creating JSON: " + e.getMessage());
-        }
-        return msg;
-    }
-
-    public JSONObject createNewChatRequestObject() {
-        JSONObject msg = new JSONObject();
-
-        if (mNewChatIncludedUsernamesList.size() < 1) { //nobody added to the list
-            Toast.makeText(this.getContext()
-                    , "PLEASE ADD AT LEAST ONE PERSON TO CHAT WITH"
-                    ,Toast.LENGTH_LONG );
-        } else { //make the chat name from names of all members, like we agreed on
-            StringBuilder sb = new StringBuilder();
-            for (String s : mNewChatIncludedUsernamesList) {
-                sb.append(s);
-            }
-            try {
-                //msg.put("memberid", mUserMemberID);
-                msg.put("chatname", sb.toString());
-            } catch (JSONException e) {
-                Log.wtf("CREATE NEW CHAT OBJECT", "Error creating JSON: " + e.getMessage());
-            }
-
-        }
-        return msg;
-    }
-
-    private void sendNewChatRequest() {
-        JSONObject requestObject = createNewChatRequestObject();
-        new SendPostAsyncTask.Builder(mNewChatUri.toString(), requestObject)
-                .onPostExecute(this::handleNewChatCreatedOnPost)
-                .onCancelled(this::handleErrorsInTask)
-                .build().execute();
-    }
-
-
-
-    private Uri buildHerokuNewChatUri(){
-        Uri uri = new Uri.Builder()
-                .scheme("https")
-                .appendPath(getString(R.string.ep_base_url))
-                .appendPath(getString(R.string.ep_contacts))
-                .appendPath(getString(R.string.ep_contacts_verified))
-                .build();
-        return uri;
-    }
-
-    private Uri buildHerokuVerifiedContactsUri() {
-        Uri uri = new Uri.Builder()
-                .scheme("https")
-                .appendPath(getString(R.string.ep_base_url))
-                .appendPath(getString(R.string.ep_contacts))
-                .appendPath(getString(R.string.ep_create_new))
-                .build();
-        return uri;
-    }
+    //-------------------------------------------------------------------------
+    //-----------------------END CREATE NEW CHAT-------------------------------
+    //-------------------------------------------------------------------------
+    //-----------------------BEGIN UTILITY METHODS-----------------------------
+    //-------------------------------------------------------------------------
 
     @Override
     public void onAttach(Context context) {
