@@ -320,9 +320,22 @@ public class CreateChatFragment extends Fragment {
      */
     public void kickOffNewChat() {
         Log.e("KICK OFF NEW CHAT: ", "TRUE");
-        //loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
         //now need a way to make sure all members are added ot this chat
+        JSONArray jsonArray = new JSONArray(mNewChatIncludedUsernamesList);
+        Uri addNewChatMembersUri = buildHerokuAddNewChatMembersUri();
+        //loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+
 //>>>   stopped here
+    }
+
+    private Uri buildHerokuAddNewChatMembersUri(){
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_chat))
+                .appendPath(getString(R.string.ep_new_chat_add_all_members))
+                .build();
+        return uri;
     }
 
     private void loadNewChatFrag(Fragment frag, String tag) {
