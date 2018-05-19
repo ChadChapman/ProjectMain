@@ -1,0 +1,3 @@
+url for the recyclerview tutorial used: http://stacktips.com/tutorials/android/android-recyclerview-example
+postgres cheat site:https://www.tutorialspoint.com/postgresql/postgresql_insert_query.htm
+sqlite3 cheat site:https://www.tutorialspoint.com/android/android_sqlite_database.htm

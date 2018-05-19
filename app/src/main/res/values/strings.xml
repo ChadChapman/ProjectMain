@@ -1,11 +1,23 @@
 <resources>
-    <string name="app_name">Group2Project</string>
+    <string name="app_name">Rabbit Chat</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Rabbit Chat Inc</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
+    <string name="username">username</string>
+    <string name="message">message</string>
+    <string name="chatid">chatid</string>
+
+    <string name="memberid">memberid</string>
+    <string name="contacts">contacts</string>
+    <string name="firstname">firstname</string>
+    <string name="lastname">lastname</string>
+
+    <!--Friend Fragment-->
+    <string name="friend_accept_button">accept</string>
+    <string name="friend_deny_button">deny</string>
 
     <!-- Login Fragment -->
     <string name="login_register_text_view_welcome">Welcome!!</string>
@@ -18,10 +30,42 @@
     <string name="register_edit_text_first_name">First Name</string>
     <string name="register_edit_text_last_name">Last Name</string>
     <string name="register_edit_text_email">Email</string>
+    <string name="contacts_textview_fragheader">Chat Contacts</string>
+
+    <!--Verify Fragment -->
+    <string name="verify_textview">Enter your verification code</string>
+    <string name="verify_edittext">Ex: 1234</string>
+    <string name="verify_check_button">Submit Code</string>
 
 
     <!-- Landing Fragment -->
     <string name="landing_button_logout">Logout</string>
+    <string name="sqlite_internal_database_name">RabbitChatDB</string>
+
+    <!-- Contacts Activity -->
+    <string name="contacts_frag_toggle_button_friends">Friends</string>
+    <string name="contacts_frag_toggle_button_pending">Pending</string>
+    <string name="contacts_frag_toggle_button_sent">Sent</string>
+
+
+    <!-- Chat Activity -->
+
+    <!-- >>>>>> SQLITE3 INTERNAL DEVICE DB QUERY STRINGS GO HERE <<<<<< -->
+    <!-- >>>>>> naming example: sqlite_create_table_ChatContact <<<<<< -->
+    <string name="sqlite_create_table_ChatContact">CREATE TABLE IF NOT EXISTS
+        RabbitChatDB.ChatContact ( memberid INTEGER PRIMARY KEY,  username TEXT UNIQUE NOT NULL
+        , fname TEXT, lname TEXT, created_at TEXT, last_modified TEXT, verified TEXT
+        , image_link TEXT , display_color TEXT</string>
+
+
+    <!-- >>>>>> HEROKU POSTGRES DB QUERY STRINGS GO HERE <<<<<< -->
+
+    <!-- Setting Fragment -->
+    <string name="setting_text_view_theme">Select App Theme</string>
+    <string name="setting_button_theme_1">Underwater Haze</string>
+    <string name="setting_button_theme_2">Arctic Blast</string>
+    <string name="setting_button_theme_3">Magentalman</string>
+    <string name="setting_button_theme_4">Minty Breeze</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
