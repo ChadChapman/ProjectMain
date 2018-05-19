@@ -50,6 +50,11 @@ public class TryContactFragment extends Fragment {
     private String mUserMemberIDStr;
     private Uri mContactsUri;
     private View v;
+    /*
+    *Used to label verified contact, incoming and outgoing requests.
+    * 1 means verified contact, 2 means incoming request, 3 means outgoing request
+     */
+    private int mContactStatus = 0;
 
     public TryContactFragment() {
         // Required empty public constructor
@@ -97,12 +102,7 @@ public class TryContactFragment extends Fragment {
             }
         });
         Button add = (Button) v.findViewById(R.id.add_button);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onAddButtonClicked(view);
-            }
-        });
+        add.setOnClickListener(this::onAddButtonClicked);
         return v;
     }
 
@@ -132,18 +132,21 @@ public class TryContactFragment extends Fragment {
         switch (view.getId()) {
             case R.id.friends_radioButton:
                 if (checked)
+                    mContactStatus = 1;
                     mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_verified));
                     getActivity().findViewById(R.id.add_editText).setVisibility(View.GONE);
                     getActivity().findViewById(R.id.add_button).setVisibility(View.GONE);
                 break;
             case R.id.pending_radioButton:
                 if (checked)
+                    mContactStatus = 2;
                     mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_pending_requests));
                     getActivity().findViewById(R.id.add_editText).setVisibility(View.GONE);
                     getActivity().findViewById(R.id.add_button).setVisibility(View.GONE);
                 break;
             case R.id.sent_radioButton:
                 if (checked)
+                    mContactStatus = 3;
                     mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_sent_requests));
                     getActivity().findViewById(R.id.add_editText).setVisibility(View.VISIBLE);
                     getActivity().findViewById(R.id.add_button).setVisibility(View.VISIBLE);
@@ -191,13 +194,14 @@ public class TryContactFragment extends Fragment {
         return uri;
     }
 
-    public Uri buildLocalAddress() {
-        Uri uri = new Uri.Builder()
-                .scheme("https")
-                .appendPath("localhost:5000")
-                .build();
-        return uri;
-    }
+    //This will not work
+//    public Uri buildLocalAddress() {
+//        Uri uri = new Uri.Builder()
+//                .scheme("https")
+//                .appendPath("localhost:5000")
+//                .build();
+//        return uri;
+//    }
 
     //on post exec should be -> handle successful contacts query
     public void handleContactsQueryResponseOnPostExec(String result) {
@@ -217,10 +221,15 @@ public class TryContactFragment extends Fragment {
                 adapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onContactItemClick(ContactFeedItem item) {
-                        //Toast.makeText(getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
+                        //Store contact status because we different UI/ Ep Calls depending
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("mContactStatus", mContactStatus);
+                        bundle.putSerializable("mUserMemberID", mUserMemberID);
+                        FriendProfileFragment fragment = new FriendProfileFragment(item);
+                        fragment.setArguments(bundle);
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.fragmentContainer, new FriendProfileFragment(item), "friend")
+                                .replace(R.id.fragmentContainer, fragment, "friend")
                                 .addToBackStack(null);
                         // Commit the transaction
                         transaction.commit();
@@ -279,6 +288,7 @@ public class TryContactFragment extends Fragment {
                 item.setThumbnail(imgAddress);
                 item.setFname(post.optString(getString(R.string.firstname)));
                 item.setLname(post.optString(getString(R.string.lastname)));
+                item.setMemberID(post.optInt("memberid"));
                 mContactFeedItemList.add(item);
             }
         } catch (JSONException e) {

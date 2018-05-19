@@ -6,6 +6,7 @@ public class ContactFeedItem {
     private String thumbnail;
     private String fname;
     private String lname;
+    private int memberID;
 
     public String getTitle() {
         return title;
@@ -31,6 +32,9 @@ public class ContactFeedItem {
     public String getLname() {return fname;    }
 
     public void setLname(String lname) {this.fname = lname; }
+
+    public int getMemberID(){return memberID;}
+    public void setMemberID(int theID){memberID = theID;}
 
     @Override
     public String toString() {
