@@ -211,7 +211,11 @@ public class ChatActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
         } else if (id == R.id.nav_new_chat) {
-            loadFragment(new CreateChatFragment(), getString(R.string.keys_fragment_create_new_chat));
+            Bundle bundle = new Bundle();
+            bundle.putString("memberid", mUserMemberID);
+            CreateChatFragment ccf = new CreateChatFragment();
+            ccf.setArguments(bundle);
+            loadFragment(ccf, getString(R.string.keys_fragment_create_new_chat));
         } else if (id == R.id.nav_logout) {
             onLogout();
         }
