@@ -46,7 +46,7 @@ public class CreateChatFragment extends Fragment {
     private List<String> mNewChatIncludedUsernamesList;
     private ImageButton createButton;
     private TextView mUsernamesDisplayTextView;
-    private int newChatIDFromResponse;
+    private int mNewChatIDFromResponse;
 
     public CreateChatFragment() {
         // Required empty public constructor
@@ -249,7 +249,16 @@ public class CreateChatFragment extends Fragment {
                 .build().execute();
     }
 
-    //on post exec should be -> handle successful contacts query
+    //-------------------------------------------------------------------------
+    //-----------------------END CREATE NEW CHAT REQUEST-----------------------
+    //-------------------------------------------------------------------------
+    //----------------BEGIN HANDLING THE RESPONSE AND INCLUDING MEMBERS--------
+    //-------------------------------------------------------------------------
+
+    //make response handler method init the int for the newly created chatid
+    //notify? add all members in the chat to the chat, use the arraylist of chosen members
+
+    //on post exec should be -> handle successful new chat creation
     public void handleNewChatCreatedOnPost(String result) {
         try {
 
@@ -263,7 +272,7 @@ public class CreateChatFragment extends Fragment {
 
                 //inform user a new chat was created
                 Toast.makeText(this.getContext(), "NEW RABBIT CHAT CREATED!", Toast.LENGTH_SHORT).show();
-
+                mNewChatIDFromResponse = resultsJSON.getInt("chatid");
                 //may need to pass params in to here later? not sure yet
                 kickOffNewChat();
 
@@ -301,16 +310,6 @@ public class CreateChatFragment extends Fragment {
         // Commit the transaction
         transaction.commit();
     }
-
-    //-------------------------------------------------------------------------
-    //-----------------------END CREATE NEW CHAT REQUEST-----------------------
-    //-------------------------------------------------------------------------
-    //-----------------------BEGIN INCLUDING MEMBERS---------------------------
-    //-------------------------------------------------------------------------
-
-    //make response handler method init the int for the newly created chatid
-    //notify? add all members in the chat to the chat, use the arraylist of chosen members
-    
 
 
     //-------------------------------------------------------------------------
