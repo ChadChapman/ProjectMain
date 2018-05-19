@@ -158,13 +158,13 @@ public class CreateChatFragment extends Fragment {
             //if the friend has already been added to the list for a new chat:
             //on the second click, they get removed
             if (item.isSelected()) {
-                mNewChatIncludedUsernamesList.remove(item.getUsername());
+                mNewChatIncludedUsernamesList.remove(item.getTitle());
                 item.setSelected(false);
 
             } else {
                 //mNewChatIncludedUsernamesList.add(item.getUsername());
                 //mUsernamesDisplayTextView.append(item.getUsername());
-                mNewChatIncludedUsernamesList.add(item.getUsername());
+                mNewChatIncludedUsernamesList.add(item.getTitle());
                 item.setSelected(true);
             }
 
