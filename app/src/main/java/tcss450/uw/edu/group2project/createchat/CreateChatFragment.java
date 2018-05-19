@@ -46,6 +46,7 @@ public class CreateChatFragment extends Fragment {
     private List<String> mNewChatIncludedUsernamesList;
     private ImageButton createButton;
     private TextView mUsernamesDisplayTextView;
+    private int newChatIDFromResponse;
 
     public CreateChatFragment() {
         // Required empty public constructor
@@ -242,10 +243,10 @@ public class CreateChatFragment extends Fragment {
 
     private void sendNewChatRequest() {
         JSONObject requestObject = createNewChatRequestObject();
-//        new SendPostAsyncTask.Builder(mNewChatUri.toString(), requestObject)
-//                .onPostExecute(this::handleNewChatCreatedOnPost)
-//                .onCancelled(this::handleErrorsInTask)
-//                .build().execute();
+        new SendPostAsyncTask.Builder(mNewChatUri.toString(), requestObject)
+                .onPostExecute(this::handleNewChatCreatedOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
     }
 
     //on post exec should be -> handle successful contacts query
@@ -300,6 +301,17 @@ public class CreateChatFragment extends Fragment {
         // Commit the transaction
         transaction.commit();
     }
+
+    //-------------------------------------------------------------------------
+    //-----------------------END CREATE NEW CHAT REQUEST-----------------------
+    //-------------------------------------------------------------------------
+    //-----------------------BEGIN INCLUDING MEMBERS---------------------------
+    //-------------------------------------------------------------------------
+
+    //make response handler method init the int for the newly created chatid
+    //notify? add all members in the chat to the chat, use the arraylist of chosen members
+    
+
 
     //-------------------------------------------------------------------------
     //-----------------------END CREATE NEW CHAT-------------------------------
