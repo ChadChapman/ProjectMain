@@ -34,6 +34,7 @@ import java.util.ArrayList;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.contacts.ContactsActivity;
+import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
 import tcss450.uw.edu.group2project.model.ChatContact;
 import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
 import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
@@ -209,6 +210,8 @@ public class ChatActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_settings) {
             loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
+        } else if (id == R.id.nav_new_chat) {
+            loadFragment(new CreateChatFragment(), getString(R.string.keys_fragment_create_new_chat));
         } else if (id == R.id.nav_logout) {
             onLogout();
         }

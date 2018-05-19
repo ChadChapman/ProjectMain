@@ -41,6 +41,7 @@ public class CreateChatFragment extends Fragment {
     private int mUserMemberID;
     private String mUserMemberIDStr;
     private Uri mNewChatUri;
+    private Uri mContactsUri;
     private View v;
     private List<String> mNewChatIncludedUsernamesList;
     private ImageButton createButton;
@@ -54,10 +55,11 @@ public class CreateChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_create_chat, container, false);
-       mRecyclerView = v.findViewById(R.id.recycler_view);
+       mRecyclerView = v.findViewById(R.id.create_chat_recycle_view);
        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
        mNewChatUri = buildHerokuNewChatUri();
-       progressBar = v.findViewById(R.id.progress_bar);
+       mContactsUri = buildHerokuVerifiedContactsUri();
+       progressBar = v.findViewById(R.id.create_chat_progress_bar);
        loadVerifiedContacts();
        createButton = v.findViewById(R.id.createNewChatFragNewChatButton);
        createButton.setOnClickListener(view -> {
@@ -274,7 +276,17 @@ public class CreateChatFragment extends Fragment {
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
-                .appendPath(getString(R.string.ep_chat))
+                .appendPath(getString(R.string.ep_contacts))
+                .appendPath(getString(R.string.ep_contacts_verified))
+                .build();
+        return uri;
+    }
+
+    private Uri buildHerokuVerifiedContactsUri() {
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_contacts))
                 .appendPath(getString(R.string.ep_create_new))
                 .build();
         return uri;

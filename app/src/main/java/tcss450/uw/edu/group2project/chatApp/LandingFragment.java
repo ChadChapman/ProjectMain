@@ -66,10 +66,8 @@ public class LandingFragment extends Fragment {
 //        new FetchWeatherDetails().execute(weatherUrl);
 //        Log.i(TAG, "onCreate: weatherURL: " + weatherUrl);
         mNewChatButton = v.findViewById(R.id.createNewChatFragNewChatButton);
-        mNewChatButton.setOnClickListener(view -> {
-            loadFragment(new CreateChatFragment()
-                    , getString(R.string.keys_fragment_create_new_chat));
-        });
+        mNewChatButton.setOnClickListener(frag -> loadFragment(new CreateChatFragment()
+                , getString(R.string.keys_fragment_create_new_chat)));
         return v;
     }
 
@@ -166,6 +164,7 @@ public class LandingFragment extends Fragment {
     }//end pJ
 
     private void loadFragment(Fragment frag, String tag) {
+        Log.e("MADE IT TO lOADFRAGMENT() IN LANDING FRAG", tag);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, frag, tag)
