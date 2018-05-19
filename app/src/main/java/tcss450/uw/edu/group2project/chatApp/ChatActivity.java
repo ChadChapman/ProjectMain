@@ -93,6 +93,8 @@ public class ChatActivity extends AppCompatActivity
             mUserMemberID = extras.getString("userMemberID");
         }
 
+
+
 //        mNewChatButton = findViewById(R.id.buttonStartNewChat);
 //
 //        mNewChatButton.setOnClickListener(button -> {

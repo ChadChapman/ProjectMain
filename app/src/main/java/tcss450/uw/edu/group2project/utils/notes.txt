@@ -9,3 +9,6 @@ ended with still needing to go: button -> create new chat (activity) -> get othe
 or username -> begin new chat with that user -> load chatting fragment to allow it -> send a notification
 to other user they have been invited -> invite takes them to the same chat frag (not same instance obv)
 
+load contacts > display contacts > click on contacts to add/remove from chat > click on button > new
+chat request sent > new chat written to db > response object sent back > parse response object >
+load new chat in a new fragment >

@@ -61,7 +61,7 @@ public class CreateChatFragment extends Fragment {
        loadVerifiedContacts();
        createButton = v.findViewById(R.id.createNewChatFragNewChatButton);
        createButton.setOnClickListener(view -> {
-
+            sendNewChatRequest();
        });
 
 
@@ -225,14 +225,7 @@ public class CreateChatFragment extends Fragment {
         transaction.commit();
     }
 
-    /**
-     * Handle errors that may occur during the AsyncTask.
-     *
-     * @param result the error message provide from the AsyncTask
-     */
-    private void handleErrorsInTask(String result) {
-        Log.e("ASYNCT_TASK_ERROR", result);
-    }
+
 
     public JSONObject createVerifiedContactsRequestObject() {
         JSONObject msg = new JSONObject();
@@ -304,6 +297,15 @@ public class CreateChatFragment extends Fragment {
        // mListener = null;
     }
 
+    /**
+     * Handle errors that may occur during the AsyncTask.
+     *
+     * @param result the error message provide from the AsyncTask
+     */
+    private void handleErrorsInTask(String result) {
+        Log.e("ASYNCT_TASK_ERROR", result);
+    }
+
 //    /**
 //     * This interface must be implemented by activities that contain this
 //     * fragment to allow an interaction in this fragment to be communicated
@@ -318,4 +320,6 @@ public class CreateChatFragment extends Fragment {
 //        // TODO: Update argument type and name
 //        void onFragmentInteraction(Uri uri);
 //    }
+
+
 }

@@ -6,10 +6,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.WeatherDisplay.NetworkUtils;
 import tcss450.uw.edu.group2project.WeatherDisplay.Weather;
 import tcss450.uw.edu.group2project.WeatherDisplay.WeatherAdapter;
+import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
 import tcss450.uw.edu.group2project.utils.ListenManager;
 
 
@@ -44,6 +47,8 @@ public class LandingFragment extends Fragment {
 
     private ListenManager mListenManager;
 
+    private ImageButton mNewChatButton;
+
     public LandingFragment() {
         // Required empty public constructor
     }
@@ -60,6 +65,11 @@ public class LandingFragment extends Fragment {
 //        URL weatherUrl = NetworkUtils.buildUrlForWeather();
 //        new FetchWeatherDetails().execute(weatherUrl);
 //        Log.i(TAG, "onCreate: weatherURL: " + weatherUrl);
+        mNewChatButton = v.findViewById(R.id.createNewChatFragNewChatButton);
+        mNewChatButton.setOnClickListener(view -> {
+            loadFragment(new CreateChatFragment()
+                    , getString(R.string.keys_fragment_create_new_chat));
+        });
         return v;
     }
 
@@ -154,5 +164,14 @@ public class LandingFragment extends Fragment {
         }
         return null;
     }//end pJ
+
+    private void loadFragment(Fragment frag, String tag) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, frag, tag)
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
+    }
 
 }//end class LF
