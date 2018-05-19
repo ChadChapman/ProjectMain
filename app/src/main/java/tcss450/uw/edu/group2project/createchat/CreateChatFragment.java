@@ -1,6 +1,7 @@
 package tcss450.uw.edu.group2project.createchat;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -224,12 +225,27 @@ public class CreateChatFragment extends Fragment {
             Toast.makeText(this.getContext()
                     , "PLEASE ADD AT LEAST ONE PERSON TO CHAT WITH"
                     ,Toast.LENGTH_LONG );
+            return msg;
         } else { //make the chat name from names of all members, like we agreed on
             StringBuilder sb = new StringBuilder();
             for (String s : mNewChatIncludedUsernamesList) {
                 sb.append(s);
+                sb.append('+');
             }
-// >>>  ended here
+            //SharedPreferences prefs = getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
+            SharedPreferences prefs =
+                    getActivity().getSharedPreferences(
+                            getString(R.string.keys_shared_prefs),
+                            Context.MODE_PRIVATE);
+            String thisUsername = prefs.getString("username", "USERNAME NOT FOUND IN PREFS!");
+            if (!mNewChatIncludedUsernamesList.contains(thisUsername)) {
+                //should be added last so easy to remove
+                mNewChatIncludedUsernamesList.add(thisUsername);
+                sb.append(thisUsername);
+            } else {
+                Log.e("ADDING THIS USERNAME TO CHAT ERROR:", "USERNAME WAS ALREADY IN THE CHATNAME");
+            }
+
             Log.e("NEW CHAT WILL BE NAMED: ", sb.toString());
             try {
                 //msg.put("memberid", mUserMemberID);
