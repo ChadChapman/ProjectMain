@@ -315,9 +315,10 @@ public class CreateChatFragment extends Fragment {
     }
 
     /**
-     * New Chat has been created from selected members.  This method should handle any logic
-     * associated with any further actions, eg: going to a different fragment, sending out notifications,
-     * writing to the internal db, etc.
+     * New Chat has been created from selected members with usernames as an id.
+     * This method should handle any logic associated with any further actions,
+     * eg: adding all members to the chat, going to a different fragment,
+     * sending out notifications, writing to the internal db, etc.
      */
     public void kickOffNewChat() {
         Log.e("KICK OFF NEW CHAT: ", "TRUE");
@@ -325,9 +326,7 @@ public class CreateChatFragment extends Fragment {
         JSONArray jsonArray = new JSONArray(mNewChatIncludedUsernamesList);
         Uri addNewChatMembersUri = buildHerokuAddNewChatMembersUri();
         Log.e("JSON ARRAY OF USERNAMES TO ADD TO NEW CHAT : ", jsonArray.toString());
-        sendNewChatAddAllMembersRequest(jsonArray, addNewChatMembersUri);
-
-
+        //sendNewChatAddAllMembersRequest(jsonArray, addNewChatMembersUri);
     }
 
     private void sendNewChatAddAllMembersRequest(JSONArray jsonArr, Uri paramUri) {
