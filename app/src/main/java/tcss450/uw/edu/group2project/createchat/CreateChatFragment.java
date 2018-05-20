@@ -30,6 +30,7 @@ import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
 import tcss450.uw.edu.group2project.utils.OnItemClickListener;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
+import tcss450.uw.edu.group2project.utils.SendPostAsyncTaskWithArray;
 
 
 public class CreateChatFragment extends Fragment {
@@ -314,18 +315,53 @@ public class CreateChatFragment extends Fragment {
     }
 
     /**
-     * New Chat has been created from selected members.  This method should handle any logic
-     * associated with any further actions, eg: going to a different fragment, sending out notifications,
-     * writing to the internal db, etc.
+     * New Chat has been created from selected members with usernames as an id.
+     * This method should handle any logic associated with any further actions,
+     * eg: adding all members to the chat, going to a different fragment,
+     * sending out notifications, writing to the internal db, etc.
      */
     public void kickOffNewChat() {
         Log.e("KICK OFF NEW CHAT: ", "TRUE");
-        //now need a way to make sure all members are added ot this chat
+        //now need a way to get all members added to this chat
         JSONArray jsonArray = new JSONArray(mNewChatIncludedUsernamesList);
         Uri addNewChatMembersUri = buildHerokuAddNewChatMembersUri();
-        //loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+        Log.e("JSON ARRAY OF USERNAMES TO ADD TO NEW CHAT : ", jsonArray.toString());
+        //sendNewChatAddAllMembersRequest(jsonArray, addNewChatMembersUri);
+    }
 
-//>>>   stopped here
+    private void sendNewChatAddAllMembersRequest(JSONArray jsonArr, Uri paramUri) {
+        //send a json array to be parsed and processed on backend, esp since we need to have memberids
+        //in order to add members to chatmembers table
+        new SendPostAsyncTaskWithArray.Builder(paramUri.toString(), jsonArr)
+                .onPostExecute(this::handleNewChatAllMembersAddedOnPost)
+                .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    private void handleNewChatAllMembersAddedOnPost(String result) {
+        try {
+
+            JSONObject resultsJSON = new JSONObject(result);
+            boolean success = resultsJSON.getBoolean("success");
+
+            if (success) { //yay, all members were added, let's go to the new chat
+                loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+            } else {
+                //need to determine what ot return if not successful
+                //maybe an array of the members who did not get added, then try them again later?
+            }
+
+
+        } catch (JSONException e) {
+
+            //It appears that the web service didn’t return a JSON formatted String
+            //or it didn’t have what we expected in it.
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
+
+        }
+
     }
 
     private Uri buildHerokuAddNewChatMembersUri(){
