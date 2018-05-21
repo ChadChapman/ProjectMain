@@ -47,6 +47,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="184dp"
         android:hint="@string/login_register_edit_text_username"
+        android:singleLine="true"
         android:text="fake"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
