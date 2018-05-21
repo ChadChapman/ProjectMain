@@ -61,8 +61,8 @@ public class CreateChatFragment extends Fragment {
        v = inflater.inflate(R.layout.fragment_create_chat, container, false);
        mRecyclerView = v.findViewById(R.id.create_chat_recycle_view);
        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-       mNewChatUri = buildHerokuNewChatUri();
-       mContactsUri = buildHerokuVerifiedContactsUri();
+       mNewChatUri = buildLocalNewChatUri();
+       mContactsUri = buildLocalVerifiedContactsUri();
        progressBar = v.findViewById(R.id.create_chat_progress_bar);
        mUsernamesDisplayTextView = v.findViewById(R.id.createChatUsernamesDisplay);
 //       Log.e("CURRENTLY INTHE TEXTVIEW: ", mUsernamesDisplayTextView.getText().toString());
@@ -203,6 +203,16 @@ public class CreateChatFragment extends Fragment {
         return uri;
     }
 
+    private Uri buildLocalVerifiedContactsUri() {
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_localhost_5000))
+                .appendPath(getString(R.string.ep_contacts))
+                .appendPath(getString(R.string.ep_contacts_verified))
+                .build();
+        return uri;
+    }
+
     //-------------------------------------------------------------------------
     //-----------------------END LOAD CONTACTS---------------------------------
     //-------------------------------------------------------------------------
@@ -212,6 +222,15 @@ public class CreateChatFragment extends Fragment {
     private Uri buildHerokuNewChatUri() {
         Uri uri = new Uri.Builder().scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_chat))
+                .appendPath(getString(R.string.ep_new_chat))
+                .build();
+        return uri;
+    }
+
+    private Uri buildLocalNewChatUri() {
+        Uri uri = new Uri.Builder().scheme("https")
+                .appendPath(getString(R.string.ep_base_localhost_5000))
                 .appendPath(getString(R.string.ep_chat))
                 .appendPath(getString(R.string.ep_new_chat))
                 .build();
@@ -382,6 +401,16 @@ public class CreateChatFragment extends Fragment {
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_chat))
+                .appendPath(getString(R.string.ep_new_chat_add_all_members))
+                .build();
+        return uri;
+    }
+
+    private Uri buildLocalAddNewChatMembersUri() {
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_localhost_5000))
                 .appendPath(getString(R.string.ep_chat))
                 .appendPath(getString(R.string.ep_new_chat_add_all_members))
                 .build();
