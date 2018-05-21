@@ -61,8 +61,8 @@ public class CreateChatFragment extends Fragment {
        v = inflater.inflate(R.layout.fragment_create_chat, container, false);
        mRecyclerView = v.findViewById(R.id.create_chat_recycle_view);
        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-       mNewChatUri = buildLocalNewChatUri();
-       mContactsUri = buildLocalVerifiedContactsUri();
+       mNewChatUri = buildHerokuNewChatUri();
+       mContactsUri = buildHerokuVerifiedContactsUri();
        progressBar = v.findViewById(R.id.create_chat_progress_bar);
        mUsernamesDisplayTextView = v.findViewById(R.id.createChatUsernamesDisplay);
 //       Log.e("CURRENTLY INTHE TEXTVIEW: ", mUsernamesDisplayTextView.getText().toString());
@@ -88,7 +88,7 @@ public class CreateChatFragment extends Fragment {
                 .build().execute();
     }
 
-    private void parseHerokuResult(String result) {
+    private void parseHerokuContactsResult(String result) {
         //String imgAddress = "https://www.logoground.com/uploads/2017108832017-04-203705844rabbitchat.jpg";
         //maybe add an array of images?
         String imgAddress = "http://2.bp.blogspot.com/-BvXcUdArvGk/UK54mxYSUOI/AAAAAAAAbg8/XycJSQH_IrU/s640/funny-animal-captions-005-020.jpg";
@@ -125,7 +125,7 @@ public class CreateChatFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
                 mNewChatIncludedUsernamesList = new ArrayList<>();
                 //need to populate the contacts list before passing it to the adapter
-                parseHerokuResult(result);
+                parseHerokuContactsResult(result);
                 Integer numContacts = mContactFeedItemList.size();
                 Log.e("NUMBER OF CONTACTS RETURNED: ", numContacts.toString());
 
@@ -206,7 +206,8 @@ public class CreateChatFragment extends Fragment {
     private Uri buildLocalVerifiedContactsUri() {
         Uri uri = new Uri.Builder()
                 .scheme("https")
-                .appendPath(getString(R.string.ep_base_localhost_5000))
+                //.appendPath(getString(R.string.ep_base_localhost_5000))
+                .encodedAuthority(getString(R.string.ep_base_localhost_5000))
                 .appendPath(getString(R.string.ep_contacts))
                 .appendPath(getString(R.string.ep_contacts_verified))
                 .build();
@@ -230,7 +231,8 @@ public class CreateChatFragment extends Fragment {
 
     private Uri buildLocalNewChatUri() {
         Uri uri = new Uri.Builder().scheme("https")
-                .appendPath(getString(R.string.ep_base_localhost_5000))
+                //.appendPath(getString(R.string.ep_base_localhost_5000))
+                .encodedAuthority(getString(R.string.ep_base_localhost_5000))
                 .appendPath(getString(R.string.ep_chat))
                 .appendPath(getString(R.string.ep_new_chat))
                 .build();
@@ -293,7 +295,8 @@ public class CreateChatFragment extends Fragment {
 
     //make response handler method init the int for the newly created chatid
     //notify? add all members in the chat to the chat, use the arraylist of chosen members
-
+//>>> idea for duplicate chats: a list of hashsets which contain members' usernames,
+        //iterate through to check for a set that contains all usernames
     //on post exec should be -> handle successful new chat creation
     public void handleNewChatCreatedOnPost(String result) {
         try {
@@ -378,23 +381,21 @@ public class CreateChatFragment extends Fragment {
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) { //yay, all members were added, let's go to the new chat
-                loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+                //loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+                Log.e("ADD ALL MEMBERS RETURNED :", "SUCCESS!");
             } else {
                 //need to determine what ot return if not successful
                 //maybe an array of the members who did not get added, then try them again later?
+                Log.e("ADD ALL MEMBERS RETURNED :", "FAILED!");
             }
 
-
         } catch (JSONException e) {
-
             //It appears that the web service didn’t return a JSON formatted String
             //or it didn’t have what we expected in it.
             Log.e("JSON_PARSE_ERROR", result
                     + System.lineSeparator()
                     + e.getMessage());
-
         }
-
     }
 
     private Uri buildHerokuAddNewChatMembersUri(){
@@ -408,9 +409,10 @@ public class CreateChatFragment extends Fragment {
     }
 
     private Uri buildLocalAddNewChatMembersUri() {
+
         Uri uri = new Uri.Builder()
                 .scheme("https")
-                .appendPath(getString(R.string.ep_base_localhost_5000))
+                .encodedAuthority(getString(R.string.ep_base_localhost_5000))
                 .appendPath(getString(R.string.ep_chat))
                 .appendPath(getString(R.string.ep_new_chat_add_all_members))
                 .build();
