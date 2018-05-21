@@ -28,9 +28,7 @@ import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.chatApp.ChatFragment;
 import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
-import tcss450.uw.edu.group2project.utils.OnItemClickListener;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
-import tcss450.uw.edu.group2project.utils.SendPostAsyncTaskWithArray;
 
 
 public class CreateChatFragment extends Fragment {
@@ -42,6 +40,7 @@ public class CreateChatFragment extends Fragment {
     private List<ContactFeedItem> mContactFeedItemList;
     private int mUserMemberID;
     private String mNewChatIDStr;
+    private String mNewChatNameStr;
     private Uri mNewChatUri;
     private Uri mContactsUri;
     private View v;
@@ -293,9 +292,10 @@ public class CreateChatFragment extends Fragment {
                 //mNewChatIDFromResponse = resultsJSON.getInt("chatid");
                 //Integer chatid = mNewChatIDFromResponse;
                 //Log.e("LOG ID IS: ", chatid.toString());
-                mNewChatIDStr = resultsJSON.getString("message");
+                mNewChatIDStr = resultsJSON.getString("chatid");
+                mNewChatNameStr = resultsJSON.getString("chatname");
                 //Log.e("LOG ID IS: ", chatid.toString());
-                Log.e("LOG ID IS: ", mNewChatIDStr);
+                Log.e("CHATID IS: ", mNewChatIDStr);
                 //may need to pass params in to here later? not sure yet
                 kickOffNewChat();
 
@@ -320,19 +320,33 @@ public class CreateChatFragment extends Fragment {
      * eg: adding all members to the chat, going to a different fragment,
      * sending out notifications, writing to the internal db, etc.
      */
-    public void kickOffNewChat() {
+    private void kickOffNewChat() {
         Log.e("KICK OFF NEW CHAT: ", "TRUE");
-        //now need a way to get all members added to this chat
-        JSONArray jsonArray = new JSONArray(mNewChatIncludedUsernamesList);
+        //now to get all members added to this chat
+        JSONObject requestObject = createNewChatAddMembersRequestObject();
         Uri addNewChatMembersUri = buildHerokuAddNewChatMembersUri();
-        Log.e("JSON ARRAY OF USERNAMES TO ADD TO NEW CHAT : ", jsonArray.toString());
-        //sendNewChatAddAllMembersRequest(jsonArray, addNewChatMembersUri);
+        sendNewChatAddAllMembersRequest(requestObject, addNewChatMembersUri);
     }
 
-    private void sendNewChatAddAllMembersRequest(JSONArray jsonArr, Uri paramUri) {
+    private JSONObject createNewChatAddMembersRequestObject() {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("chatname", mNewChatNameStr);
+            jsonObject.put("chatid", mNewChatIDStr);
+        } catch (JSONException e) {
+            Log.e("JSON ERROR ADDING FIELDS TO: ", "ADD NEW CHAT MEMBERS OBJECT");
+        }
+        Log.e("CHATNAME FOR NEW CHAT : ", mNewChatNameStr);
+        Log.e("CHATID FOR NEW CHAT : ", mNewChatIDStr);
+
+        return jsonObject;
+    }
+
+    private void sendNewChatAddAllMembersRequest(JSONObject jsonObject, Uri paramUri) {
         //send a json array to be parsed and processed on backend, esp since we need to have memberids
         //in order to add members to chatmembers table
-        new SendPostAsyncTaskWithArray.Builder(paramUri.toString(), jsonArr)
+        new SendPostAsyncTask.Builder(paramUri.toString(), jsonObject)
                 .onPostExecute(this::handleNewChatAllMembersAddedOnPost)
                 .onCancelled(this::handleErrorsInTask)
                 .build().execute();
