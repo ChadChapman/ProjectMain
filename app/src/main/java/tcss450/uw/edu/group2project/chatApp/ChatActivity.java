@@ -63,16 +63,6 @@ public class ChatActivity extends AppCompatActivity
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //uncomment when we decide what to do with the floating action button
-        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-////                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-////                        .setAction("Action", null).show();
-//                Toast.makeText(view.getContext(), "CREATE A NEW CHAT WITH THIS BUTTON", Toast.LENGTH_LONG);
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -216,6 +206,8 @@ public class ChatActivity extends AppCompatActivity
             CreateChatFragment ccf = new CreateChatFragment();
             ccf.setArguments(bundle);
             loadFragment(ccf, getString(R.string.keys_fragment_create_new_chat));
+        } else if (id == R.id.nav_go_home) {
+            loadFragment(new LandingFragment(), getString(R.string.keys_fragment_landing));
         } else if (id == R.id.nav_logout) {
             onLogout();
         }

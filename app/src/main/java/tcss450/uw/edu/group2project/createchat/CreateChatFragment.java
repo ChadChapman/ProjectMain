@@ -34,11 +34,12 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 public class CreateChatFragment extends Fragment {
     private static final String TAG = "create_chat_fragment";
     //private OnFragmentInteractionListener mListener;
+    private String mThisUsername;
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
     private List<ContactFeedItem> mContactFeedItemList;
-    private int mUserMemberID;
+    private String mUserMemberID;
     private String mNewChatIDStr;
     private String mNewChatNameStr;
     private Uri mNewChatUri;
@@ -57,26 +58,39 @@ public class CreateChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        // Inflate and setup the layout for this fragment
        v = inflater.inflate(R.layout.fragment_create_chat, container, false);
        mRecyclerView = v.findViewById(R.id.create_chat_recycle_view);
        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-       mNewChatUri = buildHerokuNewChatUri();
-       mContactsUri = buildHerokuVerifiedContactsUri();
-       progressBar = v.findViewById(R.id.create_chat_progress_bar);
-       mUsernamesDisplayTextView = v.findViewById(R.id.createChatUsernamesDisplay);
-//       Log.e("CURRENTLY INTHE TEXTVIEW: ", mUsernamesDisplayTextView.getText().toString());
-       Bundle bundle = this.getArguments();
-       if (bundle != null) {
-           mUserMemberID = Integer.parseInt(bundle.getString("memberid"));
-       }
-       loadVerifiedContacts();
-       createButton = v.findViewById(R.id.createNewChatFragNewChatButton);
-       createButton.setOnClickListener(view -> {
-            sendNewChatRequest();
-       });
+       setupCreateNewChatFrag(savedInstanceState);
 
        return v;
+    }
+
+    private void setupCreateNewChatFrag(Bundle setupSavedInstanceState) {
+
+        SharedPreferences prefs =
+                getActivity().getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        mThisUsername = prefs.getString("username", "USERNAME NOT FOUND IN PREFS!");
+        mUserMemberID = prefs.getString("mymemberid", "MEMBERID NOT FOUND IN PREFS");
+        mNewChatUri = buildHerokuNewChatUri();
+        mContactsUri = buildHerokuVerifiedContactsUri();
+        progressBar = v.findViewById(R.id.create_chat_progress_bar);
+        mUsernamesDisplayTextView = v.findViewById(R.id.createChatUsernamesDisplay);
+
+//        Bundle bundle = this.getArguments();
+//        if (bundle != null) {
+//            mUserMemberID = Integer.parseInt(bundle.getString("memberid"));
+//        }
+
+        loadVerifiedContacts();
+        createButton = v.findViewById(R.id.createNewChatFragNewChatButton);
+        createButton.setOnClickListener(view -> {
+            sendNewChatRequest();
+        });
     }
 
     public void loadVerifiedContacts() {
@@ -88,33 +102,35 @@ public class CreateChatFragment extends Fragment {
                 .build().execute();
     }
 
-    private void parseHerokuResult(String result) {
-        //String imgAddress = "https://www.logoground.com/uploads/2017108832017-04-203705844rabbitchat.jpg";
-        //maybe add an array of images?
+    private void parseHerokuContactsResult(String result) {
+
         String imgAddress = "http://2.bp.blogspot.com/-BvXcUdArvGk/UK54mxYSUOI/AAAAAAAAbg8/XycJSQH_IrU/s640/funny-animal-captions-005-020.jpg";
-        //String imgAddress = "http://ajax.googleapis.com/ajax/services/search/images?q=%s&v=1.0&rsz=large&start=1";
+
         try {
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray(getString(R.string.contacts));
+
             Integer jsonArrSize = posts.length();
             Log.e("SIZE OF RETURNED JSON ARRAY", jsonArrSize.toString());
-            mContactFeedItemList = new ArrayList<>();
 
+            mContactFeedItemList = new ArrayList<>();
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
-                ContactFeedItem item = new ContactFeedItem();
-                item.setTitle(post.optString(getString(R.string.username)));
-                item.setThumbnail(imgAddress);
-                item.setFname(post.optString(getString(R.string.firstname)));
-                item.setLname(post.optString(getString(R.string.lastname)));
-                mContactFeedItemList.add(item);
+                if (!mThisUsername.equals(post.optString("username"))) {
+                    ContactFeedItem item = new ContactFeedItem();
+                    item.setTitle(post.optString(getString(R.string.username)));
+                    item.setThumbnail(imgAddress);
+                    item.setFname(post.optString(getString(R.string.firstname)));
+                    item.setLname(post.optString(getString(R.string.lastname)));
+                    mContactFeedItemList.add(item);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    //on post exec should be -> handle successful contacts query
+
     public void handleContactsQueryResponseOnPostExec(String result) {
         try {
             JSONObject resultsJSON = new JSONObject(result);
@@ -124,8 +140,9 @@ public class CreateChatFragment extends Fragment {
                 //Query was successful
                 progressBar.setVisibility(View.GONE);
                 mNewChatIncludedUsernamesList = new ArrayList<>();
+
                 //need to populate the contacts list before passing it to the adapter
-                parseHerokuResult(result);
+                parseHerokuContactsResult(result);
                 Integer numContacts = mContactFeedItemList.size();
                 Log.e("NUMBER OF CONTACTS RETURNED: ", numContacts.toString());
 
@@ -139,8 +156,6 @@ public class CreateChatFragment extends Fragment {
                 Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
-            //It appears that the web service didn’t return a JSON formatted String
-            //or it didn’t have what we expected in it.
             Log.e("JSON_PARSE_ERROR", result
                     + System.lineSeparator()
                     + e.getMessage());
@@ -175,7 +190,7 @@ public class CreateChatFragment extends Fragment {
             }
 
             Integer sbsize = sb.length();
-            Log.e("STRING BUILDER SIZE: ", sbsize.toString());
+            //Log.e("STRING BUILDER SIZE: ", sbsize.toString());
             mUsernamesDisplayTextView.setText(sb.toString());
 
         }
@@ -185,8 +200,7 @@ public class CreateChatFragment extends Fragment {
         JSONObject msg = new JSONObject();
         try {
             msg.put("memberid", mUserMemberID);
-            Integer id = mUserMemberID;
-            Log.e("MEMBER ID BEING PASSED TO BACK END: ", id.toString());
+            Log.e("MEMBER ID BEING PASSED TO BACK END: ", mUserMemberID);
         } catch (JSONException e) {
             Log.wtf("CREATE NEW CHAT OBJECT", "Error creating JSON: " + e.getMessage());
         }
@@ -197,6 +211,17 @@ public class CreateChatFragment extends Fragment {
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_contacts))
+                .appendPath(getString(R.string.ep_contacts_verified))
+                .build();
+        return uri;
+    }
+
+    private Uri buildLocalVerifiedContactsUri() {
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                //.appendPath(getString(R.string.ep_base_localhost_5000))
+                .encodedAuthority(getString(R.string.ep_base_localhost_5000))
                 .appendPath(getString(R.string.ep_contacts))
                 .appendPath(getString(R.string.ep_contacts_verified))
                 .build();
@@ -218,6 +243,16 @@ public class CreateChatFragment extends Fragment {
         return uri;
     }
 
+    private Uri buildLocalNewChatUri() {
+        Uri uri = new Uri.Builder().scheme("https")
+                //.appendPath(getString(R.string.ep_base_localhost_5000))
+                .encodedAuthority(getString(R.string.ep_base_localhost_5000))
+                .appendPath(getString(R.string.ep_chat))
+                .appendPath(getString(R.string.ep_new_chat))
+                .build();
+        return uri;
+    }
+
     public JSONObject createNewChatRequestObject() {
         JSONObject msg = new JSONObject();
 
@@ -232,16 +267,11 @@ public class CreateChatFragment extends Fragment {
                 sb.append(s);
                 sb.append('+');
             }
-            //SharedPreferences prefs = getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
-            SharedPreferences prefs =
-                    getActivity().getSharedPreferences(
-                            getString(R.string.keys_shared_prefs),
-                            Context.MODE_PRIVATE);
-            String thisUsername = prefs.getString("username", "USERNAME NOT FOUND IN PREFS!");
-            if (!mNewChatIncludedUsernamesList.contains(thisUsername)) {
-                //should be added last so easy to remove
-                mNewChatIncludedUsernamesList.add(thisUsername);
-                sb.append(thisUsername);
+
+            if (!mNewChatIncludedUsernamesList.contains(mThisUsername)) {//could be possible?
+                //should be added last so easy to remove?
+                mNewChatIncludedUsernamesList.add(mThisUsername);
+                sb.append(mThisUsername);
             } else {
                 Log.e("ADDING THIS USERNAME TO CHAT ERROR:", "USERNAME WAS ALREADY IN THE CHATNAME");
             }
@@ -253,7 +283,6 @@ public class CreateChatFragment extends Fragment {
             } catch (JSONException e) {
                 Log.wtf("CREATE NEW CHAT OBJECT", "Error creating JSON: " + e.getMessage());
             }
-
         }
         return msg;
     }
@@ -274,7 +303,8 @@ public class CreateChatFragment extends Fragment {
 
     //make response handler method init the int for the newly created chatid
     //notify? add all members in the chat to the chat, use the arraylist of chosen members
-
+//>>> idea for duplicate chats: a list of hashsets which contain members' usernames,
+        //iterate through to check for a set that contains all usernames
     //on post exec should be -> handle successful new chat creation
     public void handleNewChatCreatedOnPost(String result) {
         try {
@@ -286,28 +316,20 @@ public class CreateChatFragment extends Fragment {
 
                 //chat creation was successful
                 progressBar.setVisibility(View.GONE);
-
                 //inform user a new chat was created
                 Toast.makeText(this.getContext(), "NEW RABBIT CHAT CREATED!", Toast.LENGTH_SHORT).show();
-                //mNewChatIDFromResponse = resultsJSON.getInt("chatid");
-                //Integer chatid = mNewChatIDFromResponse;
-                //Log.e("LOG ID IS: ", chatid.toString());
+                //log results
                 mNewChatIDStr = resultsJSON.getString("chatid");
                 mNewChatNameStr = resultsJSON.getString("chatname");
-                //Log.e("LOG ID IS: ", chatid.toString());
                 Log.e("CHATID IS: ", mNewChatIDStr);
+
                 //may need to pass params in to here later? not sure yet
                 kickOffNewChat();
-
             } else {
-
                 Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
-
             }
 
         } catch (JSONException e) {
-            //It appears that the web service didn’t return a JSON formatted String
-            //or it didn’t have what we expected in it.
             Log.e("JSON_PARSE_ERROR", result
                     + System.lineSeparator()
                     + e.getMessage());
@@ -325,7 +347,7 @@ public class CreateChatFragment extends Fragment {
         //now to get all members added to this chat
         JSONObject requestObject = createNewChatAddMembersRequestObject();
         Uri addNewChatMembersUri = buildHerokuAddNewChatMembersUri();
-        sendNewChatAddAllMembersRequest(requestObject, addNewChatMembersUri);
+//        sendNewChatAddAllMembersRequest(requestObject, addNewChatMembersUri);
     }
 
     private JSONObject createNewChatAddMembersRequestObject() {
@@ -359,29 +381,38 @@ public class CreateChatFragment extends Fragment {
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) { //yay, all members were added, let's go to the new chat
-                loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+                //loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+                Log.e("ADD ALL MEMBERS RETURNED :", "SUCCESS!");
             } else {
                 //need to determine what ot return if not successful
                 //maybe an array of the members who did not get added, then try them again later?
+                Log.e("ADD ALL MEMBERS RETURNED :", "FAILED!");
             }
 
-
         } catch (JSONException e) {
-
             //It appears that the web service didn’t return a JSON formatted String
             //or it didn’t have what we expected in it.
             Log.e("JSON_PARSE_ERROR", result
                     + System.lineSeparator()
                     + e.getMessage());
-
         }
-
     }
 
     private Uri buildHerokuAddNewChatMembersUri(){
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_chat))
+                .appendPath(getString(R.string.ep_new_chat_add_all_members))
+                .build();
+        return uri;
+    }
+
+    private Uri buildLocalAddNewChatMembersUri() {
+
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .encodedAuthority(getString(R.string.ep_base_localhost_5000))
                 .appendPath(getString(R.string.ep_chat))
                 .appendPath(getString(R.string.ep_new_chat_add_all_members))
                 .build();

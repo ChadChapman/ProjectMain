@@ -76,10 +76,21 @@ public class StartActivity extends AppCompatActivity
      */
     void loadVerifiedUserLandingActivity() {
 
+        SharedPreferences prefs =
+                getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        //save the memberid for later usage
+        prefs.edit().putString(
+                getString(R.string.keys_prefs_my_memberid),
+                mUserMemberIDStr)
+                .apply();
+
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("userMemberID", mUserMemberIDStr);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
+
     }
 
     private void sendEmail() {
@@ -141,6 +152,7 @@ public class StartActivity extends AppCompatActivity
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
+  //              .encodedAuthority(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_login))
                 .build();
 

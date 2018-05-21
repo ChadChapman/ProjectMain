@@ -4,6 +4,10 @@
     tools:showIn="navigation_view">
 
     <item
+        android:id="@+id/nav_go_home"
+        android:icon="@drawable/ic_menu_settings"
+        android:title="Home" />
+    <item
         android:id="@+id/nav_chat"
         android:icon="@drawable/ic_menu_chat"
         android:title="Chats" />

@@ -45,7 +45,8 @@
     <string name="contacts_frag_toggle_button_sent">Sent</string>
 
 
-    <!-- Chat Activity -->
+    <!-- Create a New Chat -->
+    <string name="create_new_chat_add_users_textview_default">click on a friend to add them</string>
 
     <!-- >>>>>> SQLITE3 INTERNAL DEVICE DB QUERY STRINGS GO HERE <<<<<< -->
     <!-- >>>>>> naming example: sqlite_create_table_ChatContact <<<<<< -->
