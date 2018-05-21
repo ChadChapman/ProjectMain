@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import tcss450.uw.edu.group2project.R;
 
@@ -30,6 +33,14 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_search, container, false);
 
+        Button b = (Button) v.findViewById(R.id.search_button_search_by_username);
+        b.setOnClickListener(this::onSearchUsernameButtonClicked);
+
+        b = (Button) v.findViewById(R.id.search_button_search_by_email);
+        b.setOnClickListener(this::onSearchEmailButtonClicked);
+
+        b = (Button) v.findViewById(R.id.search_button_search_by_name);
+        b.setOnClickListener(this::onSearchNameButtonClicked);
 
         // Inflate the layout for this fragment
         return v;
@@ -52,6 +63,29 @@ public class SearchFragment extends Fragment {
         mListener = null;
     }
 
+    private void onSearchUsernameButtonClicked(View view) {
+        if (mListener != null) {
+            String username = ((TextView) v.findViewById(R.id.search_text_view_username)).getText().toString();
+            mListener.onSearchByUsernameButtonClicked(username);
+        }
+    }
+
+    private void onSearchEmailButtonClicked(View view) {
+        if (mListener != null) {
+            String email = ((TextView) v.findViewById(R.id.search_text_view_email)).getText().toString();
+            mListener.onSearchByEmailButtonClicked(email);
+        }
+    }
+
+    private void onSearchNameButtonClicked(View view) {
+        if (mListener != null) {
+            String firstName = ((TextView) v.findViewById(R.id.search_text_view_first_name)).getText().toString();
+            String lastName = ((TextView) v.findViewById(R.id.search_text_view_last_name)).getText().toString();
+            mListener.onSearchByNameButtonClicked(firstName, lastName);
+        }
+    }
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -64,7 +98,7 @@ public class SearchFragment extends Fragment {
      */
     public interface OnSearchFragmentInteractionListener {
         void onSearchByEmailButtonClicked(String email);
-        void onSearchByUsernameButtonClicked(String searchInfo);
+        void onSearchByUsernameButtonClicked(String username);
         void onSearchByNameButtonClicked(String firstname, String lastname);
     }
 }

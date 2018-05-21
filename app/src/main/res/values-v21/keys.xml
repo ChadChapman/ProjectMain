@@ -32,5 +32,6 @@
     <string name="keys_json_chat_id">chatid</string>
     <string name="keys_json_success_value_true">true</string>
     <string name="keys_json_success_value_false">false</string>
+    <string name="keys_json_search_result">data</string>
 
 </resources>

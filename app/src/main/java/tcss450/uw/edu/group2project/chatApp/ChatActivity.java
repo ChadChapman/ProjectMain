@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -171,7 +173,6 @@ public class ChatActivity extends AppCompatActivity
             loadInfo();
         } else if (id == R.id.nav_search) {
             loadFragment(new SearchFragment(), getString(R.string.keys_fragment_search));
-            loadInfo();
         } else if (id == R.id.nav_settings) {
             loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
         } else if (id == R.id.nav_logout) {
@@ -268,17 +269,54 @@ public class ChatActivity extends AppCompatActivity
     // Handle searches
     @Override
     public void onSearchByEmailButtonClicked(String email) {
+        Log.e("ChatActivity", "Search by email");
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search)).build();
+        JSONObject emailJSON = new JSONObject();
 
+        try {
+            emailJSON.put(getString(R.string.keys_json_email), email);
+            Log.e("ChatActivity", "Put email to json" );
+        } catch (JSONException theException) {
+            Log.e("ChatActivity", "Error creating JSON" + theException.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), emailJSON)
+                .onPostExecute(this::handleSearchResult).build().execute();
     }
 
     @Override
-    public void onSearchByUsernameButtonClicked(String searchInfo) {
+    public void onSearchByUsernameButtonClicked(String username) {
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search)).build();
+        JSONObject usernameJSON = new JSONObject();
 
+        try {
+            usernameJSON.put(getString(R.string.keys_json_username), username);
+            Log.e("ChatActivity", "Put usernamer to json" );
+        } catch (JSONException theException) {
+            Log.e("ChatActivity", "Error creating JSON" + theException.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), usernameJSON)
+                .onPostExecute(this::handleSearchResult).build().execute();
     }
 
     @Override
     public void onSearchByNameButtonClicked(String firstname, String lastname) {
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search)).build();
+        JSONObject nameJSON = new JSONObject();
 
+        try {
+            nameJSON.put(getString(R.string.keys_json_first), firstname);
+            nameJSON.put(getString(R.string.keys_json_last), lastname);
+        } catch (JSONException theException) {
+            Log.e("ChatActivity", "Error creating JSON" + theException.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), nameJSON)
+                .onPostExecute(this::handleSearchResult).build().execute();
     }
 
     //load the profile info
@@ -308,6 +346,30 @@ public class ChatActivity extends AppCompatActivity
                 .build().execute();
     }
 
+    private void handleSearchResult(String result) {
+
+        try {
+            JSONObject responseJSON = new JSONObject(result);
+            boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
+
+            TextView resultFirstName = findViewById(R.id.search_text_view_result_first_name);
+            TextView resultLastName = findViewById(R.id.search_text_view_result_first_name);
+
+            if (success) {
+                JSONArray users = responseJSON.getJSONArray(getString(R.string.keys_json_search_result));
+                if (users.length() > 0) {
+                    resultFirstName.setText(users.getJSONObject(0).getString("firstname"));
+                    resultLastName.setText(users.getJSONObject(0).getString("lastname"));
+                    Log.e("ChatActivity", users.getJSONObject(0).getString("firstname"));
+                    Log.e("ChatActivity", users.getJSONObject(0).getString("lastname"));
+                }
+            } else {
+                Log.e("ChatActivity", "User not found");
+            }
+        } catch (JSONException e) {
+            Log.e("ChatActivity", "JSON parse error" + e.getMessage());
+        }
+    }
 
     /*
     --------------------------Async handlers-------------------------------

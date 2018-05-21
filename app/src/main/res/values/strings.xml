@@ -73,7 +73,9 @@
     <string name="search_text_view_email">Email</string>
     <string name="search_text_view_first_name">First Name</string>
     <string name="search_text_view_last_name">Last Name</string>
-    <string name="search_button_search">Search</string>
+    <string name="search_button_search_by_username">Search by username</string>
+    <string name="search_button_search_by_email">Search by email</string>
+    <string name="search_button_search_by_name">Search by name</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
