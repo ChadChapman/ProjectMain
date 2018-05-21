@@ -34,6 +34,7 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 public class CreateChatFragment extends Fragment {
     private static final String TAG = "create_chat_fragment";
     //private OnFragmentInteractionListener mListener;
+    private String mThisUsername;
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
@@ -61,6 +62,7 @@ public class CreateChatFragment extends Fragment {
        v = inflater.inflate(R.layout.fragment_create_chat, container, false);
        mRecyclerView = v.findViewById(R.id.create_chat_recycle_view);
        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+       setupCreateNewChatFrag();
        mNewChatUri = buildHerokuNewChatUri();
        mContactsUri = buildHerokuVerifiedContactsUri();
        progressBar = v.findViewById(R.id.create_chat_progress_bar);
@@ -77,6 +79,14 @@ public class CreateChatFragment extends Fragment {
        });
 
        return v;
+    }
+
+    private void setupCreateNewChatFrag() {
+        SharedPreferences prefs =
+                getActivity().getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        mThisUsername = prefs.getString("username", "USERNAME NOT FOUND IN PREFS!");
     }
 
     public void loadVerifiedContacts() {
@@ -100,14 +110,17 @@ public class CreateChatFragment extends Fragment {
             Log.e("SIZE OF RETURNED JSON ARRAY", jsonArrSize.toString());
             mContactFeedItemList = new ArrayList<>();
 
+
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
-                ContactFeedItem item = new ContactFeedItem();
-                item.setTitle(post.optString(getString(R.string.username)));
-                item.setThumbnail(imgAddress);
-                item.setFname(post.optString(getString(R.string.firstname)));
-                item.setLname(post.optString(getString(R.string.lastname)));
-                mContactFeedItemList.add(item);
+                if (!mThisUsername.equals(post.optString("username"))) {
+                    ContactFeedItem item = new ContactFeedItem();
+                    item.setTitle(post.optString(getString(R.string.username)));
+                    item.setThumbnail(imgAddress);
+                    item.setFname(post.optString(getString(R.string.firstname)));
+                    item.setLname(post.optString(getString(R.string.lastname)));
+                    mContactFeedItemList.add(item);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -254,15 +267,11 @@ public class CreateChatFragment extends Fragment {
                 sb.append('+');
             }
             //SharedPreferences prefs = getSharedPreferences(getString(R.string.keys_shared_prefs), Context.MODE_PRIVATE);
-            SharedPreferences prefs =
-                    getActivity().getSharedPreferences(
-                            getString(R.string.keys_shared_prefs),
-                            Context.MODE_PRIVATE);
-            String thisUsername = prefs.getString("username", "USERNAME NOT FOUND IN PREFS!");
-            if (!mNewChatIncludedUsernamesList.contains(thisUsername)) {
+
+            if (!mNewChatIncludedUsernamesList.contains(mThisUsername)) {
                 //should be added last so easy to remove
-                mNewChatIncludedUsernamesList.add(thisUsername);
-                sb.append(thisUsername);
+                mNewChatIncludedUsernamesList.add(mThisUsername);
+                sb.append(mThisUsername);
             } else {
                 Log.e("ADDING THIS USERNAME TO CHAT ERROR:", "USERNAME WAS ALREADY IN THE CHATNAME");
             }
@@ -347,7 +356,7 @@ public class CreateChatFragment extends Fragment {
         //now to get all members added to this chat
         JSONObject requestObject = createNewChatAddMembersRequestObject();
         Uri addNewChatMembersUri = buildHerokuAddNewChatMembersUri();
-        sendNewChatAddAllMembersRequest(requestObject, addNewChatMembersUri);
+//        sendNewChatAddAllMembersRequest(requestObject, addNewChatMembersUri);
     }
 
     private JSONObject createNewChatAddMembersRequestObject() {
