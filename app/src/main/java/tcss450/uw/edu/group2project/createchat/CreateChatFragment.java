@@ -33,7 +33,7 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 public class CreateChatFragment extends Fragment {
     private static final String TAG = "create_chat_fragment";
-    //private OnFragmentInteractionListener mListener;
+
     private String mThisUsername;
     private RecyclerView mRecyclerView;
     private MyRecyclerViewAdapter adapter;
@@ -48,8 +48,6 @@ public class CreateChatFragment extends Fragment {
     private List<String> mNewChatIncludedUsernamesList;
     private ImageButton createButton;
     private TextView mUsernamesDisplayTextView;
-    private int mNewChatIDFromResponse;
-
 
     public CreateChatFragment() {
         // Required empty public constructor
@@ -80,12 +78,7 @@ public class CreateChatFragment extends Fragment {
         mContactsUri = buildHerokuVerifiedContactsUri();
         progressBar = v.findViewById(R.id.create_chat_progress_bar);
         mUsernamesDisplayTextView = v.findViewById(R.id.createChatUsernamesDisplay);
-
-//        Bundle bundle = this.getArguments();
-//        if (bundle != null) {
-//            mUserMemberID = Integer.parseInt(bundle.getString("memberid"));
-//        }
-
+        
         loadVerifiedContacts();
         createButton = v.findViewById(R.id.createNewChatFragNewChatButton);
         createButton.setOnClickListener(view -> {
