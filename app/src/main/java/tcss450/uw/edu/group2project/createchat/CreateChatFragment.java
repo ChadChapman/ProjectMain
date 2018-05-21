@@ -39,7 +39,7 @@ public class CreateChatFragment extends Fragment {
     private MyRecyclerViewAdapter adapter;
     private ProgressBar progressBar;
     private List<ContactFeedItem> mContactFeedItemList;
-    private int mUserMemberID;
+    private String mUserMemberID;
     private String mNewChatIDStr;
     private String mNewChatNameStr;
     private Uri mNewChatUri;
@@ -75,16 +75,16 @@ public class CreateChatFragment extends Fragment {
                         getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
         mThisUsername = prefs.getString("username", "USERNAME NOT FOUND IN PREFS!");
-
+        mUserMemberID = prefs.getString("mymemberid", "MEMBERID NOT FOUND IN PREFS");
         mNewChatUri = buildHerokuNewChatUri();
         mContactsUri = buildHerokuVerifiedContactsUri();
         progressBar = v.findViewById(R.id.create_chat_progress_bar);
         mUsernamesDisplayTextView = v.findViewById(R.id.createChatUsernamesDisplay);
 
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            mUserMemberID = Integer.parseInt(bundle.getString("memberid"));
-        }
+//        Bundle bundle = this.getArguments();
+//        if (bundle != null) {
+//            mUserMemberID = Integer.parseInt(bundle.getString("memberid"));
+//        }
 
         loadVerifiedContacts();
         createButton = v.findViewById(R.id.createNewChatFragNewChatButton);
@@ -200,8 +200,7 @@ public class CreateChatFragment extends Fragment {
         JSONObject msg = new JSONObject();
         try {
             msg.put("memberid", mUserMemberID);
-            Integer id = mUserMemberID;
-            Log.e("MEMBER ID BEING PASSED TO BACK END: ", id.toString());
+            Log.e("MEMBER ID BEING PASSED TO BACK END: ", mUserMemberID);
         } catch (JSONException e) {
             Log.wtf("CREATE NEW CHAT OBJECT", "Error creating JSON: " + e.getMessage());
         }

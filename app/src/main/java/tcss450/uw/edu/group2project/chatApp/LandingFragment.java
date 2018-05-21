@@ -66,9 +66,14 @@ public class LandingFragment extends Fragment {
 //        new FetchWeatherDetails().execute(weatherUrl);
 //        Log.i(TAG, "onCreate: weatherURL: " + weatherUrl);
         mNewChatButton = v.findViewById(R.id.createNewChatFragNewChatButton);
+        setupNewChatButton(savedInstanceState);
+        return v;
+    }
+
+    private void setupNewChatButton(Bundle paramBundle){
+
         mNewChatButton.setOnClickListener(frag -> loadFragment(new CreateChatFragment()
                 , getString(R.string.keys_fragment_create_new_chat)));
-        return v;
     }
 
     @Override
