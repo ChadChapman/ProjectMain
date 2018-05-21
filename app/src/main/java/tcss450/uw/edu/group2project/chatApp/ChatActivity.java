@@ -216,6 +216,8 @@ public class ChatActivity extends AppCompatActivity
             CreateChatFragment ccf = new CreateChatFragment();
             ccf.setArguments(bundle);
             loadFragment(ccf, getString(R.string.keys_fragment_create_new_chat));
+        } else if (id == R.id.nav_go_home) {
+            loadFragment(new LandingFragment(), getString(R.string.keys_fragment_landing));
         } else if (id == R.id.nav_logout) {
             onLogout();
         }
