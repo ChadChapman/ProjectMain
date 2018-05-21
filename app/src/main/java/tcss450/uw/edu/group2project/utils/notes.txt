@@ -12,3 +12,5 @@ to other user they have been invited -> invite takes them to the same chat frag 
 load contacts > display contacts > click on contacts to add/remove from chat > click on button > new
 chat request sent > new chat written to db > response object sent back > parse response object >
 load new chat in a new fragment >
+
+end 5/20 - need to get backend pulled in, then test that.  so far front, the buttons in nav bar and on landing frag work.

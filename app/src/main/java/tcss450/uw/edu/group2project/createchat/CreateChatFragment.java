@@ -161,8 +161,6 @@ public class CreateChatFragment extends Fragment {
                     + e.getMessage());
         }
     }
-
-
     private void handleChatMembersAddRemove(ContactFeedItem item) {
 
         StringBuilder sb = new StringBuilder();
@@ -349,7 +347,6 @@ public class CreateChatFragment extends Fragment {
         Uri addNewChatMembersUri = buildHerokuAddNewChatMembersUri();
 //        sendNewChatAddAllMembersRequest(requestObject, addNewChatMembersUri);
     }
-
     private JSONObject createNewChatAddMembersRequestObject() {
         JSONObject jsonObject = new JSONObject();
 
