@@ -32,7 +32,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".chatApp.ChatActivity" />
         </activity>
-        <activity android:name=".createchat.CreateNewChatActivity"></activity>
     </application>
 
 </manifest>
