@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +23,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.chatApp.ChatFragment;
@@ -53,6 +57,15 @@ public class CreateChatFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Setup the RecyclerView, basically.
+     *
+     * @param inflater Android standard
+     * @param container Android standard
+     * @param savedInstanceState Android standard
+     *
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,7 +75,6 @@ public class CreateChatFragment extends Fragment {
        mRecyclerView = v.findViewById(R.id.create_chat_recycle_view);
        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
        setupCreateNewChatFrag(savedInstanceState);
-
        return v;
     }
 
@@ -78,7 +90,7 @@ public class CreateChatFragment extends Fragment {
         mContactsUri = buildHerokuVerifiedContactsUri();
         progressBar = v.findViewById(R.id.create_chat_progress_bar);
         mUsernamesDisplayTextView = v.findViewById(R.id.createChatUsernamesDisplay);
-        
+
         loadVerifiedContacts();
         createButton = v.findViewById(R.id.createNewChatFragNewChatButton);
         createButton.setOnClickListener(view -> {
@@ -338,7 +350,7 @@ public class CreateChatFragment extends Fragment {
         //now to get all members added to this chat
         JSONObject requestObject = createNewChatAddMembersRequestObject();
         Uri addNewChatMembersUri = buildHerokuAddNewChatMembersUri();
-//        sendNewChatAddAllMembersRequest(requestObject, addNewChatMembersUri);
+        sendNewChatAddAllMembersRequest(requestObject, addNewChatMembersUri);
     }
     private JSONObject createNewChatAddMembersRequestObject() {
         JSONObject jsonObject = new JSONObject();
@@ -351,6 +363,7 @@ public class CreateChatFragment extends Fragment {
         }
         Log.e("CHATNAME FOR NEW CHAT : ", mNewChatNameStr);
         Log.e("CHATID FOR NEW CHAT : ", mNewChatIDStr);
+        Log.e("JSON REQUEST OBJECT : ", jsonObject.toString());
 
         return jsonObject;
     }
@@ -371,8 +384,11 @@ public class CreateChatFragment extends Fragment {
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) { //yay, all members were added, let's go to the new chat
-                //loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+                //TODO now add all members of this chat to the list of sets of usernames fo chats
                 Log.e("ADD ALL MEMBERS RETURNED :", "SUCCESS!");
+                loadNewChatIDIntoPrefs(mNewChatIDStr);
+                loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+
             } else {
                 //need to determine what ot return if not successful
                 //maybe an array of the members who did not get added, then try them again later?
@@ -424,6 +440,102 @@ public class CreateChatFragment extends Fragment {
     //-------------------------------------------------------------------------
     //-----------------------BEGIN UTILITY METHODS-----------------------------
     //-------------------------------------------------------------------------
+
+    private void loadNewChatInfoIntoPrefs(String chatID) {
+        //prefs has a string set type it will take, about the best we can do for storing chat info
+        //for now i think.
+        //make the string to store, add in some char to split it on later
+        StringBuilder sb = new StringBuilder();
+        sb.append(mNewChatIDStr + '+');
+        sb.append(mNewChatNameStr);
+        // then keep the chatid as [0] in resulting array so it's easy to find
+        //get a prefs instance
+        SharedPreferences prefs =
+                getActivity().getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        //see if this is first chat or not
+        if (prefs.getStringSet("chatids", null) == null) {
+            //make a string set, add this chatid, write it to prefs
+            Set<String> chatidset = new Set<String>() {
+                @Override
+                public int size() {
+                    return 0;
+                }
+
+                @Override
+                public boolean isEmpty() {
+                    return false;
+                }
+
+                @Override
+                public boolean contains(Object o) {
+                    return false;
+                }
+
+                @NonNull
+                @Override
+                public Iterator<String> iterator() {
+                    return null;
+                }
+
+                @NonNull
+                @Override
+                public Object[] toArray() {
+                    return new Object[0];
+                }
+
+                @NonNull
+                @Override
+                public <T> T[] toArray(@NonNull T[] a) {
+                    return null;
+                }
+
+                @Override
+                public boolean add(String s) {
+                    return false;
+                }
+
+                @Override
+                public boolean remove(Object o) {
+                    return false;
+                }
+
+                @Override
+                public boolean containsAll(@NonNull Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean addAll(@NonNull Collection<? extends String> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean retainAll(@NonNull Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public boolean removeAll(@NonNull Collection<?> c) {
+                    return false;
+                }
+
+                @Override
+                public void clear() {
+
+                }
+            };
+        }
+    }
+//        SharedPreferences prefs =
+//                getActivity().getSharedPreferences(
+//                        getString(R.string.keys_shared_prefs),
+//                        Context.MODE_PRIVATE);
+//        //save the chatid for later usage
+//        prefs.edit().putString("")
+//                .apply();
+//    }
 
     @Override
     public void onAttach(Context context) {

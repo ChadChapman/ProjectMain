@@ -55,13 +55,6 @@ public class TryContactFragment extends Fragment {
         // Required empty public constructor
     }
 
-    @SuppressLint("ValidFragment")
-    public TryContactFragment(String mID) {
-        // Required empty public constructor
-        mUserMemberID = new Integer(mID);
-
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

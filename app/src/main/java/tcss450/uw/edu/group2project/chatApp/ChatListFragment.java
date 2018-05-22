@@ -1,6 +1,8 @@
 package tcss450.uw.edu.group2project.chatApp;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,7 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
+//import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
+import tcss450.uw.edu.group2project.model.MessageFeedItem;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 /**
@@ -51,11 +54,21 @@ public class ChatListFragment extends Fragment {
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.message_recycler_view));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        progressBar = (ProgressBar) (v.findViewById(R.id.message_progressBar));
-        mContactsUri = buildHerokuAddress(getString(R.string.ep_get_recent_chat));
-        mUserMemberIDStr = getArguments().getString("memberID");
+        setupFragmentView();
         loadMessages();
         return v;
+    }
+
+    private void setupFragmentView() {
+
+        progressBar = (ProgressBar) (v.findViewById(R.id.message_progressBar));
+        mContactsUri = buildHerokuAddress(getString(R.string.ep_get_recent_chat));
+        SharedPreferences prefs =
+                getActivity().getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        //mThisUsername = prefs.getString("username", "USERNAME NOT FOUND IN PREFS!");
+        mUserMemberIDStr = prefs.getString("mymemberid", "MEMBERID NOT FOUND IN PREFS");
     }
 
     /**
