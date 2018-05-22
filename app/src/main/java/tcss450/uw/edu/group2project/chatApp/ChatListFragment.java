@@ -1,9 +1,11 @@
 package tcss450.uw.edu.group2project.chatApp;
 
 
-import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,8 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -24,75 +26,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.model.ChatContact;
-import tcss450.uw.edu.group2project.model.FeedItem;
+//import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
 import tcss450.uw.edu.group2project.model.MessageFeedItem;
-import tcss450.uw.edu.group2project.utils.MyMsgRecyclerViewAdapter;
-import tcss450.uw.edu.group2project.utils.OnMsgClickListener;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ChatListFragment extends Fragment {
-    private List<FeedItem> feedsList;
     private RecyclerView mRecyclerView;
-    private MyMsgRecyclerViewAdapter adapter;
+    private RecyclerView.Adapter adapter;
     private ProgressBar progressBar;
-    private List<ChatContact> mContactsList;
-    private List<MessageFeedItem> mContactFeedItemList;
-    private int mUserMemberID;
+    private List<MessageFeedItem> messageFeedItemList;
     private String mUserMemberIDStr;
     private Uri mContactsUri;
     private View v;
-    private Button mCreateNewChatButton;
-    private static final String TAG = ChatListFragment.class.getSimpleName();
 
     public ChatListFragment() {
         // Required empty public constructor
     }
 
-    @SuppressLint("ValidFragment")
-    public ChatListFragment(String mID) {
-        // Required empty public constructor
-
-        //mUserMemberID = new Integer.(mID);
-        mUserMemberIDStr = mID;
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_chat_list, container, false);
-        mUserMemberIDStr = Integer.toString(mUserMemberID);
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.message_recycler_view));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        progressBar = (ProgressBar) (v.findViewById(R.id.message_progressBar));
-        mContactsUri = buildHerokuAddress(getString(R.string.ep_get_recent_chat));
+        setupFragmentView();
         loadMessages();
-        mCreateNewChatButton = v.findViewById(R.id.createNewChatFragNewChatButton);
-        mCreateNewChatButton.setOnClickListener(button -> {
-            createNewChat(mCreateNewChatButton);
-        });
         return v;
     }
 
-    public void createNewChat(Button paramButton) {
+    private void setupFragmentView() {
 
-       // loadFragment(new ChatFragment(), );
-
+        progressBar = (ProgressBar) (v.findViewById(R.id.message_progressBar));
+        mContactsUri = buildHerokuAddress(getString(R.string.ep_get_recent_chat));
+        SharedPreferences prefs =
+                getActivity().getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        //mThisUsername = prefs.getString("username", "USERNAME NOT FOUND IN PREFS!");
+        mUserMemberIDStr = prefs.getString("mymemberid", "MEMBERID NOT FOUND IN PREFS");
     }
 
-    private void loadFragment(Fragment frag, String tag) {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, frag, tag)
-                .addToBackStack(null);
-        // Commit the transaction
-        transaction.commit();
-    }
     /**
      * For building a url address.
      */
@@ -125,7 +103,7 @@ public class ChatListFragment extends Fragment {
         JSONObject msg = new JSONObject();
         try {
             //Todo need args for json
-            msg.put("memberid", mUserMemberID);
+            msg.put("memberid", mUserMemberIDStr);
         } catch (JSONException e) {
             Log.wtf("CONTACTS VERIFIED ALL", "Error creating JSON: " + e.getMessage());
         }
@@ -133,25 +111,19 @@ public class ChatListFragment extends Fragment {
     }
 
     /**
-     * Takes JSON String as a result from an Async call to get all chats with this user in them.
-     * these chats are then loaded into a List which is then likely handed off to an adapter
-     * for a RecyclerView.
-     *
-     * @param result a JSON response String fron a Heroku app endpoint.
+     * Heroku parser
      */
     private void parseHerokuResult(String result) {
-        //String imgAddress = "http://2.bp.blogspot.com/-BvXcUdArvGk/UK54mxYSUOI/AAAAAAAAbg8/XycJSQH_IrU/s640/funny-animal-captions-005-020.jpg";
-        //String imgAddress = "http://ajax.googleapis.com/ajax/services/search/images?q=%s&v=1.0&rsz=large&start=1";
         try {
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray(getString(R.string.contacts));
-            mContactFeedItemList = new ArrayList<>();
+            messageFeedItemList = new ArrayList<>();
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
                 MessageFeedItem item = new MessageFeedItem();
                 item.setChatid(post.optString(getString(R.string.chatid)));
                 item.setMessage(post.optString(getString(R.string.message)));
-                mContactFeedItemList.add(item);
+                messageFeedItemList.add(item);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -174,32 +146,42 @@ public class ChatListFragment extends Fragment {
                 //need to populate the contacts list before passing it to the adapter
                 parseHerokuResult(result);
                 //added from here
-                adapter = new MyMsgRecyclerViewAdapter(getContext(), mContactFeedItemList);
-                mRecyclerView.setAdapter(adapter);
-                adapter.setOnMsgClickListener(new OnMsgClickListener() {
+                adapter = new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                    @NonNull
                     @Override
-                    public void onMsgItemClick(MessageFeedItem item) {
-                        //Toast.makeText(getContext(), item.getChatid(), Toast.LENGTH_LONG).show();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragmentContainer, new ChatFragment(new Integer(item.getChatid())), getString(R.string.keys_fragment_chat))
-                                .addToBackStack(null);
-                        // Commit the transaction
-                        transaction.commit();
+                    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+                        View view = LayoutInflater.from(viewGroup.getContext())
+                                .inflate(R.layout.messaging_list_rows, null);
+                        return new CustomViewHolder(view);
                     }
-                });
 
+                    @Override
+                    public void onBindViewHolder(RecyclerView.ViewHolder customViewHolder, int i) {
+                        //FeedItem feedItem = feedItemList.get(i);
+                        MessageFeedItem feedItem = messageFeedItemList.get(i);
+
+                        //Setting text view title
+                        ((CustomViewHolder) customViewHolder).chatid.setText(feedItem.getChatid());
+                        ((CustomViewHolder) customViewHolder).message.setText(feedItem.getMessage());
+
+                        View.OnClickListener listener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                onMsgItemClick(feedItem);
+                            }
+                        };
+                        ((CustomViewHolder) customViewHolder).chatid.setOnClickListener(listener);
+                        ((CustomViewHolder) customViewHolder).message.setOnClickListener(listener);
+                    }
+                    @Override
+                    public int getItemCount() {
+                        return (null != messageFeedItemList ? messageFeedItemList.size() : 0);
+                    }
+                };
+                mRecyclerView.setAdapter(adapter);
             } else {
                 Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
             }//to here from tut GH
-
-//                adapter = new MyRecyclerViewAdapter(
-//                            ContactsActivity.this, mContactFeedItemList);
-//                    mRecyclerView.setAdapter(adapter);
-//          } else {
-//                    Toast.makeText(ContactsActivity.this
-//                            , "Failed to fetch data!", Toast.LENGTH_SHORT).show();
-//            } //commented out for testing
         } catch (JSONException e) {
             //It appears that the web service didn’t return a JSON formatted String
             //or it didn’t have what we expected in it.
@@ -211,6 +193,30 @@ public class ChatListFragment extends Fragment {
 
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
+    }
+
+    private void onMsgItemClick(MessageFeedItem item) {
+        Bundle bundle = new Bundle();
+        bundle.putString("chatID", item.getChatid());
+        Fragment chats = new ChatFragment();
+        chats.setArguments(bundle);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, chats, getString(R.string.keys_fragment_chat))
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
+    }
+
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
+        protected TextView chatid;
+        protected TextView message;
+
+        public CustomViewHolder(View view) {
+            super(view);
+            this.chatid = (TextView) view.findViewById(R.id.username);
+            this.message = (TextView) view.findViewById(R.id.message);
+        }
     }
 
 }

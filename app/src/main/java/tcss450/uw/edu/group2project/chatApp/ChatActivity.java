@@ -189,11 +189,11 @@ public class ChatActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_chat) {
-            loadFragment(new ChatListFragment(mUserMemberID), getString(R.string.keys_fragment_chat_list));
+            loadFragment(new ChatListFragment(), getString(R.string.keys_fragment_chat_list));
         } else if (id == R.id.nav_contacts) { //switch to Contacts Activity
             //loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts)); original
             //loadContactsActivity();
-            loadFragment(new TryContactFragment(mUserMemberID), getString(R.string.keys_fragment_contacts));
+            loadFragment(new TryContactFragment(), getString(R.string.keys_fragment_contacts));
         } else if (id == R.id.nav_profile) {
             loadFragment(new ProfileFragment(), getString(R.string.keys_fragment_profile));
             loadInfo();
