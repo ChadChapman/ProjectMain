@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,8 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -386,7 +384,7 @@ public class CreateChatFragment extends Fragment {
             if (success) { //yay, all members were added, let's go to the new chat
                 //TODO now add all members of this chat to the list of sets of usernames fo chats
                 Log.e("ADD ALL MEMBERS RETURNED :", "SUCCESS!");
-                loadNewChatIDIntoPrefs(mNewChatIDStr);
+                loadNewChatInfoIntoPrefs(mNewChatIDStr);
                 loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
 
             } else {
@@ -444,98 +442,50 @@ public class CreateChatFragment extends Fragment {
     private void loadNewChatInfoIntoPrefs(String chatID) {
         //prefs has a string set type it will take, about the best we can do for storing chat info
         //for now i think.
-        //make the string to store, add in some char to split it on later
-        StringBuilder sb = new StringBuilder();
-        sb.append(mNewChatIDStr + '+');
-        sb.append(mNewChatNameStr);
-        // then keep the chatid as [0] in resulting array so it's easy to find
-        //get a prefs instance
+        //both chatid and chatname will have their own set so we can check chatids easier
+
         SharedPreferences prefs =
                 getActivity().getSharedPreferences(
                         getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
+        //first add the chatname and chatid for passing around to fragments
+        prefs.edit()
+                .putString("newchatid", mNewChatIDStr);
+        prefs.edit()
+                .putString("newchatname", mNewChatNameStr);
+
         //see if this is first chat or not
-        if (prefs.getStringSet("chatids", null) == null) {
+        if (prefs.getStringSet("chatidset", null) == null) {
             //make a string set, add this chatid, write it to prefs
-            Set<String> chatidset = new Set<String>() {
-                @Override
-                public int size() {
-                    return 0;
-                }
+            Set<String> chatidset = new HashSet<String>();
+            chatidset.add(mNewChatIDStr);
+            prefs.edit()
+                    .putStringSet("chatidset", chatidset)
+                    .apply();
+        } else {
+            Set<String> chatidset = prefs.getStringSet("chatidset", null);
+            chatidset.add(mNewChatIDStr);
+            prefs.edit()
+                    .putStringSet("chatidset", chatidset)
+                    .apply();
+        }
+        //now for the chatname
+        if (prefs.getStringSet("chatnameset", null) == null) {
+            //make a string set, add this chatid, write it to prefs
+            Set<String> chatnameset = new HashSet<String>();
+            chatnameset.add(mNewChatNameStr);
+            prefs.edit()
+                    .putStringSet("chatnameset", chatnameset)
+                    .apply();
 
-                @Override
-                public boolean isEmpty() {
-                    return false;
-                }
-
-                @Override
-                public boolean contains(Object o) {
-                    return false;
-                }
-
-                @NonNull
-                @Override
-                public Iterator<String> iterator() {
-                    return null;
-                }
-
-                @NonNull
-                @Override
-                public Object[] toArray() {
-                    return new Object[0];
-                }
-
-                @NonNull
-                @Override
-                public <T> T[] toArray(@NonNull T[] a) {
-                    return null;
-                }
-
-                @Override
-                public boolean add(String s) {
-                    return false;
-                }
-
-                @Override
-                public boolean remove(Object o) {
-                    return false;
-                }
-
-                @Override
-                public boolean containsAll(@NonNull Collection<?> c) {
-                    return false;
-                }
-
-                @Override
-                public boolean addAll(@NonNull Collection<? extends String> c) {
-                    return false;
-                }
-
-                @Override
-                public boolean retainAll(@NonNull Collection<?> c) {
-                    return false;
-                }
-
-                @Override
-                public boolean removeAll(@NonNull Collection<?> c) {
-                    return false;
-                }
-
-                @Override
-                public void clear() {
-
-                }
-            };
+        } else {
+            Set<String> chatnameset = prefs.getStringSet("chatnameset", null);
+            chatnameset.add(mNewChatNameStr);
+            prefs.edit()
+                    .putStringSet("chatnameset", chatnameset)
+                    .apply();
         }
     }
-//        SharedPreferences prefs =
-//                getActivity().getSharedPreferences(
-//                        getString(R.string.keys_shared_prefs),
-//                        Context.MODE_PRIVATE);
-//        //save the chatid for later usage
-//        prefs.edit().putString("")
-//                .apply();
-//    }
 
     @Override
     public void onAttach(Context context) {
