@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -65,22 +66,22 @@ public class SearchFragment extends Fragment {
 
     private void onSearchUsernameButtonClicked(View view) {
         if (mListener != null) {
-            String username = ((TextView) v.findViewById(R.id.search_text_view_username)).getText().toString();
+            String username = ((EditText) v.findViewById(R.id.search_edit_text_username)).getText().toString();
             mListener.onSearchByUsernameButtonClicked(username);
         }
     }
 
     private void onSearchEmailButtonClicked(View view) {
         if (mListener != null) {
-            String email = ((TextView) v.findViewById(R.id.search_text_view_email)).getText().toString();
+            String email = ((EditText) v.findViewById(R.id.search_edit_text_email)).getText().toString();
             mListener.onSearchByEmailButtonClicked(email);
         }
     }
 
     private void onSearchNameButtonClicked(View view) {
         if (mListener != null) {
-            String firstName = ((TextView) v.findViewById(R.id.search_text_view_first_name)).getText().toString();
-            String lastName = ((TextView) v.findViewById(R.id.search_text_view_last_name)).getText().toString();
+            String firstName = ((EditText) v.findViewById(R.id.search_edit_text_first_name)).getText().toString();
+            String lastName = ((EditText) v.findViewById(R.id.search_edit_text_last_name)).getText().toString();
             mListener.onSearchByNameButtonClicked(firstName, lastName);
         }
     }

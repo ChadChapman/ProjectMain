@@ -290,7 +290,7 @@ public class ChatActivity extends AppCompatActivity
         Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_search)).build();
         JSONObject usernameJSON = new JSONObject();
-
+        Log.e("ChatActivity", username);
         try {
             usernameJSON.put(getString(R.string.keys_json_username), username);
             Log.e("ChatActivity", "Put usernamer to json" );
@@ -309,8 +309,8 @@ public class ChatActivity extends AppCompatActivity
         JSONObject nameJSON = new JSONObject();
 
         try {
-            nameJSON.put(getString(R.string.keys_json_first), firstname);
-            nameJSON.put(getString(R.string.keys_json_last), lastname);
+            nameJSON.put(getString(R.string.keys_json_firstname), firstname);
+            nameJSON.put(getString(R.string.keys_json_lastname), lastname);
         } catch (JSONException theException) {
             Log.e("ChatActivity", "Error creating JSON" + theException.getMessage());
         }
@@ -351,18 +351,13 @@ public class ChatActivity extends AppCompatActivity
         try {
             JSONObject responseJSON = new JSONObject(result);
             boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
-
             TextView resultFirstName = findViewById(R.id.search_text_view_result_first_name);
-            TextView resultLastName = findViewById(R.id.search_text_view_result_first_name);
+            TextView resultLastName = findViewById(R.id.search_text_view_result_last_name);
 
             if (success) {
-                JSONArray users = responseJSON.getJSONArray(getString(R.string.keys_json_search_result));
-                if (users.length() > 0) {
-                    resultFirstName.setText(users.getJSONObject(0).getString("firstname"));
-                    resultLastName.setText(users.getJSONObject(0).getString("lastname"));
-                    Log.e("ChatActivity", users.getJSONObject(0).getString("firstname"));
-                    Log.e("ChatActivity", users.getJSONObject(0).getString("lastname"));
-                }
+                resultFirstName.setText(responseJSON.getString("firstname"));
+                resultLastName.setText(responseJSON.getString("lastname"));
+
             } else {
                 Log.e("ChatActivity", "User not found");
             }
