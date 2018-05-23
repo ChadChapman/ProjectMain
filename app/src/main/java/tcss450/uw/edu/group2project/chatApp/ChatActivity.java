@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
+import tcss450.uw.edu.group2project.utils.UITextSize;
 import tcss450.uw.edu.group2project.utils.UITheme;
 
 public class ChatActivity extends AppCompatActivity
@@ -35,6 +36,7 @@ public class ChatActivity extends AppCompatActivity
     private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
     public static int mTheme = UITheme.THEME_ONE;
+    public static int mTextSize = UITextSize.SIZE_MEDIUM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,9 @@ public class ChatActivity extends AppCompatActivity
 
         // Update theme color
         setTheme(UITheme.getThemeId(mTheme));
+
+        // Update text size
+        setTheme(UITextSize.getSizeId(mTextSize));
 
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -236,6 +241,41 @@ public class ChatActivity extends AppCompatActivity
         int duration = Toast.LENGTH_SHORT;
         Context context = this.getBaseContext();
         Toast toast = Toast.makeText(context, "Changed theme to " + themeName, duration);
+        toast.show();
+    }
+
+    @Override
+    public void onSettingTextSizeButtonClicked(int size) {
+        switch (size) {
+            case 1:
+                changeTextSize(UITextSize.SIZE_SMALL);
+                break;
+            case 2:
+                changeTextSize(UITextSize.SIZE_MEDIUM);
+                break;
+            case 3:
+                changeTextSize(UITextSize.SIZE_LARGE);
+                break;
+        }
+    }
+
+    public void changeTextSize(final int size) {
+        // Handles theme changes to activity
+        mTextSize = size;
+        setTheme(mTextSize);
+        String sizeName = " ";
+        if(size == 1){
+            sizeName = getString(R.string.setting_button_text_size_small);
+        }else if(size == 2){
+            sizeName = getString(R.string.setting_button_text_size_medium);
+        }else if(size == 3){
+            sizeName = getString(R.string.setting_button_text_size_large);
+        }
+        ChatActivity.this.recreate();
+
+        int duration = Toast.LENGTH_SHORT;
+        Context context = this.getBaseContext();
+        Toast toast = Toast.makeText(context, "Changed text size to " + sizeName, duration);
         toast.show();
     }
 

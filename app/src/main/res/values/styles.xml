@@ -40,6 +40,16 @@
         <item name="colorAccent">@color/colorAccent4</item>
     </style>
 
+    <style name="TextSizeSmall">
+        <item name="android:textSize">12sp</item>
+    </style>
+    <style name="TextSizeMedium">
+        <item name="android:textSize">16sp</item>
+    </style>
+    <style name="TextSizeLarge">
+        <item name="android:textSize">20sp</item>
+    </style>
+
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
