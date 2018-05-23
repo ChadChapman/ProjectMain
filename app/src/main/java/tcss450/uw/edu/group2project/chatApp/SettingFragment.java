@@ -80,28 +80,24 @@ public class SettingFragment extends Fragment {
 
     private void onThemeOneButtonClicked(View v) {
         if (mListener != null) {
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             mListener.onSettingThemeButtonClicked(1);
         }
     }
 
     private void onThemeTwoButtonClicked(View v) {
         if (mListener != null) {
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             mListener.onSettingThemeButtonClicked(2);
         }
     }
 
     private void onThemeThreeButtonClicked(View v) {
         if (mListener != null) {
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             mListener.onSettingThemeButtonClicked(3);
         }
     }
 
     private void onThemeFourButtonClicked(View v) {
         if (mListener != null) {
-            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
             mListener.onSettingThemeButtonClicked(4);
         }
     }

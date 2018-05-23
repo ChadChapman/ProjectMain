@@ -6,10 +6,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.WeatherDisplay.NetworkUtils;
 import tcss450.uw.edu.group2project.WeatherDisplay.Weather;
 import tcss450.uw.edu.group2project.WeatherDisplay.WeatherAdapter;
+import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
 import tcss450.uw.edu.group2project.utils.ListenManager;
 
 
@@ -44,6 +47,8 @@ public class LandingFragment extends Fragment {
 
     private ListenManager mListenManager;
 
+    private ImageButton mNewChatButton;
+
     public LandingFragment() {
         // Required empty public constructor
     }
@@ -53,49 +58,35 @@ public class LandingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_landing, container, false);
-        weatherView = v.findViewById(R.id.weatherTextView);
-
-        listView = v.findViewById(R.id.idListView);
-
-
-
-        URL weatherUrl = NetworkUtils.buildUrlForWeather();
-        new FetchWeatherDetails().execute(weatherUrl);
-        Log.i(TAG, "onCreate: weatherURL: " + weatherUrl);
+//        weatherView = v.findViewById(R.id.weatherTextView);
+//
+//        listView = v.findViewById(R.id.idListView);
+//
+//        URL weatherUrl = NetworkUtils.buildUrlForWeather();
+//        new FetchWeatherDetails().execute(weatherUrl);
+//        Log.i(TAG, "onCreate: weatherURL: " + weatherUrl);
+        mNewChatButton = v.findViewById(R.id.createNewChatFragNewChatButton);
+        setupNewChatButton(savedInstanceState);
         return v;
+    }
+
+    private void setupNewChatButton(Bundle paramBundle){
+
+        mNewChatButton.setOnClickListener(frag -> loadFragment(new CreateChatFragment()
+                , getString(R.string.keys_fragment_create_new_chat)));
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-
-
-
-//        SharedPreferences prefs =
-//                getActivity().getSharedPreferences(
-//                        getString(R.string.keys_shared_prefs),
-//                        Context.MODE_PRIVATE);
-//        if (prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in), false)) {
-//            getView().findViewById(R.id.landing_button_logout)
-//                    .setOnClickListener(v -> mListener.onLogout());
-//        } else {
-//            getView().findViewById(R.id.landing_button_logout).setVisibility(View.GONE);
-//        }
     }
+
     private void handleError(Exception e) {
         Log.e("LISTEN ERROR", e.getMessage());
     }
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-//        if (context instanceof OnLandingFragmentInteractionListener) {
-//            mListener = (OnLandingFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnRegisterFragmentInteractionListener");
-//        }
     }
 
     @Override
@@ -107,6 +98,7 @@ public class LandingFragment extends Fragment {
     public interface OnLandingFragmentInteractionListener {
         void onLogout();
     }
+
     private class FetchWeatherDetails extends AsyncTask<URL, Void, String>{
         @Override
         protected void onPreExecute(){
@@ -161,12 +153,7 @@ public class LandingFragment extends Fragment {
                     String link = resultsObj.getString("Link");
                     weather.setLink(link);
 
-
                     weatherArrayList.add(weather);
-
-
-
-
                 }
                 if(weatherArrayList != null){
                     WeatherAdapter weatherAdapter = new WeatherAdapter(getContext(), weatherArrayList);
@@ -179,6 +166,16 @@ public class LandingFragment extends Fragment {
             }
         }
         return null;
+    }//end pJ
+
+    private void loadFragment(Fragment frag, String tag) {
+        Log.e("MADE IT TO lOADFRAGMENT() IN LANDING FRAG", tag);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, frag, tag)
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
     }
 
-}
+}//end class LF

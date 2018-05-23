@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout5"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".chatApp.ContactFragment">
+    tools:context=".chatApp.TryContactFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/try_recycle_view"

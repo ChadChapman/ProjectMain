@@ -1,4 +1,4 @@
-package tcss450.uw.edu.group2project.model.Feeders;
+package tcss450.uw.edu.group2project.model;
 
 public class ContactFeedItem {
 
@@ -6,7 +6,9 @@ public class ContactFeedItem {
     private String thumbnail;
     private String fname;
     private String lname;
-    private int memberID;
+    private boolean isSelected = false;
+    private String username;
+
 
     public String getTitle() {
         return title;
@@ -29,13 +31,25 @@ public class ContactFeedItem {
     }
 
     public void setFname(String fname) {this.fname = fname; }
+    public String getLname() {return fname;    }
 
-    public String getLname() {return lname;    }
+    public void setLname(String lname) {this.fname = lname; }
 
-    public void setLname(String lname) {this.lname = lname; }
+    public boolean isSelected() {
+        return isSelected;
+    }
 
-    public int getMemberID(){return memberID;}
-    public void setMemberID(int theID){memberID = theID;}
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     @Override
     public String toString() {

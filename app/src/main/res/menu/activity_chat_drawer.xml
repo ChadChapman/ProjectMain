@@ -5,10 +5,6 @@
 
 
     <item
-        android:id="@+id/nav_home"
-        android:icon="@mipmap/baseline_home_black_18dp"
-        android:title="Home" />
-    <item
         android:id="@+id/nav_chat"
         android:icon="@drawable/ic_menu_chat"
         android:title="Chats" />
@@ -24,6 +20,10 @@
         android:id="@+id/nav_settings"
         android:icon="@drawable/ic_menu_settings"
         android:title="Settings" />
+    <item
+        android:id="@+id/nav_new_chat"
+        android:icon="@drawable/ic_menu_settings"
+        android:title="New Chat" />
     <item
         android:id="@+id/nav_logout"
         android:title="Logout" />

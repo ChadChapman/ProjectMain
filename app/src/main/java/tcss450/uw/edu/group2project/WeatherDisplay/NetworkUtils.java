@@ -13,8 +13,7 @@ public class NetworkUtils {
     private static final String TAG = "NewtorkUtils";
     private final static String WEATHER_BASE_URL =
             "http://dataservice.accuweather.com/forecasts/v1/daily/5day/331423";
-    //private final static String API_KEY = "QpnGCFMmidZOuQtwNIbt3ZnFknggEqRj";
-    private final static String API_KEY = "Y6CvnHQU9pAkGKGCh8NsVldTvsfA0oub";
+    private final static String API_KEY = "QpnGCFMmidZOuQtwNIbt3ZnFknggEqRj";
 
 
     private final static String PARAM_API_KEY = "apikey";
