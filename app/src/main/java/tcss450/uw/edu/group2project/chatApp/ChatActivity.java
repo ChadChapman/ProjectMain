@@ -6,15 +6,11 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,6 +23,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -36,8 +33,6 @@ import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.contacts.ContactsActivity;
 import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
 import tcss450.uw.edu.group2project.model.ChatContact;
-import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
-import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.UITextSize;
@@ -45,10 +40,12 @@ import tcss450.uw.edu.group2project.utils.UITheme;
 
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
+        SearchFragment.OnSearchFragmentInteractionListener,
         SettingFragment.OnSettingFragmentInteractionListener {
 
     private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
+    //private int mUserMemberIDInt;
     private ArrayList<ChatContact> mChatContactsArrList;
     private Button mNewChatButton;
 
@@ -203,7 +200,8 @@ public class ChatActivity extends AppCompatActivity
         } else if (id == R.id.nav_profile) {
             loadFragment(new ProfileFragment(), getString(R.string.keys_fragment_profile));
             loadInfo();
-
+        } else if (id == R.id.nav_search) {
+            loadFragment(new SearchFragment(), getString(R.string.keys_fragment_search));
         } else if (id == R.id.nav_settings) {
             loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
         } else if (id == R.id.nav_new_chat) {
@@ -319,6 +317,59 @@ public class ChatActivity extends AppCompatActivity
         toast.show();
     }
 
+    // Handle searches
+    @Override
+    public void onSearchByEmailButtonClicked(String email) {
+        Log.e("ChatActivity", "Search by email");
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search)).build();
+        JSONObject emailJSON = new JSONObject();
+
+        try {
+            emailJSON.put(getString(R.string.keys_json_email), email);
+            Log.e("ChatActivity", "Put email to json" );
+        } catch (JSONException theException) {
+            Log.e("ChatActivity", "Error creating JSON" + theException.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), emailJSON)
+                .onPostExecute(this::handleSearchResult).build().execute();
+    }
+
+    @Override
+    public void onSearchByUsernameButtonClicked(String username) {
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search)).build();
+        JSONObject usernameJSON = new JSONObject();
+        Log.e("ChatActivity", username);
+        try {
+            usernameJSON.put(getString(R.string.keys_json_username), username);
+            Log.e("ChatActivity", "Put usernamer to json" );
+        } catch (JSONException theException) {
+            Log.e("ChatActivity", "Error creating JSON" + theException.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), usernameJSON)
+                .onPostExecute(this::handleSearchResult).build().execute();
+    }
+
+    @Override
+    public void onSearchByNameButtonClicked(String firstname, String lastname) {
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search)).build();
+        JSONObject nameJSON = new JSONObject();
+
+        try {
+            nameJSON.put(getString(R.string.keys_json_firstname), firstname);
+            nameJSON.put(getString(R.string.keys_json_lastname), lastname);
+        } catch (JSONException theException) {
+            Log.e("ChatActivity", "Error creating JSON" + theException.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), nameJSON)
+                .onPostExecute(this::handleSearchResult).build().execute();
+    }
+
     //load the profile info
     private void loadInfo() {
         //build the web service URL
@@ -346,6 +397,25 @@ public class ChatActivity extends AppCompatActivity
                 .build().execute();
     }
 
+    private void handleSearchResult(String result) {
+
+        try {
+            JSONObject responseJSON = new JSONObject(result);
+            boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
+            TextView resultFirstName = findViewById(R.id.search_text_view_result_first_name);
+            TextView resultLastName = findViewById(R.id.search_text_view_result_last_name);
+
+            if (success) {
+                resultFirstName.setText(responseJSON.getString("firstname"));
+                resultLastName.setText(responseJSON.getString("lastname"));
+
+            } else {
+                Log.e("ChatActivity", "User not found");
+            }
+        } catch (JSONException e) {
+            Log.e("ChatActivity", "JSON parse error" + e.getMessage());
+        }
+    }
 
     /*
     --------------------------Async handlers-------------------------------

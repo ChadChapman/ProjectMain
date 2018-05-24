@@ -73,6 +73,17 @@
     <string name="setting_button_text_size_small">Small</string>
     <string name="setting_button_text_size_medium">Medium</string>
     <string name="setting_button_text_size_large">Large</string>
+
+    <!-- Search Fragment -->
+    <string name="search_text_view_username">Username</string>
+    <string name="search_text_view_email">Email</string>
+    <string name="search_text_view_first_name">First Name</string>
+    <string name="search_text_view_last_name">Last Name</string>
+    <string name="search_button_search_by_username">Search by username</string>
+    <string name="search_button_search_by_email">Search by email</string>
+    <string name="search_button_search_by_name">Search by name</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_chat">ChatActivity</string>

@@ -22,6 +22,7 @@
     <string name="keys_fragment_create_new_chat">createChatFragmentTag</string>
     <string name="keys_fragment_profile">profileFragmentTag</string>
     <string name="keys_fragment_contacts">contactsFragmentTag</string>
+    <string name="keys_fragment_search">searchFragmentTag</string>
     <string name="keys_fragment_settings">settingsFragmentTag</string>
     <string name="keys_fragment_contact_details">contactDetailsFragmentTag</string>
 
@@ -36,5 +37,8 @@
     <string name="keys_json_chat_id">chatid</string>
     <string name="keys_json_success_value_true">true</string>
     <string name="keys_json_success_value_false">false</string>
+    <string name="keys_json_firstname">firstname</string>
+    <string name="keys_json_lastname">lastname</string>
+    <string name="keys_json_search_result">search_result</string>
 
 </resources>
