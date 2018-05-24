@@ -24,8 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.model.Feeders.ChatFeedItem;
-import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
+//import tcss450.uw.edu.group2project.model.Feeders.ChatFeedItem;
+//import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
+import tcss450.uw.edu.group2project.model.ChatFeedItem;
 import tcss450.uw.edu.group2project.utils.GetPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.ListenManager;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
@@ -60,6 +61,12 @@ public class ChatFragment extends Fragment {
         mLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
         return v;
+    }
+
+    private void setupChatFragment(){
+        messageFeedItemList = new ArrayList<>();
+        mUserChatIDStr = getArguments().getString("chatID");
+
     }
 
     @Override

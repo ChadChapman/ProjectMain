@@ -10,12 +10,13 @@
 
 
 
-    <string name="ep_base_url">rabbitchat-backend.herokuapp.com</string>
+   <string name="ep_base_url">rabbitchat-backend.herokuapp.com</string> <!-- SWITCH BACK AFTER TESTING! -->
+    <!-- <string name="ep_base_url">localhost:5000</string> -->
     <string name="ep_login">login</string>
-    <string name="ep_verify">verify</string>
     <string name="ep_email">email</string>
     <string name="ep_register">register</string>
     <string name="ep_register_saveVerificationCode">saveVerificationCode</string>
+    <string name="ep_base_localhost_5000">localhost:5000</string>
     <string name="ep_contacts">contacts</string>
 
 
@@ -34,4 +35,10 @@
     <string name="ep_get_message">getMessages</string>
     <string name="ep_get_recent_chat">getRecentChat</string>
     <string name="ep_chat">chat</string>
+    <string name="ep_new_chat">newChat</string>
+    <string name="ep_new_chat_add_all_members">addNewChatMembers</string>
+
+
+
+    <string name="ep_search">search</string>
     </resources>

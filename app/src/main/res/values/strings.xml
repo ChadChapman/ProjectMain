@@ -37,6 +37,7 @@
     <string name="verify_edittext">Ex: 1234</string>
     <string name="verify_check_button">Submit Code</string>
 
+    <string name="chat_start_new_chat_button">new chat</string>
 
     <!-- Landing Fragment -->
     <string name="landing_button_logout">Logout</string>
@@ -48,7 +49,8 @@
     <string name="contacts_frag_toggle_button_sent">Sent</string>
 
 
-    <!-- Chat Activity -->
+    <!-- Create a New Chat -->
+    <string name="create_new_chat_add_users_textview_default">click on a friend to add them</string>
 
     <!-- >>>>>> SQLITE3 INTERNAL DEVICE DB QUERY STRINGS GO HERE <<<<<< -->
     <!-- >>>>>> naming example: sqlite_create_table_ChatContact <<<<<< -->
@@ -66,6 +68,20 @@
     <string name="setting_button_theme_2">Arctic Blast</string>
     <string name="setting_button_theme_3">Magentalman</string>
     <string name="setting_button_theme_4">Minty Breeze</string>
+
+    <string name="setting_text_view_text_size">Select App Text Size</string>
+    <string name="setting_button_text_size_small">Small</string>
+    <string name="setting_button_text_size_medium">Medium</string>
+    <string name="setting_button_text_size_large">Large</string>
+
+    <!-- Search Fragment -->
+    <string name="search_text_view_username">Username</string>
+    <string name="search_text_view_email">Email</string>
+    <string name="search_text_view_first_name">First Name</string>
+    <string name="search_text_view_last_name">Last Name</string>
+    <string name="search_button_search_by_username">Search by username</string>
+    <string name="search_button_search_by_email">Search by email</string>
+    <string name="search_button_search_by_name">Search by name</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

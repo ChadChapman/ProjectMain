@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 
 import tcss450.uw.edu.group2project.chatApp.ChatActivity;
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.chatApp.LandingFragment;
 import tcss450.uw.edu.group2project.model.Credentials;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
@@ -53,7 +55,7 @@ public class StartActivity extends AppCompatActivity
 
                 if (prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in),
                         false)) {
-                    loadLandingFragment();
+                    loadVerifiedUserLandingActivity();
                 } else {
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.start_constraint_layout,
@@ -66,11 +68,29 @@ public class StartActivity extends AppCompatActivity
     }
 
 
-    void loadLandingFragment() {
+    /**
+     * Previously named loadLandingFragment, shit you not.
+     * Since this begins a new activity, now it's name reflects that.
+     *
+     * everything worked and now we are going into the app, starting with the chat activity
+     */
+    void loadVerifiedUserLandingActivity() {
+
+        SharedPreferences prefs =
+                getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        //save the memberid for later usage
+        prefs.edit().putString(
+                getString(R.string.keys_prefs_my_memberid),
+                mUserMemberIDStr)
+                .apply();
+
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("userMemberID", mUserMemberIDStr);
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
+
     }
 
     private void sendEmail() {
@@ -132,6 +152,7 @@ public class StartActivity extends AppCompatActivity
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
+  //              .encodedAuthority(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_login))
                 .build();
 
@@ -195,7 +216,7 @@ public class StartActivity extends AppCompatActivity
                 checkStayLoggedIn();
                 int vCode = resultsJSON.getInt("code");
                 if (vCode == 1) {
-                    loadLandingFragment();
+                    loadVerifiedUserLandingActivity();
                 } else if (vCode == 0) {
                     sendEmail();
                     LoginFragment fragment = new LoginFragment();
@@ -298,22 +319,7 @@ public class StartActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction() {
-        Uri uri = new Uri.Builder()
-                .scheme("https")
-                .appendPath(getString(R.string.ep_base_url))
-                .appendPath(getString(R.string.ep_login))
-                .appendPath(getString(R.string.ep_verify))
-                .build();
-
-        JSONObject msg = new JSONObject();
-        try {
-            msg.put("memberid", mUserMemberIDStr);
-            new SendPostAsyncTask.Builder(uri.toString(), msg)
-                    .build().execute();
-        } catch (JSONException e) {
-            Log.wtf("Verify", "Error creating JSON " + e.getMessage());
-        }
-        loadLandingFragment();
+        loadVerifiedUserLandingActivity();
     }
 
 

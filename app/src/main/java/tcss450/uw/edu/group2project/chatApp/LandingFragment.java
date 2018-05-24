@@ -19,6 +19,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -38,6 +40,11 @@ import java.util.Locale;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.WeatherDisplay.NetworkUtils;
+import tcss450.uw.edu.group2project.WeatherDisplay.Weather;
+import tcss450.uw.edu.group2project.WeatherDisplay.WeatherAdapter;
+import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
+import tcss450.uw.edu.group2project.utils.ListenManager;
+
 import tcss450.uw.edu.group2project.utils.WeatherAsyncTask;
 
 /**
@@ -71,6 +78,8 @@ public class LandingFragment extends Fragment implements
     private String myZip = "";
     private JSONObject myCurrInfo;
     private ProgressBar mProgressBar;
+
+    private ImageButton mNewChatButton;
 
     public LandingFragment() {
         // Required empty public constructor
@@ -109,6 +118,9 @@ public class LandingFragment extends Fragment implements
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
 
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mNewChatButton = v.findViewById(R.id.createNewChatFragNewChatButton);
+        setupNewChatButton(savedInstanceState);
+
         return v;
     }
 
@@ -145,7 +157,11 @@ public class LandingFragment extends Fragment implements
         mGoogleApiClient.disconnect();
         myZip = "";
     }
+    private void setupNewChatButton(Bundle paramBundle){
 
+        mNewChatButton.setOnClickListener(frag -> loadFragment(new CreateChatFragment()
+                , getString(R.string.keys_fragment_create_new_chat)));
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -310,5 +326,15 @@ public class LandingFragment extends Fragment implements
             }
 
         }
+    }
+
+    private void loadFragment(Fragment frag, String tag) {
+        Log.e("MADE IT TO lOADFRAGMENT() IN LANDING FRAG", tag);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, frag, tag)
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
     }
 }
