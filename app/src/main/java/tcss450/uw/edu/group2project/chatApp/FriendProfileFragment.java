@@ -49,8 +49,6 @@ public class FriendProfileFragment extends Fragment {
         ((TextView)v.findViewById(R.id.fname_textView)).setText(getArguments().getString("lname"));
         ((TextView)v.findViewById(R.id.lname_textView)).setText(getArguments().getString("title"));
         Log.e("","Contact Status = " + mContactStatus);
-
-
         Button b;
         //handle pending requests
         if (mContactStatus == 2) {
