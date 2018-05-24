@@ -1,22 +1,28 @@
 package tcss450.uw.edu.group2project.chatApp;
 
 
-import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
+
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,43 +32,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.model.ChatContact;
 import tcss450.uw.edu.group2project.model.ContactFeedItem;
-import tcss450.uw.edu.group2project.model.FeedItem;
-import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
-import tcss450.uw.edu.group2project.utils.OnItemClickListener;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ContactFragment extends Fragment {
-    private static final String TAG = "RecyclerViewExample";
-    private List<FeedItem> feedsList;
     private RecyclerView mRecyclerView;
-    private MyRecyclerViewAdapter adapter;
+    private RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
     private ProgressBar progressBar;
-    private List<ChatContact> mContactsList;
     private List<ContactFeedItem> mContactFeedItemList;
-    private int mUserMemberID;
     private String mUserMemberIDStr;
     private Uri mContactsUri;
     private View v;
-    /*
-     *Used to label verified contact, incoming and outgoing requests.
-     * 1 means verified contact, 2 means incoming request, 3 means outgoing request
-     */
     private int mContactStatus = 0;
-
     public ContactFragment() {
         // Required empty public constructor
-    }
-
-    @SuppressLint("ValidFragment")
-    public ContactFragment(String mID) {
-        // Required empty public constructor
-        mUserMemberID = new Integer(mID);
-
     }
 
     @Override
@@ -70,35 +56,22 @@ public class ContactFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_contact, container, false);
         // Inflate the layout for this fragment
-        mUserMemberIDStr = Integer.toString(mUserMemberID);
+        mUserMemberIDStr = getArguments().getString("memberID");
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.try_recycle_view));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         progressBar = (ProgressBar) (v.findViewById(R.id.try_progress_bar));
-        mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_verified)); //TODO start using this uri instead
-        //mContactsUri = buildLocalAddress(); //TODO start using this uri instead
-        loadVerifiedContacts();
+        mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_verified));
 
+        //Load the list of friends
+        loadContacts();
+
+        //Set up each buttons in fragment
         RadioButton rb = (RadioButton) v.findViewById(R.id.friends_radioButton);
-        rb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onRadioButtonClicked(view);
-            }
-        });
+        rb.setOnClickListener(this::onRadioButtonClicked);
         rb = (RadioButton) v.findViewById(R.id.pending_radioButton);
-        rb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onRadioButtonClicked(view);
-            }
-        });
+        rb.setOnClickListener(this::onRadioButtonClicked);
         rb = (RadioButton) v.findViewById(R.id.sent_radioButton);
-        rb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onRadioButtonClicked(view);
-            }
-        });
+        rb.setOnClickListener(this::onRadioButtonClicked);
         Button add = (Button) v.findViewById(R.id.add_button);
         add.setOnClickListener(this::onAddButtonClicked);
         return v;
@@ -110,7 +83,7 @@ public class ContactFragment extends Fragment {
         String friend = ((EditText) (getActivity().findViewById(R.id.add_editText))).getText().toString();
         JSONObject msg = new JSONObject();
         try {
-            msg.put("memberid", mUserMemberID);
+            msg.put("memberid", mUserMemberIDStr);
             msg.put("username_b", friend);
 
         } catch (JSONException e) {
@@ -150,11 +123,12 @@ public class ContactFragment extends Fragment {
                 getActivity().findViewById(R.id.add_button).setVisibility(View.VISIBLE);
                 break;
         }
-        loadVerifiedContacts();
+        loadContacts();
     }
 
-
-    public void loadVerifiedContacts() {
+    //Load the contacts in each list friends,pending,sent.
+    //Depending on what was clicked
+    public void loadContacts() {
         JSONObject jsonObject = createVerifiedContactsRequestObject();
         //now json obj is built, time ot send it off
         new SendPostAsyncTask.Builder(mContactsUri.toString(), jsonObject)
@@ -163,10 +137,11 @@ public class ContactFragment extends Fragment {
                 .build().execute();
     }
 
+    //create a friend request to another user
     public JSONObject createVerifiedContactsRequestObject() {
         JSONObject msg = new JSONObject();
         try {
-            msg.put("memberid", mUserMemberID);
+            msg.put("memberid", mUserMemberIDStr);
         } catch (JSONException e) {
             Log.wtf("CONTACTS VERIFIED ALL", "Error creating JSON: " + e.getMessage());
         }
@@ -182,6 +157,7 @@ public class ContactFragment extends Fragment {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
 
+    //build a heroku url with a passed on ep
     public Uri buildHerokuAddress(String ep) {
         Uri uri = new Uri.Builder()
                 .scheme("https")
@@ -191,15 +167,6 @@ public class ContactFragment extends Fragment {
                 .build();
         return uri;
     }
-
-    //This will not work
-//    public Uri buildLocalAddress() {
-//        Uri uri = new Uri.Builder()
-//                .scheme("https")
-//                .appendPath("localhost:5000")
-//                .build();
-//        return uri;
-//    }
 
     //on post exec should be -> handle successful contacts query
     public void handleContactsQueryResponseOnPostExec(String result) {
@@ -213,38 +180,54 @@ public class ContactFragment extends Fragment {
 
                 //need to populate the contacts list before passing it to the adapter
                 parseHerokuResult(result);
-                //added from here
-                adapter = new MyRecyclerViewAdapter(getContext(), mContactFeedItemList);
-                mRecyclerView.setAdapter(adapter);
-                adapter.setOnItemClickListener(new OnItemClickListener() {
+                //create a recycler adapter
+                adapter = new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                    @NonNull
                     @Override
-                    public void onContactItemClick(ContactFeedItem item) {
-                        //Store contact status because we different UI/ Ep Calls depending
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("mContactStatus", mContactStatus);
-                        bundle.putSerializable("mUserMemberID", mUserMemberID);
-                        FriendProfileFragment fragment = new FriendProfileFragment(item);
-                        fragment.setArguments(bundle);
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragmentContainer, fragment, "friend")
-                                .addToBackStack(null);
-                        // Commit the transaction
-                        transaction.commit();
+                    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+                        View view = LayoutInflater.from(viewGroup.getContext())
+                                .inflate(R.layout.list_row, null);
+                        return new CustomViewHolder(view);
                     }
-                });
 
+                    @Override
+                    public void onBindViewHolder(RecyclerView.ViewHolder customViewHolder, int i) {
+                        //FeedItem feedItem = feedItemList.get(i);
+                        ContactFeedItem feedItem = mContactFeedItemList.get(i);
+
+                        //Render image using Picasso library
+                        if (!TextUtils.isEmpty(feedItem.getThumbnail())) {
+                            Picasso.with(getContext()).load(feedItem.getThumbnail())
+                                    .error(R.drawable.contacts_image_error)
+                                    .placeholder(R.drawable.contacts_image_placeholder)
+                                    .into(((CustomViewHolder) customViewHolder).imageView);
+                        }
+
+                        //Setting text view title
+                        ((CustomViewHolder) customViewHolder).textView.setText(feedItem.getTitle());
+
+                        View.OnClickListener listener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                onContactItemClick(feedItem);
+                            }
+                        };
+
+
+                        ((CustomViewHolder) customViewHolder).imageView.setOnClickListener(listener);
+                        ((CustomViewHolder) customViewHolder).textView.setOnClickListener(listener);
+                    }
+
+                    @Override
+                    public int getItemCount() {
+                        return (null != mContactFeedItemList ? mContactFeedItemList.size() : 0);
+                    }
+                };
+                mRecyclerView.setAdapter(adapter);
             } else {
                 Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
             }//to here from tut GH
 
-//                adapter = new MyRecyclerViewAdapter(
-//                            ContactsActivity.this, mContactFeedItemList);
-//                    mRecyclerView.setAdapter(adapter);
-//          } else {
-//                    Toast.makeText(ContactsActivity.this
-//                            , "Failed to fetch data!", Toast.LENGTH_SHORT).show();
-//            } //commented out for testing
         } catch (JSONException e) {
             //It appears that the web service didn’t return a JSON formatted String
             //or it didn’t have what we expected in it.
@@ -256,19 +239,12 @@ public class ContactFragment extends Fragment {
 
 
     //on click should be -> load detail fag of that contact
-
     //on pending button press -> new query for all pending requests others sent
-
     //on sent button press -> new query for all pending requests others sent
-
     //search for new contacts
-
     //sned new contact request
-
     //delete contact request
-
     //accept contact request
-
     private void parseHerokuResult(String result) {
         //String imgAddress = "https://www.logoground.com/uploads/2017108832017-04-203705844rabbitchat.jpg";
         //maybe add an array of images?
@@ -295,24 +271,7 @@ public class ContactFragment extends Fragment {
         //return mContactFeedItemList;
     }
 
-    private void parseResult(String result) {
-        try {
-            JSONObject response = new JSONObject(result);
-            JSONArray posts = response.optJSONArray("posts");
-            feedsList = new ArrayList<>();
-
-            for (int i = 0; i < posts.length(); i++) {
-                JSONObject post = posts.optJSONObject(i);
-                FeedItem item = new FeedItem();
-                item.setTitle(post.optString("title"));
-                item.setThumbnail(post.optString("thumbnail"));
-                feedsList.add(item);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
+    //
     public void handleAddOnPost(String result) {
 
         try {
@@ -321,7 +280,7 @@ public class ContactFragment extends Fragment {
 
             if (success) {
                 Toast.makeText(getContext(), "Sent", Toast.LENGTH_SHORT).show();
-                loadVerifiedContacts();
+                loadContacts();
             } else {
                 Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
             }
@@ -331,6 +290,40 @@ public class ContactFragment extends Fragment {
             Log.e("JSON_PARSE_ERROR", result
                     + System.lineSeparator()
                     + e.getMessage());
+        }
+    }
+
+
+    private void onContactItemClick(ContactFeedItem item) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("fname", item.getFname());
+        bundle.putSerializable("lname", item.getLname());
+        bundle.putSerializable("title", item.getTitle());
+        bundle.putSerializable("memberID",item.getMemberID());
+        bundle.putSerializable("mContactStatus", mContactStatus);
+        bundle.putSerializable("mUserMemberID", mUserMemberIDStr);
+        Fragment friend = new FriendProfileFragment();
+        friend.setArguments(bundle);
+
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, friend, "friend")
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
+    }
+
+    /**
+     * begin internal class for the viewholder
+     */
+    public class CustomViewHolder extends RecyclerView.ViewHolder {
+        protected ImageView imageView;
+        protected TextView textView;
+
+        public CustomViewHolder(View view) {
+            super(view);
+            this.imageView = (ImageView) view.findViewById(R.id.thumbnail);
+            this.textView = (TextView) view.findViewById(R.id.title);
         }
     }
 }

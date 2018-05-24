@@ -64,10 +64,6 @@ public class DownloadTask extends AsyncTask<String, Void, Integer> {
 
         //this assumes it is a ContactsActivity so I commented it out, otherwise is correct
         if (result == 1) {
-            //adapter = new MyRecyclerViewAdapter(ContactsActivity.this, feedsList);
-//            mMyRecyclerViewAdapter = new MyRecyclerViewAdapter(
-//                    ContactsActivity.this, mContactFeedItemList);
-//            mRecyclerView.setAdapter(adapter);
         } else {
 //            Toast.makeText(ContactsActivity.this
 //                    , "Failed to fetch data!", Toast.LENGTH_SHORT).show();
