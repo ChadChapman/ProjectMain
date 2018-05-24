@@ -265,12 +265,22 @@ public class ChatActivity extends AppCompatActivity
         // Handles theme changes to activity
         mTheme = theme;
         setTheme(mTheme);
+        String themeName = " ";
+        if(theme == 1){
+            themeName = getString(R.string.setting_button_theme_1);
+        }else if(theme == 2){
+            themeName = getString(R.string.setting_button_theme_2);
+        }else if(theme == 3){
+            themeName = getString(R.string.setting_button_theme_3);
+        }else if(theme == 4){
+            themeName = getString(R.string.setting_button_theme_4);
+        }
 
         ChatActivity.this.recreate();
 
         int duration = Toast.LENGTH_SHORT;
         Context context = this.getBaseContext();
-        Toast toast = Toast.makeText(context, "Changed to Theme " + theme, duration);
+        Toast toast = Toast.makeText(context, "Changed Theme to " + themeName, duration);
         toast.show();
     }
 
