@@ -2,10 +2,6 @@ package tcss450.uw.edu.group2project.contacts;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -65,9 +61,27 @@ public class ContactsActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mContactsUri = buildHerokuAddress(); //TODO start using this uri instead
+        //mContactsUri = buildHerokuAddress(); //TODO start using this uri instead
+        //mContactFeedItemList = new ArrayList<>(); done in parseHerokuResult
         //String url = "http://stacktips.com/?json=get_category_posts&slug=news&count=30";
+        //new DownloadTask().execute(url);
+        //new DownloadTask().execute(mContactsUri.toString()); //commented out trying to get away from tut
         loadVerifiedContacts();
+//        adapter.setOnItemClickListener(new OnItemClickListener() {
+//            @Override
+//            public void onItemClick(FeedItem item) {
+//                Toast.makeText(ContactsActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+//
+//            }
+//        });
 
+//        adapter.setOnItemClickListener(new OnItemClickListener() {
+//            @Override
+//            public void onContactItemClick(ContactFeedItem item) {
+//                Toast.makeText(ContactsActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+//
+//            }
+//        }); alos commented out for testing
     }
 
     public void loadVerifiedContacts(){
@@ -136,10 +150,8 @@ public class ContactsActivity extends AppCompatActivity {
                 adapter.setOnItemClickListener(new OnItemClickListener() {
                     @Override
                     public void onContactItemClick(ContactFeedItem item) {
-                        Toast.makeText(ContactsActivity.this, item.getTitle()
-                                , Toast.LENGTH_LONG).show();
-                        loadFragment(new ContactDetailsFragment()
-                                , getString(R.string.keys_fragment_contact_details));
+                        Toast.makeText(ContactsActivity.this, item.getTitle(), Toast.LENGTH_LONG).show();
+
                     }
                 });
 
@@ -147,14 +159,21 @@ public class ContactsActivity extends AppCompatActivity {
                 Toast.makeText(ContactsActivity.this, "Failed to fetch data!", Toast.LENGTH_SHORT).show();
             }//to here from tut GH
 
+//                adapter = new MyRecyclerViewAdapter(
+//                            ContactsActivity.this, mContactFeedItemList);
+//                    mRecyclerView.setAdapter(adapter);
+//          } else {
+//                    Toast.makeText(ContactsActivity.this
+//                            , "Failed to fetch data!", Toast.LENGTH_SHORT).show();
+//            } //commented out for testing
         } catch(JSONException e){
-                //It appears that the web service didn’t return a JSON formatted String
-                //or it didn’t have what we expected in it.
-                Log.e("JSON_PARSE_ERROR", result
-                        + System.lineSeparator()
-                        + e.getMessage());
-            }
+            //It appears that the web service didn’t return a JSON formatted String
+            //or it didn’t have what we expected in it.
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
         }
+    }
 
 
     //on click should be -> load detail fag of that contact
@@ -174,8 +193,8 @@ public class ContactsActivity extends AppCompatActivity {
     private void parseHerokuResult(String result) {
         //String imgAddress = "https://www.logoground.com/uploads/2017108832017-04-203705844rabbitchat.jpg";
         //maybe add an array of images?
-        String imgAddress = "http://2.bp.blogspot.com/-BvXcUdArvGk/UK54mxYSUOI/AAAAAAAAbg8/XycJSQH_IrU/s640/funny-animal-captions-005-020.jpg";
-        //String imgAddress = "http://ajax.googleapis.com/ajax/services/search/images?q=%s&v=1.0&rsz=large&start=1";
+        //String imgAddress = "http://2.bp.blogspot.com/-BvXcUdArvGk/UK54mxYSUOI/AAAAAAAAbg8/XycJSQH_IrU/s640/funny-animal-captions-005-020.jpg";
+        String imgAddress = "http://ajax.googleapis.com/ajax/services/search/images?q=%s&v=1.0&rsz=large&start=1";
         try {
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray("contacts");
@@ -213,13 +232,5 @@ public class ContactsActivity extends AppCompatActivity {
         }
     }
 
-    private void loadFragment(Fragment frag, String tag){
-        FragmentTransaction transaction = getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, frag, tag)
-                .addToBackStack(tag);
-        // Commit the transaction
-        transaction.commit();
-    }
 
 }

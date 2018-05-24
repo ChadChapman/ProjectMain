@@ -49,6 +49,8 @@ public class ChatActivity extends AppCompatActivity
     private ArrayList<ChatContact> mChatContactsArrList;
     private Button mNewChatButton;
 
+
+
     public static int mTheme = UITheme.THEME_ONE;
     public static int mTextSize = UITextSize.SIZE_MEDIUM;
 
@@ -192,11 +194,11 @@ public class ChatActivity extends AppCompatActivity
         if(id == R.id.nav_home){
             loadFragment(new LandingFragment(), getString(R.string.keys_fragment_landing));
         }else if (id == R.id.nav_chat) {
-            loadFragment(new ChatListFragment(), getString(R.string.keys_fragment_chat_list));
+            loadFragment(new ChatListFragment(mUserMemberID), getString(R.string.keys_fragment_chat_list));
         } else if (id == R.id.nav_contacts) { //switch to Contacts Activity
             //loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts)); original
             //loadContactsActivity();
-            loadFragment(new TryContactFragment(), getString(R.string.keys_fragment_contacts));
+            loadFragment(new TryContactFragment(mUserMemberID), getString(R.string.keys_fragment_contacts));
         } else if (id == R.id.nav_profile) {
             loadFragment(new ProfileFragment(), getString(R.string.keys_fragment_profile));
             loadInfo();

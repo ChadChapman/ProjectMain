@@ -8,6 +8,7 @@ public class ContactFeedItem {
     private String lname;
     private boolean isSelected = false;
     private String username;
+    private int memberID;
 
 
     public String getTitle() {
@@ -50,6 +51,10 @@ public class ContactFeedItem {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public int getMemberID(){return memberID;}
+
+    public void setMemberID(int theID){memberID = theID;}
 
     @Override
     public String toString() {

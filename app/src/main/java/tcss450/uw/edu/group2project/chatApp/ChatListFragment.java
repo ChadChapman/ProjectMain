@@ -1,6 +1,7 @@
 package tcss450.uw.edu.group2project.chatApp;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -39,6 +40,7 @@ public class ChatListFragment extends Fragment {
     private ProgressBar progressBar;
     private List<MessageFeedItem> messageFeedItemList;
     private String mUserMemberIDStr;
+    private int mUserMemberID;
     private Uri mContactsUri;
     private View v;
 
@@ -46,6 +48,12 @@ public class ChatListFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @SuppressLint("ValidFragment")
+    public ChatListFragment(String mID) {
+        // Required empty public constructor
+        mUserMemberID = new Integer(mID);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
