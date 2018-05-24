@@ -1,14 +1,16 @@
 package tcss450.uw.edu.group2project.chatApp;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,10 +18,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.chatApp.testing.NewLandingFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.UITheme;
@@ -35,9 +34,12 @@ import tcss450.uw.edu.group2project.utils.UITheme;
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         SettingFragment.OnSettingFragmentInteractionListener {
+    private static final String BACK_STACK_ROOT_TAG = "root_fragment";
     private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
     public static int mTheme = UITheme.THEME_ONE;
+    private static final int MY_PERMISSIONS_LOCATIONS = 814;
+    private Fragment landing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +70,12 @@ public class ChatActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        landing = new LandingFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragmentContainer,
-                        new NewLandingFragment(),
+                        landing,
                         getString(R.string.keys_fragment_landing))
                 .commit();
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mUserMemberID = extras.getString("userMemberID");
@@ -82,10 +83,19 @@ public class ChatActivity extends AppCompatActivity
         //let's just make an sqlite db and be done with it
         //mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
 //        setupDeviceDatabase();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION
+                            , Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_LOCATIONS);
+        }
 
 
     }
-
 
 
     @Override
@@ -101,15 +111,45 @@ public class ChatActivity extends AppCompatActivity
 
     }
 
-//}
+    //}
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_LOCATIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // locations-related task you need to do.
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Log.d("PERMISSION DENIED", "Nothing to see or do here.");
+
+                    //Shut down the app. In production release, you would let the user
+                    //know why the app is shutting down…maybe ask for permission again?
+                    finishAndRemoveTask();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 
     private void loadFragment(Fragment frag, String tag) {
-        FragmentTransaction transaction = getSupportFragmentManager()
-                .beginTransaction()
+        // Pop off everything up to and including the current tab
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        fragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, frag, tag)
-                .addToBackStack(null);
-        // Commit the transaction
-        transaction.commit();
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -139,7 +179,7 @@ public class ChatActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
-        }else if(id == R.id.action_logout){
+        } else if (id == R.id.action_logout) {
             onLogout();
         }
 
@@ -151,7 +191,8 @@ public class ChatActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_home) {
-            loadFragment(new LandingFragment(), getString(R.string.keys_fragment_landing));
+            loadFragment(landing, getString(R.string.keys_fragment_landing));
+
         } else if (id == R.id.nav_chat) {
             Bundle bundle = new Bundle();
             bundle.putString("memberID", mUserMemberID);
@@ -226,13 +267,13 @@ public class ChatActivity extends AppCompatActivity
         mTheme = theme;
         setTheme(mTheme);
         String themeName = " ";
-        if(theme == 1){
+        if (theme == 1) {
             themeName = getString(R.string.setting_button_theme_1);
-        }else if(theme == 2){
+        } else if (theme == 2) {
             themeName = getString(R.string.setting_button_theme_2);
-        }else if(theme == 3){
+        } else if (theme == 3) {
             themeName = getString(R.string.setting_button_theme_3);
-        }else if(theme == 4){
+        } else if (theme == 4) {
             themeName = getString(R.string.setting_button_theme_4);
         }
 
@@ -285,9 +326,10 @@ public class ChatActivity extends AppCompatActivity
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
+
     private void handleOnGetInfoPost(String result) {
         try {
-            Log.e("",result);
+            Log.e("", result);
             JSONObject msg = new JSONObject(result);
             ((TextView) findViewById(R.id.profile_text_view_username)).setText(msg.getString("username"));
             ((TextView) findViewById(R.id.profile_text_view_firstname)).setText(msg.getString("firstname"));

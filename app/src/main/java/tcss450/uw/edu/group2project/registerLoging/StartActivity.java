@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.CheckBox;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -23,7 +22,6 @@ import org.json.JSONObject;
 
 import tcss450.uw.edu.group2project.chatApp.ChatActivity;
 import tcss450.uw.edu.group2project.R;
-import tcss450.uw.edu.group2project.chatApp.LandingFragment;
 import tcss450.uw.edu.group2project.model.Credentials;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
@@ -69,14 +67,6 @@ public class StartActivity extends AppCompatActivity
 
 
     void loadLandingFragment() {
-//        LandingFragment landingFragment = new LandingFragment();
-//
-//        FragmentTransaction transaction = getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.start_constraint_layout, landingFragment, getString(R.string.keys_fragment_landing));
-//        // Commit the transaction
-//        transaction.commit();
-
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("userMemberID", mUserMemberIDStr);
         ActivityCompat.finishAffinity(this);

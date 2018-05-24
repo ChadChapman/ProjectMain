@@ -1,17 +1,31 @@
 package tcss450.uw.edu.group2project.chatApp;
 
 
-import android.content.Context;
-import android.net.Uri;
-import android.os.AsyncTask;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,30 +33,44 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.WeatherDisplay.NetworkUtils;
-import tcss450.uw.edu.group2project.WeatherDisplay.Weather;
-import tcss450.uw.edu.group2project.WeatherDisplay.WeatherAdapter;
-import tcss450.uw.edu.group2project.utils.ListenManager;
-
+import tcss450.uw.edu.group2project.utils.WeatherAsyncTask;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LandingFragment extends Fragment {
+public class LandingFragment extends Fragment implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
+    private static final String TAG = "MyLocationsActivity";
+    /**
+     * The desired interval for location updates. Inexact. Updates may be more or less frequent.
+     */
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
 
-    private OnLandingFragmentInteractionListener mListener;
-    private TextView weatherView;
-    private Uri retrieve;
+    /**
+     * The fastest rate for active location updates. Exact. Updates will never be more frequent
+     * than this value.
+     */
+    public static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
-    private static final String TAG = LandingFragment.class.getSimpleName();
-    private ArrayList<Weather> weatherArrayList = new ArrayList<>();
-
-    private ListView listView;
-
-    private ListenManager mListenManager;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private Location mCurrentLocation;
+    private TextView mLocationTextView;
+    private URL myLocURL;
+    private TextView celTextView;
+    private TextView fahTextView;
+    private TextView weatherTextView;
+    private String myZip = "";
+    private JSONObject myCurrInfo;
+    private ProgressBar mProgressBar;
 
     public LandingFragment() {
         // Required empty public constructor
@@ -53,125 +81,234 @@ public class LandingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_landing, container, false);
-        weatherView = v.findViewById(R.id.weatherTextView);
+        //Search for zip
+        EditText search = v.findViewById(R.id.search_zip_textview);
+        search.setOnEditorActionListener(this::pressedDone);
+        mLocationTextView = v.findViewById(R.id.location_textview);
+        celTextView = v.findViewById(R.id.cel_textview);
+        fahTextView = v.findViewById(R.id.fah_textview);
+        weatherTextView = v.findViewById(R.id.weather_textview);
+        mProgressBar = v.findViewById(R.id.landing_progressbar);
 
-        listView = v.findViewById(R.id.idListView);
+        // Create an instance of GoogleAPIClient.
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+        mLocationRequest = LocationRequest.create();
+        // Sets the desired interval for active location updates. This interval is
+        // inexact. You may not receive updates at all if no location sources are available, or
+        // you may receive them slower than requested. You may also receive updates faster than
+        // requested if other applications are requesting location at a faster interval.
+        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+        // Sets the fastest rate for active location updates. This interval is exact, and your
+        // application will never receive updates faster than this value.
+        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
 
-
-
-        URL weatherUrl = NetworkUtils.buildUrlForWeather();
-        new FetchWeatherDetails().execute(weatherUrl);
-        Log.i(TAG, "onCreate: weatherURL: " + weatherUrl);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return v;
+    }
+
+    private boolean pressedDone(TextView exampleView, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+
+
+            if (exampleView.getText().toString().length() >= 5) {
+                Bundle bundle = new Bundle();
+                bundle.putString("zip", exampleView.getText().toString());
+                Fragment disp = new DisplayConditionsFragment();
+                disp.setArguments(bundle);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragmentContainer, disp, getString(R.string.keys_fragment_condition))
+                        .addToBackStack(null);
+                // Commit the transaction
+                transaction.commit();
+
+            } else {
+                Log.e("fail", "fail" + exampleView.getText().toString());
+            }
+        }
+        return true;
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        stopLocationUpdates();
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+            Log.i(TAG, "Connection suspended");
+        mGoogleApiClient.disconnect();
+        myZip = "";
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+            Log.i(TAG, "Connection Connects" + myZip.isEmpty() + (mLocationRequest == null));
+            myZip = "";
+        }
 
-
-
-
-//        SharedPreferences prefs =
-//                getActivity().getSharedPreferences(
-//                        getString(R.string.keys_shared_prefs),
-//                        Context.MODE_PRIVATE);
-//        if (prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in), false)) {
-//            getView().findViewById(R.id.landing_button_logout)
-//                    .setOnClickListener(v -> mListener.onLogout());
-//        } else {
-//            getView().findViewById(R.id.landing_button_logout).setVisibility(View.GONE);
-//        }
-    }
-    private void handleError(Exception e) {
-        Log.e("LISTEN ERROR", e.getMessage());
-    }
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-//        if (context instanceof OnLandingFragmentInteractionListener) {
-//            mListener = (OnLandingFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnRegisterFragmentInteractionListener");
-//        }
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void onStop() {
+        super.onStop();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.disconnect();
+            Log.i(TAG, "Connection suspended");
+            myZip = "";
+        }
     }
 
-    public interface OnLandingFragmentInteractionListener {
-        void onLogout();
-    }
-    private class FetchWeatherDetails extends AsyncTask<URL, Void, String>{
-        @Override
-        protected String doInBackground(URL... urls) {
-            URL weatherUrl = urls[0];
-            String weatherSearchResults = null;
-            try{
-                weatherSearchResults = NetworkUtils.getResponseFromHttpUrl(weatherUrl);
-            }catch(IOException e){
-                e.printStackTrace();
-            }
-            Log.i(TAG, "doInBackground: weatherSearchResults: " + weatherSearchResults );
-            return weatherSearchResults;
-        }
-        @Override
-        protected void onPostExecute(String weatherSearchResults){
-            if(weatherSearchResults != null && !weatherSearchResults.equals("")){
-                weatherArrayList = parseJSON(weatherSearchResults);
 
-            }
-            super.onPostExecute(weatherSearchResults);
-        }
+    /**
+     * Removes location updates from the FusedLocationApi.
+     */
+    protected void stopLocationUpdates() {
+        // It is a good practice to remove location requests when the activity is in a paused or
+        // stopped state. Doing so helps battery performance and is especially
+        // recommended in applications that request frequent location updates.
 
+        // The final argument to {@code requestLocationUpdates()} is a LocationListener
+        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
     }
 
-    private ArrayList<Weather> parseJSON(String weatherSearchResults){
-        if(weatherArrayList != null){
-            weatherArrayList.clear();
-        }
-        if(weatherSearchResults != null){
-            try{
-                JSONObject rootObject = new JSONObject(weatherSearchResults);
-                JSONArray results = rootObject.getJSONArray(("DailyForecasts"));
-                for(int i = 0; i < results.length(); i++){
-                    Weather weather = new Weather();
-                    JSONObject resultsObj = results.getJSONObject(i);
-                    String date = resultsObj.getString("Date");
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        // If the initial location was never previously requested, we use
+        // FusedLocationApi.getLastLocation() to get it. If it was previously requested, we store
+        // its value in the Bundle and check for it in onCreate(). We
+        // do not request it again unless the user specifically requests location updates by pressing
+        // the Start Updates button.
+        //
+        // Because we cache the value of the initial location in the Bundle, it means that if the
+        // user launches the activity,
+        // moves to a new location, and then changes the device orientation, the original location
+        // is displayed as the activity is re-created.
 
-                    weather.setDate(date);
+        if (mCurrentLocation == null) {
+            Log.i(TAG, "connected");
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED
+                    &&
+                    ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
 
+                mCurrentLocation =
+                        LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-                    JSONObject temperatureObj = resultsObj.getJSONObject("Temperature");
-                    String minTemperature = temperatureObj.getJSONObject("Minimum").getString("Value");
-                    weather.setMinTemp(minTemperature);
-
-
-                    String maxTemperature = temperatureObj.getJSONObject("Maximum").getString("Value");
-                    weather.setMaxTemp(maxTemperature);
-
-                    String link = resultsObj.getString("Link");
-                    weather.setLink(link);
-
-
-                    weatherArrayList.add(weather);
+                if (mCurrentLocation != null) {
+                    Log.i(TAG, mCurrentLocation.toString());
                 }
-                if(weatherArrayList != null){
-                    WeatherAdapter weatherAdapter = new WeatherAdapter(getContext(), weatherArrayList);
-                    listView.setAdapter(weatherAdapter);
-                }
-                return weatherArrayList;
+                Log.i(TAG, "start loc");
 
+            }
+        }
+        startLocationUpdates();
+    }
+
+    private void startLocationUpdates() {
+        // The final argument to {@code requestLocationUpdates()} is a LocationListener
+        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(
+                    mGoogleApiClient, mLocationRequest, this);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        // The connection to Google Play services was lost for some reason. We call connect() to
+        // attempt to re-establish the connection.
+        Log.i(TAG, "Connection suspended");
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
+        // onConnectionFailed.
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " +
+                connectionResult.getErrorCode());
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mCurrentLocation = location;
+        Log.i(TAG, mCurrentLocation.toString());
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(getActivity(), Locale.getDefault());
+        try {
+            addresses = geocoder.getFromLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), 1);
+            String city = addresses.get(0).getLocality();
+            final String postalCode = addresses.get(0).getPostalCode();
+            mLocationTextView.setText(city + ",\n" + postalCode);
+            myLocURL = NetworkUtils.buildUrlForLocation(postalCode);
+            Log.i(TAG, myLocURL.toString());
+            if (!myZip.equals(postalCode)) {
+                myZip = postalCode;
+                mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                new WeatherAsyncTask(this::onPostGetLoc).execute(myLocURL);
+            } else if (myCurrInfo != null) {
+                loadWeatherInfo();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadWeatherInfo() {
+        try {
+            weatherTextView.setText(myCurrInfo.getString("WeatherText"));
+            celTextView.setText(myCurrInfo.getJSONObject("Temperature").getJSONObject("Metric").getString("Value"));
+            fahTextView.setText(myCurrInfo.getJSONObject("Temperature").getJSONObject("Imperial").getString("Value"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onPostSearchLoc(String result) {
+        Log.e(TAG, result);
+        if (result != null && !result.equals("")) {
+            try {
+                myCurrInfo = new JSONArray(result).getJSONObject(0);
+                loadWeatherInfo();
+                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, "ERR" + e.getMessage());
             }
+
         }
-        return null;
     }
 
+    private void onPostGetLoc(String result) {
+        if (result != null && !result.equals("")) {
+            Log.e(TAG, "POST");
+            try {
+                JSONArray rootObject = new JSONArray(result);
+                JSONObject thisArr = rootObject.getJSONObject(0);
+                String locKey = thisArr.getString("Key");
+                URL currCondURL = NetworkUtils.buildUrlForCurr(locKey);
+                new WeatherAsyncTask(this::onPostSearchLoc).execute(currCondURL);
+            } catch (JSONException e) {
+                Log.e(TAG, "ERR" + e.getMessage());
+            }
+
+        }
+    }
 }

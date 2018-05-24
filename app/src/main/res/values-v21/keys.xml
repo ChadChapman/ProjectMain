@@ -15,6 +15,7 @@
     <string name="keys_fragment_register">registerFragmentTag</string>
     <string name="keys_fragment_landing">landingFragmentTag</string>
     <string name="keys_fragment_chat">chatFragmentTag</string>
+    <string name="keys_fragment_condition">DisplayConditionsFragmentTag</string>
     <string name="keys_fragment_chat_list">chatListFragmentTag</string>
     <string name="keys_fragment_profile">profileFragmentTag</string>
     <string name="keys_fragment_contacts">contactsFragmentTag</string>
