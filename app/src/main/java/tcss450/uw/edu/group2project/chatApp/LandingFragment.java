@@ -58,13 +58,13 @@ public class LandingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_landing, container, false);
-//        weatherView = v.findViewById(R.id.weatherTextView);
-//
-//        listView = v.findViewById(R.id.idListView);
-//
-//        URL weatherUrl = NetworkUtils.buildUrlForWeather();
-//        new FetchWeatherDetails().execute(weatherUrl);
-//        Log.i(TAG, "onCreate: weatherURL: " + weatherUrl);
+        weatherView = v.findViewById(R.id.weatherTextView);
+
+        listView = v.findViewById(R.id.idListView);
+
+        URL weatherUrl = NetworkUtils.buildUrlForWeather();
+        new FetchWeatherDetails().execute(weatherUrl);
+       Log.i(TAG, "onCreate: weatherURL: " + weatherUrl);
         mNewChatButton = v.findViewById(R.id.createNewChatFragNewChatButton);
         setupNewChatButton(savedInstanceState);
         return v;
