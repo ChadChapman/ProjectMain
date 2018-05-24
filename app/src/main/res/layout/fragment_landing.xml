@@ -23,6 +23,6 @@
         android:id="@+id/idListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteX="57dp"
         tools:layout_editor_absoluteY="0dp" />
 </android.support.constraint.ConstraintLayout>

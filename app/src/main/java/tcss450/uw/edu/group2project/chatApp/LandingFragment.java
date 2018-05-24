@@ -109,10 +109,6 @@ public class LandingFragment extends Fragment {
     }
     private class FetchWeatherDetails extends AsyncTask<URL, Void, String>{
         @Override
-        protected void onPreExecute(){
-            super.onPreExecute();
-        }
-        @Override
         protected String doInBackground(URL... urls) {
             URL weatherUrl = urls[0];
             String weatherSearchResults = null;
@@ -134,6 +130,7 @@ public class LandingFragment extends Fragment {
         }
 
     }
+
     private ArrayList<Weather> parseJSON(String weatherSearchResults){
         if(weatherArrayList != null){
             weatherArrayList.clear();
@@ -163,10 +160,6 @@ public class LandingFragment extends Fragment {
 
 
                     weatherArrayList.add(weather);
-
-
-
-
                 }
                 if(weatherArrayList != null){
                     WeatherAdapter weatherAdapter = new WeatherAdapter(getContext(), weatherArrayList);

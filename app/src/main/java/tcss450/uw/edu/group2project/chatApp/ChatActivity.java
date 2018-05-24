@@ -16,8 +16,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.chatApp.testing.NewLandingFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.UITheme;
@@ -68,7 +71,7 @@ public class ChatActivity extends AppCompatActivity
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragmentContainer,
-                        new LandingFragment(),
+                        new NewLandingFragment(),
                         getString(R.string.keys_fragment_landing))
                 .commit();
 
@@ -82,6 +85,8 @@ public class ChatActivity extends AppCompatActivity
 
 
     }
+
+
 
     @Override
     public void onStart() {
