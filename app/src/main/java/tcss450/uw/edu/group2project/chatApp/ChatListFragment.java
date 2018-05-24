@@ -68,7 +68,6 @@ public class ChatListFragment extends Fragment {
         mCreateNewChatBtn = v.findViewById(R.id.createNewChatButtonChatList);
         setupFragmentView();
         loadMessages();
-
         return v;
     }
 
