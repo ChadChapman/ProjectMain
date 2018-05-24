@@ -10,7 +10,7 @@
     <!-- TODO: Update blank fragment layout -->
 
     <ImageButton
-        android:id="@+id/createNewChatButton2"
+        android:id="@+id/createNewChatButtonChatList"
         android:layout_width="68dp"
         android:layout_height="62dp"
         android:layout_marginBottom="16dp"

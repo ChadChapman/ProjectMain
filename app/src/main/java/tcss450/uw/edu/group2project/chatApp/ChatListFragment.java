@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
 //import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
+import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
 import tcss450.uw.edu.group2project.model.MessageFeedItem;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
@@ -43,6 +45,7 @@ public class ChatListFragment extends Fragment {
     private int mUserMemberID;
     private Uri mContactsUri;
     private View v;
+    private ImageButton mCreateNewChatBtn;
 
     public ChatListFragment() {
         // Required empty public constructor
@@ -62,12 +65,16 @@ public class ChatListFragment extends Fragment {
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.message_recycler_view));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mCreateNewChatBtn = v.findViewById(R.id.createNewChatButtonChatList);
         setupFragmentView();
         loadMessages();
+
         return v;
     }
 
     private void setupFragmentView() {
+        mCreateNewChatBtn.setOnClickListener(frag -> loadFragment(new CreateChatFragment()
+                , getString(R.string.keys_fragment_create_new_chat)));
 
         progressBar = (ProgressBar) (v.findViewById(R.id.message_progressBar));
         mContactsUri = buildHerokuAddress(getString(R.string.ep_get_recent_chat));
@@ -225,6 +232,16 @@ public class ChatListFragment extends Fragment {
             this.chatid = (TextView) view.findViewById(R.id.username);
             this.message = (TextView) view.findViewById(R.id.message);
         }
+    }
+
+    private void loadFragment(Fragment frag, String tag) {
+        Log.e("MADE IT TO lOADFRAGMENT() IN LANDING FRAG", tag);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, frag, tag)
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
     }
 
 }
