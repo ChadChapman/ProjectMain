@@ -385,7 +385,11 @@ public class CreateChatFragment extends Fragment {
                 //TODO now add all members of this chat to the list of sets of usernames fo chats
                 Log.e("ADD ALL MEMBERS RETURNED :", "SUCCESS!");
                 loadNewChatInfoIntoPrefs(mNewChatIDStr);
-                loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
+                ChatFragment newChatFrag = new ChatFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("chatID", mNewChatIDStr);
+                newChatFrag.setArguments(bundle);
+                loadNewChatFrag(newChatFrag, getString(R.string.keys_fragment_chat));
 
             } else {
                 //need to determine what ot return if not successful
@@ -424,6 +428,7 @@ public class CreateChatFragment extends Fragment {
     }
 
     private void loadNewChatFrag(Fragment frag, String tag) {
+
         FragmentTransaction transaction = getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, frag, tag)

@@ -55,7 +55,11 @@ public class ChatFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_chat_1, container, false);
         v.findViewById(R.id.trychatSendButton).setOnClickListener(this::sendMessage);
         messageFeedItemList = new ArrayList<>();
-        mUserChatIDStr = getArguments().getString("chatID");
+
+        messageFeedItemList = new ArrayList<>();
+        if (getArguments() != null) {
+            mUserChatIDStr = getArguments().getString("chatID");
+        }
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.trychat_recyclerview));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setStackFromEnd(true);
@@ -64,8 +68,8 @@ public class ChatFragment extends Fragment {
     }
 
     private void setupChatFragment(){
-        messageFeedItemList = new ArrayList<>();
-        mUserChatIDStr = getArguments().getString("chatID");
+
+
 
     }
 

@@ -20,8 +20,9 @@ public class NetworkUtils {
     private final static String Curr_BASE_URL =
             "http://dataservice.accuweather.com/currentconditions/v1/";
 
-    //private final static String API_KEY = "QpnGCFMmidZOuQtwNIbt3ZnFknggEqRj";
-    private final static String API_KEY = "28ibHBD6xBSpomybED2dEQgaAgc0pDh1";
+    private final static String API_KEY = "QpnGCFMmidZOuQtwNIbt3ZnFknggEqRj";
+// newest -1    private final static String API_KEY = "28ibHBD6xBSpomybED2dEQgaAgc0pDh1";
+// newest:    private final static String API_KEY = "BoeoxMyWQyO3S2Q6VnEkuWua46XzIPRu";
     //private final static String API_KEY = "Y6CvnHQU9pAkGKGCh8NsVldTvsfA0oub";
 
 
