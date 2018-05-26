@@ -22,9 +22,11 @@ public class ChatContact implements Serializable {
 
     private static final long serialVersionUID = -1634677417576883813L;
 
+    private String mMemberID;
     private final String mUsername;
     private String mFirstName;
     private String mLastName;
+    private String mEmail;
     private String mCreatedAt;
     private String mLastModified;
     private String mVerified;
@@ -38,9 +40,11 @@ public class ChatContact implements Serializable {
      * @author Charles Bryan
      */
     public static class Builder {
+        private String mMemberID;
         private final String mUsername;
         private String mFirstName = "";
         private String mLastName = "";
+        private String mEmail;
         private String mCreatedAt = "";
         private String mLastModified = "";
         private String mVerified;
@@ -55,11 +59,13 @@ public class ChatContact implements Serializable {
          *
          * @param username the username
          */
-        public Builder(String username, String fname, String lname,
-                       String createdAt, String lastMod, String initiator) {
+        public Builder(String memberid, String username, String fname, String lname,
+                       String email, String createdAt, String lastMod, String initiator) {
+            mMemberID = memberid;
             mUsername = username;
             mFirstName = fname;
             mLastName = lname;
+            mEmail = email;
             mCreatedAt = createdAt;
             mLastModified = lastMod;
             mVerified = "0"; //still have to wait on a response from new contact
@@ -101,9 +107,11 @@ public class ChatContact implements Serializable {
      * @param builder the builder used to construct this object
      */
     private ChatContact(final Builder builder) {
+        mMemberID = builder.mMemberID;
         mUsername = builder.mUsername;
         mFirstName = builder.mFirstName;
         mLastName = builder.mLastName;
+        mEmail = builder.mEmail;
         mCreatedAt = builder.mCreatedAt;
         mLastModified = builder.mLastModified;
         mVerified = builder.mVerified;

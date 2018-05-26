@@ -93,7 +93,7 @@ public class ChatActivity extends AppCompatActivity
             mUserMemberID = extras.getString("userMemberID");
         }
         //let's just make an sqlite db and be done with it
-        //mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
+//        mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
 //        setupDeviceDatabase();
 
 

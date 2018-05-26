@@ -28,6 +28,7 @@
     <string name="ep_contacts_find_new">contacts/find</string>
     <string name="ep_contacts_verified">verified</string>
     <string name="ep_contacts_add">createContact</string>
+    <string name="ep_contacts_getAllContacts">getAllContacts</string>
 
     //Messages
     <string name="ep_send_message">sendMessages</string>
