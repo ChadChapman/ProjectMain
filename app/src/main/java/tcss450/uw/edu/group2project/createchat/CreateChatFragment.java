@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -264,18 +265,25 @@ public class CreateChatFragment extends Fragment {
             return msg;
         } else { //make the chat name from names of all members, like we agreed on
             StringBuilder sb = new StringBuilder();
+            if (!mNewChatIncludedUsernamesList.contains(mThisUsername)) {//could be possible?
+                //should be added last so easy to remove?
+                mNewChatIncludedUsernamesList.add(mThisUsername);
+                sb.append(mThisUsername + "+");
+            } else {
+                Log.e("ADDING THIS USERNAME TO CHAT ERROR:", "USERNAME WAS ALREADY IN THE CHATNAME");
+            }
+            mNewChatIncludedUsernamesList.sort(new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    return o1.compareToIgnoreCase(o2);
+                }
+            });
             for (String s : mNewChatIncludedUsernamesList) {
                 sb.append(s);
                 sb.append('+');
             }
 
-            if (!mNewChatIncludedUsernamesList.contains(mThisUsername)) {//could be possible?
-                //should be added last so easy to remove?
-                mNewChatIncludedUsernamesList.add(mThisUsername);
-                sb.append(mThisUsername);
-            } else {
-                Log.e("ADDING THIS USERNAME TO CHAT ERROR:", "USERNAME WAS ALREADY IN THE CHATNAME");
-            }
+
 
             Log.e("NEW CHAT WILL BE NAMED: ", sb.toString());
             try {
