@@ -16,6 +16,7 @@
 
     <string name="keys_fragment_login">loginFragmentTag</string>
     <string name="keys_fragment_register">registerFragmentTag</string>
+    <string name="keys_fragment_password">changePasswordFragmentTag</string>
     <string name="keys_fragment_landing">landingFragmentTag</string>
     <string name="keys_fragment_chat">chatFragmentTag</string>
     <string name="keys_fragment_chat_list">chatListFragmentTag</string>

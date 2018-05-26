@@ -137,7 +137,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         for (ChatContact contact: theContacts) {
             ContentValues contentValues = new ContentValues();
-            contentValues.put()
+            //contentValues.put();
         }
     }
 }
