@@ -42,20 +42,12 @@ public class ChatListFragment extends Fragment {
     private ProgressBar progressBar;
     private List<MessageFeedItem> messageFeedItemList;
     private String mUserMemberIDStr;
-    private int mUserMemberID;
     private Uri mContactsUri;
     private View v;
     private ImageButton mCreateNewChatBtn;
 
     public ChatListFragment() {
         // Required empty public constructor
-    }
-
-    @SuppressLint("ValidFragment")
-    public ChatListFragment(String mID) {
-        // Required empty public constructor
-        mUserMemberID = new Integer(mID);
-
     }
 
     @Override

@@ -49,7 +49,7 @@ public class DisplayConditionsFragment extends Fragment {
         fahrenheit = v.findViewById(R.id.fahrenheit_textView);
         mProgressBar = v.findViewById(R.id.display_progressbar);
         mProgressBar.setVisibility(ProgressBar.VISIBLE);
-        new WeatherAsyncTask(this::onPostGetLoc).execute(NetworkUtils.buildUrlForLocation(zip));
+        //new WeatherAsyncTask(this::onPostGetLoc).execute(NetworkUtils.buildUrlForLocation(zip));
         return v;
     }
     private void onPostGetLoc(String result) {

@@ -67,8 +67,7 @@ public class ChatFragment extends Fragment {
         return v;
     }
 
-    private void setupChatFragment(){
-
+    private void setupChatFragment() {
 
 
     }
@@ -226,8 +225,10 @@ public class ChatFragment extends Fragment {
     }
 
     private void publishProgress(JSONObject messages) {
-                if (messages.has(getString(R.string.keys_json_messages))) {
+        if (messages.has(getString(R.string.keys_json_messages))) {
+            List<ChatFeedItem> temp = new ArrayList<>();
             try {
+
                 JSONArray jMessages =
                         messages.getJSONArray((getString(R.string.keys_json_messages)));
                 for (int i = 0; i < jMessages.length(); i++) {
@@ -235,7 +236,7 @@ public class ChatFragment extends Fragment {
                     ChatFeedItem item = new ChatFeedItem();
                     item.setUsername(msg.optString(getString(R.string.username)));
                     item.setMessage(msg.optString(getString(R.string.message)));
-                    messageFeedItemList.add(item);
+                    temp.add(item);
                 }
 
 
@@ -245,9 +246,10 @@ public class ChatFragment extends Fragment {
             }
 
             getActivity().runOnUiThread(() -> {
-                for (ChatFeedItem msg : messageFeedItemList) {
+                for (ChatFeedItem msg : temp) {
 //                    mOutputTextView.append(msg);
 //                    mOutputTextView.append(System.lineSeparator());
+                    messageFeedItemList.add(msg);
                     adapter.notifyDataSetChanged();
                     mRecyclerView.smoothScrollToPosition(adapter.getItemCount());
                 }

@@ -272,16 +272,21 @@ public class LandingFragment extends Fragment implements
             addresses = geocoder.getFromLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), 1);
             String city = addresses.get(0).getLocality();
             final String postalCode = addresses.get(0).getPostalCode();
-            mLocationTextView.setText(city + ",\n" + postalCode);
-            myLocURL = NetworkUtils.buildUrlForLocation(postalCode);
+            final String state = addresses.get(0).getAdminArea();
+            final String country = addresses.get(0).getCountryCode();
+            mLocationTextView.setText(city + ","+ state+"\n" + postalCode);
+            Log.e("country", city + "," + postalCode + ","+ country + "," +state);
+            Log.e("sub", addresses.get(0).toString());
+            myLocURL = NetworkUtils.buildUrlForCurr(postalCode);
+
             Log.i(TAG, myLocURL.toString());
-            if (!myZip.equals(postalCode)) {
-                myZip = postalCode;
-                mProgressBar.setVisibility(ProgressBar.VISIBLE);
-                new WeatherAsyncTask(this::onPostGetLoc).execute(myLocURL);
-            } else if (myCurrInfo != null) {
-                loadWeatherInfo();
-            }
+//            if (!myZip.equals(postalCode)) {
+//                myZip = postalCode;
+//                mProgressBar.setVisibility(ProgressBar.VISIBLE);
+//                new WeatherAsyncTask(this::onPostSearchLoc).execute(myLocURL);
+//            } else if (myCurrInfo != null) {
+//                loadWeatherInfo();
+//            }
 
         } catch (IOException e) {
             e.printStackTrace();
