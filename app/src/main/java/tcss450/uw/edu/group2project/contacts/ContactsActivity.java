@@ -167,13 +167,13 @@ public class ContactsActivity extends AppCompatActivity {
 //                            , "Failed to fetch data!", Toast.LENGTH_SHORT).show();
 //            } //commented out for testing
         } catch(JSONException e){
-                //It appears that the web service didn’t return a JSON formatted String
-                //or it didn’t have what we expected in it.
-                Log.e("JSON_PARSE_ERROR", result
-                        + System.lineSeparator()
-                        + e.getMessage());
-            }
+            //It appears that the web service didn’t return a JSON formatted String
+            //or it didn’t have what we expected in it.
+            Log.e("JSON_PARSE_ERROR", result
+                    + System.lineSeparator()
+                    + e.getMessage());
         }
+    }
 
 
     //on click should be -> load detail fag of that contact

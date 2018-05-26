@@ -22,10 +22,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/setting_button_theme_1"
+    <TextView
+        android:id="@+id/setting_text_view_text_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/setting_text_view_text_size"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_button_theme_4" />
+
+    <Button
+        android:id="@+id/setting_button_theme_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="120dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         android:text="@string/setting_button_theme_1"
@@ -35,8 +51,10 @@
 
     <Button
         android:id="@+id/setting_button_theme_2"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="120dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary2"
         android:text="@string/setting_button_theme_2"
@@ -46,8 +64,10 @@
 
     <Button
         android:id="@+id/setting_button_theme_3"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="120dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary3"
         android:text="@string/setting_button_theme_3"
@@ -57,14 +77,46 @@
 
     <Button
         android:id="@+id/setting_button_theme_4"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="120dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary4"
         android:text="@string/setting_button_theme_4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/setting_button_theme_3" />
+
+    <Button
+        android:id="@+id/setting_button_text_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/setting_button_text_size_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_text_view_text_size" />
+
+    <Button
+        android:id="@+id/setting_button_text_medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/setting_button_text_size_medium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_button_text_small" />
+
+    <Button
+        android:id="@+id/setting_button_text_large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/setting_button_text_size_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setting_button_text_medium" />
 
 
 </android.support.constraint.ConstraintLayout>

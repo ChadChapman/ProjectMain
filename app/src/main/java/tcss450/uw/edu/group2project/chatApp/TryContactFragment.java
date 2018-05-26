@@ -51,8 +51,8 @@ public class TryContactFragment extends Fragment {
     private Uri mContactsUri;
     private View v;
     /*
-    *Used to label verified contact, incoming and outgoing requests.
-    * 1 means verified contact, 2 means incoming request, 3 means outgoing request
+     *Used to label verified contact, incoming and outgoing requests.
+     * 1 means verified contact, 2 means incoming request, 3 means outgoing request
      */
     private int mContactStatus = 0;
 
@@ -133,23 +133,23 @@ public class TryContactFragment extends Fragment {
             case R.id.friends_radioButton:
                 if (checked)
                     mContactStatus = 1;
-                    mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_verified));
-                    getActivity().findViewById(R.id.add_editText).setVisibility(View.GONE);
-                    getActivity().findViewById(R.id.add_button).setVisibility(View.GONE);
+                mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_verified));
+                getActivity().findViewById(R.id.add_editText).setVisibility(View.GONE);
+                getActivity().findViewById(R.id.add_button).setVisibility(View.GONE);
                 break;
             case R.id.pending_radioButton:
                 if (checked)
                     mContactStatus = 2;
-                    mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_pending_requests));
-                    getActivity().findViewById(R.id.add_editText).setVisibility(View.GONE);
-                    getActivity().findViewById(R.id.add_button).setVisibility(View.GONE);
+                mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_pending_requests));
+                getActivity().findViewById(R.id.add_editText).setVisibility(View.GONE);
+                getActivity().findViewById(R.id.add_button).setVisibility(View.GONE);
                 break;
             case R.id.sent_radioButton:
                 if (checked)
                     mContactStatus = 3;
-                    mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_sent_requests));
-                    getActivity().findViewById(R.id.add_editText).setVisibility(View.VISIBLE);
-                    getActivity().findViewById(R.id.add_button).setVisibility(View.VISIBLE);
+                mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_sent_requests));
+                getActivity().findViewById(R.id.add_editText).setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.add_button).setVisibility(View.VISIBLE);
                 break;
         }
         loadVerifiedContacts();

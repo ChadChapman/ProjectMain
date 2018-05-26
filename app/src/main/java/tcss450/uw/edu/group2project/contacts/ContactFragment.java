@@ -103,7 +103,7 @@ public class ContactFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-       // mAdapter = new MyChatContactsAdapter(myDataset);
+        // mAdapter = new MyChatContactsAdapter(myDataset);
         mRecyclerView.setAdapter(mAdapter);
     }
 

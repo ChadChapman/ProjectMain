@@ -24,13 +24,14 @@
         <activity
             android:name=".chatApp.ChatActivity"
             android:label="@string/title_activity_chat"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".contacts.ContactsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".contacts.ContactsActivity"
             android:parentActivityName=".chatApp.ChatActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".chatApp.ChatActivity" />
-        </activity> </application>
+        </activity>
+    </application>
 
 </manifest>

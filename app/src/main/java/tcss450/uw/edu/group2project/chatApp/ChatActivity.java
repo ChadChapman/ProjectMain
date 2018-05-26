@@ -6,15 +6,11 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,9 +19,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,25 +31,28 @@ import java.util.ArrayList;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.contacts.ContactsActivity;
+import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
 import tcss450.uw.edu.group2project.model.ChatContact;
-import tcss450.uw.edu.group2project.registerLoging.LoginFragment;
-import tcss450.uw.edu.group2project.registerLoging.RegisterFragment;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
+import tcss450.uw.edu.group2project.utils.UITextSize;
 import tcss450.uw.edu.group2project.utils.UITheme;
 
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
+        SearchFragment.OnSearchFragmentInteractionListener,
         SettingFragment.OnSettingFragmentInteractionListener {
+
     private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
     //private int mUserMemberIDInt;
     private ArrayList<ChatContact> mChatContactsArrList;
-    //private String mUsername;
+    private Button mNewChatButton;
 
-    Bundle mContactsBundle;
+
 
     public static int mTheme = UITheme.THEME_ONE;
+    public static int mTextSize = UITextSize.SIZE_MEDIUM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,18 +61,12 @@ public class ChatActivity extends AppCompatActivity
         // Update theme color
         setTheme(UITheme.getThemeId(mTheme));
 
+        // Update text size
+        setTheme(UITextSize.getSizeId(mTextSize));
+
         setContentView(R.layout.activity_chat);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //uncomment when we decide what to do with the floating action button
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -92,6 +87,14 @@ public class ChatActivity extends AppCompatActivity
         if (extras != null) {
             mUserMemberID = extras.getString("userMemberID");
         }
+
+
+
+//        mNewChatButton = findViewById(R.id.buttonStartNewChat);
+//
+//        mNewChatButton.setOnClickListener(button -> {
+//            startNewChat(mNewChatButton);
+//        });
         //let's just make an sqlite db and be done with it
 //        mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
 //        setupDeviceDatabase();
@@ -99,6 +102,10 @@ public class ChatActivity extends AppCompatActivity
 
     }
 
+    /**
+     * For now this is just being overridden but i think once we use an internal db, we will want to
+     * use it since the db should already be created
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -113,6 +120,29 @@ public class ChatActivity extends AppCompatActivity
     }
 
 //}
+
+    /**
+     * Begin a new chat conversation with verified contact or friend.
+     * This process begins with selecting a person to chat with from a list of verified contacts.
+     * Once a user has been selected, a request is sent to that user to notify they have a new chat open.
+     * At that point, everything should be handed off.
+     *
+     * @param paramButton which button will be used to create a new chat
+     */
+    public void startNewChat(Button paramButton) {
+        //load blank chat frag
+        //add this frag to the back stack
+
+        //start a new chat with at least one other person
+        //load list of contacts to click on one to start a new chat
+        //
+        //get the other memberID
+        //hit endpoint to create a new chat
+        //on success load a fragment for a new chat
+        //on fail, return to this frag and give a long toast that signals failure
+
+
+    }
 
     private void loadFragment(Fragment frag, String tag) {
         FragmentTransaction transaction = getSupportFragmentManager()
@@ -161,8 +191,9 @@ public class ChatActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        if (id == R.id.nav_chat) {
+        if(id == R.id.nav_home){
+            loadFragment(new LandingFragment(), getString(R.string.keys_fragment_landing));
+        }else if (id == R.id.nav_chat) {
             loadFragment(new ChatListFragment(mUserMemberID), getString(R.string.keys_fragment_chat_list));
         } else if (id == R.id.nav_contacts) { //switch to Contacts Activity
             //loadFragment(new ContactFragment(),getString(R.string.keys_fragment_contacts)); original
@@ -171,13 +202,19 @@ public class ChatActivity extends AppCompatActivity
         } else if (id == R.id.nav_profile) {
             loadFragment(new ProfileFragment(), getString(R.string.keys_fragment_profile));
             loadInfo();
-
+        } else if (id == R.id.nav_search) {
+            loadFragment(new SearchFragment(), getString(R.string.keys_fragment_search));
         } else if (id == R.id.nav_settings) {
             loadFragment(new SettingFragment(), getString(R.string.keys_fragment_settings));
+        } else if (id == R.id.nav_new_chat) {
+            Bundle bundle = new Bundle();
+            bundle.putString("memberid", mUserMemberID);
+            CreateChatFragment ccf = new CreateChatFragment();
+            ccf.setArguments(bundle);
+            loadFragment(ccf, getString(R.string.keys_fragment_create_new_chat));
         } else if (id == R.id.nav_logout) {
             onLogout();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -228,13 +265,111 @@ public class ChatActivity extends AppCompatActivity
         // Handles theme changes to activity
         mTheme = theme;
         setTheme(mTheme);
+        String themeName = " ";
+        if(theme == 1){
+            themeName = getString(R.string.setting_button_theme_1);
+        }else if(theme == 2){
+            themeName = getString(R.string.setting_button_theme_2);
+        }else if(theme == 3){
+            themeName = getString(R.string.setting_button_theme_3);
+        }else if(theme == 4){
+            themeName = getString(R.string.setting_button_theme_4);
+        }
 
         ChatActivity.this.recreate();
 
         int duration = Toast.LENGTH_SHORT;
         Context context = this.getBaseContext();
-        Toast toast = Toast.makeText(context, "Changed to Theme " + theme, duration);
+        Toast toast = Toast.makeText(context, "Changed Theme to " + themeName, duration);
         toast.show();
+    }
+
+    @Override
+    public void onSettingTextSizeButtonClicked(int size) {
+        switch (size) {
+            case 1:
+                changeTextSize(UITextSize.SIZE_SMALL);
+                break;
+            case 2:
+                changeTextSize(UITextSize.SIZE_MEDIUM);
+                break;
+            case 3:
+                changeTextSize(UITextSize.SIZE_LARGE);
+                break;
+        }
+    }
+
+    public void changeTextSize(final int size) {
+        // Handles theme changes to activity
+        mTextSize = size;
+        setTheme(mTextSize);
+        String sizeName = " ";
+        if(size == 1){
+            sizeName = getString(R.string.setting_button_text_size_small);
+        }else if(size == 2){
+            sizeName = getString(R.string.setting_button_text_size_medium);
+        }else if(size == 3){
+            sizeName = getString(R.string.setting_button_text_size_large);
+        }
+        ChatActivity.this.recreate();
+
+        int duration = Toast.LENGTH_SHORT;
+        Context context = this.getBaseContext();
+        Toast toast = Toast.makeText(context, "Changed text size to " + sizeName, duration);
+        toast.show();
+    }
+
+    // Handle searches
+    @Override
+    public void onSearchByEmailButtonClicked(String email) {
+        Log.e("ChatActivity", "Search by email");
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search)).build();
+        JSONObject emailJSON = new JSONObject();
+
+        try {
+            emailJSON.put(getString(R.string.keys_json_email), email);
+            Log.e("ChatActivity", "Put email to json" );
+        } catch (JSONException theException) {
+            Log.e("ChatActivity", "Error creating JSON" + theException.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), emailJSON)
+                .onPostExecute(this::handleSearchResult).build().execute();
+    }
+
+    @Override
+    public void onSearchByUsernameButtonClicked(String username) {
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search)).build();
+        JSONObject usernameJSON = new JSONObject();
+        Log.e("ChatActivity", username);
+        try {
+            usernameJSON.put(getString(R.string.keys_json_username), username);
+            Log.e("ChatActivity", "Put usernamer to json" );
+        } catch (JSONException theException) {
+            Log.e("ChatActivity", "Error creating JSON" + theException.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), usernameJSON)
+                .onPostExecute(this::handleSearchResult).build().execute();
+    }
+
+    @Override
+    public void onSearchByNameButtonClicked(String firstname, String lastname) {
+        Uri uri = new Uri.Builder().scheme("https").appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_search)).build();
+        JSONObject nameJSON = new JSONObject();
+
+        try {
+            nameJSON.put(getString(R.string.keys_json_firstname), firstname);
+            nameJSON.put(getString(R.string.keys_json_lastname), lastname);
+        } catch (JSONException theException) {
+            Log.e("ChatActivity", "Error creating JSON" + theException.getMessage());
+        }
+
+        new SendPostAsyncTask.Builder(uri.toString(), nameJSON)
+                .onPostExecute(this::handleSearchResult).build().execute();
     }
 
     //load the profile info
@@ -264,6 +399,25 @@ public class ChatActivity extends AppCompatActivity
                 .build().execute();
     }
 
+    private void handleSearchResult(String result) {
+
+        try {
+            JSONObject responseJSON = new JSONObject(result);
+            boolean success = responseJSON.getBoolean(getString(R.string.keys_json_success));
+            TextView resultFirstName = findViewById(R.id.search_text_view_result_first_name);
+            TextView resultLastName = findViewById(R.id.search_text_view_result_last_name);
+
+            if (success) {
+                resultFirstName.setText(responseJSON.getString("firstname"));
+                resultLastName.setText(responseJSON.getString("lastname"));
+
+            } else {
+                Log.e("ChatActivity", "User not found");
+            }
+        } catch (JSONException e) {
+            Log.e("ChatActivity", "JSON parse error" + e.getMessage());
+        }
+    }
 
     /*
     --------------------------Async handlers-------------------------------
@@ -278,6 +432,7 @@ public class ChatActivity extends AppCompatActivity
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
+
     private void handleOnGetInfoPost(String result) {
         try {
             Log.e("",result);
