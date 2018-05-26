@@ -20,7 +20,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -41,9 +40,7 @@ import java.util.Locale;
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.WeatherDisplay.NetworkUtils;
 import tcss450.uw.edu.group2project.WeatherDisplay.Weather;
-import tcss450.uw.edu.group2project.WeatherDisplay.WeatherAdapter;
 import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
-import tcss450.uw.edu.group2project.utils.ListenManager;
 
 import tcss450.uw.edu.group2project.utils.WeatherAsyncTask;
 
@@ -72,13 +69,12 @@ public class LandingFragment extends Fragment implements
     private Location mCurrentLocation;
     private TextView mLocationTextView;
     private URL myLocURL;
-    private TextView celTextView;
     private TextView fahTextView;
     private TextView weatherTextView;
-    private String myZip = "";
+    private String myCity = "";
     private JSONObject myCurrInfo;
     private ProgressBar mProgressBar;
-
+    private Weather curWeather;
     private ImageButton mNewChatButton;
 
     public LandingFragment() {
@@ -94,11 +90,10 @@ public class LandingFragment extends Fragment implements
         EditText search = v.findViewById(R.id.search_zip_textview);
         search.setOnEditorActionListener(this::pressedDone);
         mLocationTextView = v.findViewById(R.id.location_textview);
-        celTextView = v.findViewById(R.id.cel_textview);
         fahTextView = v.findViewById(R.id.fah_textview);
         weatherTextView = v.findViewById(R.id.weather_textview);
         mProgressBar = v.findViewById(R.id.landing_progressbar);
-
+        curWeather = new Weather();
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
@@ -128,9 +123,20 @@ public class LandingFragment extends Fragment implements
         if (actionId == EditorInfo.IME_ACTION_DONE) {
 
 
-            if (exampleView.getText().toString().length() >= 5) {
+            if (exampleView.getText().toString().length() == 5) {
+                Weather cond = new Weather();
+                Geocoder geo = new Geocoder(getActivity());
+                try {
+                    Address addresses = geo.getFromLocationName(exampleView.getText().toString(), 1).get(0);
+                    cond.setZip(addresses.getPostalCode());
+                    cond.setLat(addresses.getLatitude());
+                    cond.setLon(addresses.getLongitude());
+                    cond.setCity(addresses.getLocality());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Bundle bundle = new Bundle();
-                bundle.putString("zip", exampleView.getText().toString());
+                bundle.putSerializable("weather", cond);
                 Fragment disp = new DisplayConditionsFragment();
                 disp.setArguments(bundle);
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager()
@@ -155,20 +161,22 @@ public class LandingFragment extends Fragment implements
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
             Log.i(TAG, "Connection suspended");
         mGoogleApiClient.disconnect();
-        myZip = "";
+        myCity = "";
     }
-    private void setupNewChatButton(Bundle paramBundle){
+
+    private void setupNewChatButton(Bundle paramBundle) {
 
         mNewChatButton.setOnClickListener(frag -> loadFragment(new CreateChatFragment()
                 , getString(R.string.keys_fragment_create_new_chat)));
     }
+
     @Override
     public void onStart() {
         super.onStart();
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
-            Log.i(TAG, "Connection Connects" + myZip.isEmpty() + (mLocationRequest == null));
-            myZip = "";
+            Log.i(TAG, "Connection Connects" + myCity.isEmpty() + (mLocationRequest == null));
+            myCity = "";
         }
 
     }
@@ -179,7 +187,7 @@ public class LandingFragment extends Fragment implements
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
             Log.i(TAG, "Connection suspended");
-            myZip = "";
+            myCity = "";
         }
     }
 
@@ -269,24 +277,18 @@ public class LandingFragment extends Fragment implements
         List<Address> addresses;
         geocoder = new Geocoder(getActivity(), Locale.getDefault());
         try {
+
             addresses = geocoder.getFromLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), 1);
             String city = addresses.get(0).getLocality();
-            final String postalCode = addresses.get(0).getPostalCode();
-            final String state = addresses.get(0).getAdminArea();
-            final String country = addresses.get(0).getCountryCode();
-            mLocationTextView.setText(city + ","+ state+"\n" + postalCode);
-            Log.e("country", city + "," + postalCode + ","+ country + "," +state);
-            Log.e("sub", addresses.get(0).toString());
-            myLocURL = NetworkUtils.buildUrlForCurr(postalCode);
-
-            Log.i(TAG, myLocURL.toString());
-//            if (!myZip.equals(postalCode)) {
-//                myZip = postalCode;
-//                mProgressBar.setVisibility(ProgressBar.VISIBLE);
-//                new WeatherAsyncTask(this::onPostSearchLoc).execute(myLocURL);
-//            } else if (myCurrInfo != null) {
-//                loadWeatherInfo();
-//            }
+            myLocURL = NetworkUtils.buildUrlForCurr(city);
+            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            Log.e("address",addresses.get(0).toString());
+            if (!myCity.equals(city)) {
+                myCity = city;
+                new WeatherAsyncTask(this::onPostSearchLoc).execute(myLocURL);
+            } else{
+                loadWeatherInfo();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -294,22 +296,18 @@ public class LandingFragment extends Fragment implements
     }
 
     private void loadWeatherInfo() {
-        try {
-            weatherTextView.setText(myCurrInfo.getString("WeatherText"));
-            celTextView.setText(myCurrInfo.getJSONObject("Temperature").getJSONObject("Metric").getString("Value"));
-            fahTextView.setText(myCurrInfo.getJSONObject("Temperature").getJSONObject("Imperial").getString("Value"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        weatherTextView.setText(curWeather.getCurrWeather());
+        fahTextView.setText(curWeather.getFarTemp());
+        mLocationTextView.setText(curWeather.getCityState());
+        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
     }
 
     private void onPostSearchLoc(String result) {
-        Log.e(TAG, result);
         if (result != null && !result.equals("")) {
             try {
-                myCurrInfo = new JSONArray(result).getJSONObject(0);
+                JSONArray temp = new JSONObject(result).getJSONArray("data");
+                parseResulte(temp.getJSONObject(0));
                 loadWeatherInfo();
-                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
             } catch (JSONException e) {
                 Log.e(TAG, "ERR" + e.getMessage());
             }
@@ -317,20 +315,16 @@ public class LandingFragment extends Fragment implements
         }
     }
 
-    private void onPostGetLoc(String result) {
-        if (result != null && !result.equals("")) {
-            Log.e(TAG, "POST");
-            try {
-                JSONArray rootObject = new JSONArray(result);
-                JSONObject thisArr = rootObject.getJSONObject(0);
-                String locKey = thisArr.getString("Key");
-                URL currCondURL = NetworkUtils.buildUrlForCurr(locKey);
-                new WeatherAsyncTask(this::onPostSearchLoc).execute(currCondURL);
-            } catch (JSONException e) {
-                Log.e(TAG, "ERR" + e.getMessage());
-            }
-
+    private void parseResulte(JSONObject result) {
+        try {
+            curWeather.setCityState(result.getString("city_name") + "," + result.getString("state_code"));
+            curWeather.setFarTemp(result.getString("temp"));
+            curWeather.setCurrWeather(result.getJSONObject("weather").getString("description"));
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+
     }
 
     private void loadFragment(Fragment frag, String tag) {

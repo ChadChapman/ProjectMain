@@ -80,12 +80,7 @@ public class StartActivity extends AppCompatActivity
                 getSharedPreferences(
                         getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
-        //save the memberid for later usage
-        prefs.edit().putString(
-                getString(R.string.keys_prefs_my_memberid),
-                mUserMemberIDStr)
-                .apply();
-
+        mUserMemberIDStr = prefs.getString(getString(R.string.keys_prefs_my_memberid),"MEMBERID NOT FOUND IN PREFS");
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("userMemberID", mUserMemberIDStr);
         ActivityCompat.finishAffinity(this);
@@ -306,9 +301,10 @@ public class StartActivity extends AppCompatActivity
                             Context.MODE_PRIVATE);
             //save the username for later usage
             prefs.edit().putString(
-                    getString(R.string.keys_prefs_username),
-                    mCredentials.getUsername())
+                    getString(R.string.keys_prefs_my_memberid),
+                    mUserMemberIDStr)
                     .apply();
+
             //save the users “want” to stay logged in
             prefs.edit().putBoolean(
                     getString(R.string.keys_prefs_stay_logged_in),

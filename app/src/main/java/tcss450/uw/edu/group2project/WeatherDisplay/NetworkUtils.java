@@ -30,7 +30,9 @@ public class NetworkUtils {
     private final static String API_KEY = "01b805016496462e89548686b49d261f";
 
     private final static String PARAM_API_KEY = "key";
-    private final static String PARAM_POSTAL = "postal_code";
+    private final static String PARAM_CITY = "city";
+    private final static String PARAM_units = "units";
+    private final static String PARAM_units_i = "I";
 
 
 //    public static URL buildUrlForCurr(String key) {
@@ -46,9 +48,10 @@ public class NetworkUtils {
 //        }
 //        return url;
 //    }
-    public static URL buildUrlForCurr(String key) {
+    public static URL buildUrlForCurr(String city) {
         Uri builtUri = Uri.parse(Curr_BASE_URL).buildUpon()
-                .appendQueryParameter(PARAM_POSTAL,key)
+                .appendQueryParameter(PARAM_CITY,city)
+                .appendQueryParameter(PARAM_units,PARAM_units_i)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY)
                 .build();
         URL url = null;

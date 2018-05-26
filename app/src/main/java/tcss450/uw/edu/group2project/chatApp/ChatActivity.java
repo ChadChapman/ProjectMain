@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,15 +24,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
-import tcss450.uw.edu.group2project.model.ChatContact;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.UITextSize;
@@ -45,11 +40,7 @@ public class ChatActivity extends AppCompatActivity
         SearchFragment.OnSearchFragmentInteractionListener,
         SettingFragment.OnSettingFragmentInteractionListener {
 
-    private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
-    //private int mUserMemberIDInt;
-    private ArrayList<ChatContact> mChatContactsArrList;
-    private Button mNewChatButton;
 
 
 
@@ -69,16 +60,16 @@ public class ChatActivity extends AppCompatActivity
         setTheme(UITextSize.getSizeId(mTextSize));
 
         setContentView(R.layout.activity_chat);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView =  findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         landing = new LandingFragment();
         getSupportFragmentManager().beginTransaction()
@@ -104,7 +95,7 @@ public class ChatActivity extends AppCompatActivity
                     MY_PERMISSIONS_LOCATIONS);
         }
 
-
+        Log.e("userID",mUserMemberID);
     }
 
 
@@ -283,10 +274,6 @@ public class ChatActivity extends AppCompatActivity
     }
 
 
-    //should make one database to pass around
-    public static SQLiteDatabase getmAppDB() {
-        return mAppDB;
-    }
 
     @Override
     public void onSettingThemeButtonClicked(int color) {
