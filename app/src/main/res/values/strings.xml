@@ -32,6 +32,7 @@
     <string name="register_edit_text_first_name">First Name</string>
     <string name="register_edit_text_last_name">Last Name</string>
     <string name="register_edit_text_email">Email</string>
+    <string name="firebase_token">token</string>
     <string name="contacts_textview_fragheader">Chat Contacts</string>
 
     <!--Verify Fragment -->

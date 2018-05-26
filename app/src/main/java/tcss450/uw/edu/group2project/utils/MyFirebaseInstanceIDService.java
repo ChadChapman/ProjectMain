@@ -30,9 +30,9 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         Log.d(TAG, "Refreshed token: " + refreshedToken);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        preferences.edit().putString(getString(R.string.token), refreshedToken).apply();
+        preferences.edit().putString(getString(R.string.firebase_token), refreshedToken).apply();
 
-        int memberid = preferences.getInt(getString(R.string.keys_prefs_memberid), 0);
+        int memberid = preferences.getInt(getString(R.string.keys_prefs_my_memberid), 0);
         // Update user's token on server as well
         Uri uri = new Uri.Builder()
                 .scheme("https")
@@ -41,8 +41,8 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
                 .build();
         JSONObject msg = new JSONObject();
         try {
-            msg.put(getString(R.string.keys_prefs_memberid), memberid);
-            msg.put(getString(R.string.token), refreshedToken);
+            msg.put(getString(R.string.keys_prefs_my_memberid), memberid);
+            msg.put(getString(R.string.firebase_token), refreshedToken);
         } catch (JSONException e) {
             e.printStackTrace();
         }

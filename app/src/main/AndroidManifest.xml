@@ -47,7 +47,7 @@
         </service>
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_menu_camera" />
+            android:resource="@drawable/ic_chat_notif" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
