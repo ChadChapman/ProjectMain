@@ -93,6 +93,7 @@ public class LandingFragment extends Fragment implements
         fahTextView = v.findViewById(R.id.fah_textview);
         weatherTextView = v.findViewById(R.id.weather_textview);
         mProgressBar = v.findViewById(R.id.landing_progressbar);
+        mProgressBar.setVisibility(ProgressBar.VISIBLE);
         curWeather = new Weather();
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {

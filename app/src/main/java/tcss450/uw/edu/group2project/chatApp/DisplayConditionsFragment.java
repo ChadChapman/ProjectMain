@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,8 +45,11 @@ import tcss450.uw.edu.group2project.utils.WeatherAsyncTask;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DisplayConditionsFragment extends Fragment {
-    private String zip;
+public class DisplayConditionsFragment extends Fragment implements OnMapReadyCallback{
+    private GoogleMap mMap;
+    private MapView mMapView;
+    private View mView;
+
     private Weather curWeather;
     private TextView location;
     private TextView fahrenheit;
@@ -56,16 +69,16 @@ public class DisplayConditionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_display_conditions, container, false);
+        mView = inflater.inflate(R.layout.fragment_display_conditions, container, false);
         curWeather = (Weather) getArguments().getSerializable("weather");
-        mWeatherDesc = v.findViewById(R.id.WeatherText_textView);
-        location = v.findViewById(R.id.locDisp_textview);
-        fahrenheit = v.findViewById(R.id.fahrenheit_textView);
-        mProgressBar = v.findViewById(R.id.display_progressbar);
+        mWeatherDesc = mView.findViewById(R.id.WeatherText_textView);
+        location = mView.findViewById(R.id.locDisp_textview);
+        fahrenheit = mView.findViewById(R.id.fahrenheit_textView);
+        mProgressBar = mView.findViewById(R.id.display_progressbar);
         mProgressBar.setVisibility(ProgressBar.VISIBLE);
-        mAdd = v.findViewById(R.id.add_loc_button);
+        mAdd = mView.findViewById(R.id.add_loc_button);
         mAdd.setOnClickListener(this::addLoc);
-        mDel = v.findViewById(R.id.delete_loc_button);
+        mDel = mView.findViewById(R.id.delete_loc_button);
         mDel.setOnClickListener(this::delLoc);
         SharedPreferences prefs = getActivity().getSharedPreferences(
                 getString(R.string.keys_shared_prefs),
@@ -75,7 +88,7 @@ public class DisplayConditionsFragment extends Fragment {
         seeIfLocIsSaved();
         city = curWeather.getCity();
         new WeatherAsyncTask(this::onPostSearchLoc).execute(NetworkUtils.buildUrlForCurr(city));
-        return v;
+        return mView;
     }
 
     private void delLoc(View view) {
@@ -185,9 +198,28 @@ public class DisplayConditionsFragment extends Fragment {
 
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+        super.onViewCreated(view,savedInstanceState);
+        mMapView = (MapView)mView.findViewById(R.id.map_fragment);
+        if(mMapView!=null){
+            mMapView.onCreate(null);
+            mMapView.onResume();
+            mMapView.getMapAsync(this);
+        }
+    }
 
     private void handleError(final String msg) {
         Log.e("CHAT ERROR!!!", msg.toString());
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        MapsInitializer.initialize(getContext());
+        mMap = googleMap;
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(curWeather.getLat(),curWeather.getLon())).title(curWeather.getCity()).snippet(curWeather.getState()));
+        CameraPosition here = CameraPosition.builder().target(new LatLng(curWeather.getLat(),curWeather.getLon())).zoom(15).bearing(0).build();
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(here));
+    }
 }

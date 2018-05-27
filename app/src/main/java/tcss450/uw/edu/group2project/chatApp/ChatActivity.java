@@ -41,9 +41,6 @@ public class ChatActivity extends AppCompatActivity
         SettingFragment.OnSettingFragmentInteractionListener {
 
     private String mUserMemberID;
-
-
-
     public static int mTheme = UITheme.THEME_ONE;
     private static final int MY_PERMISSIONS_LOCATIONS = 814;
     private Fragment landing;
