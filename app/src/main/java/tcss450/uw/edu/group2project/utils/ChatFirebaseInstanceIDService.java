@@ -14,7 +14,7 @@ public class ChatFirebaseInstanceIDService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
+        Log.e(TAG, "Refreshed token: " + refreshedToken);
 
         //sendRegistrationToServer(refreshedToken);
 //        Intent i = new Intent(GOT_UPDATE);
