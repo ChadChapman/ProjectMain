@@ -17,9 +17,9 @@ public class ChatFirebaseInstanceIDService extends FirebaseInstanceIdService {
         Log.d(TAG, "Refreshed token: " + refreshedToken);
 
         //sendRegistrationToServer(refreshedToken);
-        Intent i = new Intent(GOT_UPDATE);
-        i.putExtra("KEY", refreshedToken);
-        sendBroadcast(i);
+//        Intent i = new Intent(GOT_UPDATE);
+//        i.putExtra("KEY", refreshedToken);
+//        sendBroadcast(i);
 
         //or send to webserver here ->
 

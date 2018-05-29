@@ -1,31 +1,39 @@
 {
   "project_info": {
-    "project_number": "904938206694",
-    "firebase_url": "https://projectmain-17b89.firebaseio.com",
-    "project_id": "projectmain-17b89",
-    "storage_bucket": "projectmain-17b89.appspot.com"
+    "project_number": "558087653904",
+    "firebase_url": "https://projectmain-c06b9.firebaseio.com",
+    "project_id": "projectmain-c06b9",
+    "storage_bucket": "projectmain-c06b9.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:904938206694:android:e79d3cb07aeb5be7",
+        "mobilesdk_app_id": "1:558087653904:android:e79d3cb07aeb5be7",
         "android_client_info": {
           "package_name": "tcss450.uw.edu.group2project"
         }
       },
       "oauth_client": [
         {
-          "client_id": "904938206694-e60svkeo29ikr3s93vidcvsk07lp1er4.apps.googleusercontent.com",
+          "client_id": "558087653904-8e5810rou3j4s62qu4aqao8p3ua6i6a7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tcss450.uw.edu.group2project",
+            "certificate_hash": "6c4cffa7e30b64134ec7a43bbb1e64685bfb823d"
+          }
+        },
+        {
+          "client_id": "558087653904-17ou98obqreru48bueqkrto2qdrp2e43.apps.googleusercontent.com",
           "client_type": 3
         },
         {
-          "client_id": "904938206694-e60svkeo29ikr3s93vidcvsk07lp1er4.apps.googleusercontent.com",
+          "client_id": "558087653904-17ou98obqreru48bueqkrto2qdrp2e43.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDF_KECtStQAXp6zXeoaeAB4FoQSLxVUAE"
+          "current_key": "AIzaSyBEQqIsmfobUEdjevDQ0Gc1-369nBOren0"
         }
       ],
       "services": {
@@ -33,8 +41,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558087653904-17ou98obqreru48bueqkrto2qdrp2e43.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

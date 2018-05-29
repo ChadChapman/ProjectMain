@@ -58,7 +58,7 @@ public class ChatFragment extends Fragment {
 
         //messageFeedItemList = new ArrayList<>();
         if (getArguments() != null) {
-            mUserChatIDStr = getArguments().getString("chatID");
+            mUserChatIDStr = getArguments().getString("chatid");
         }
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.trychat_recyclerview));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
