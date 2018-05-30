@@ -38,10 +38,11 @@
 
     <Button
         android:id="@+id/setting_button_theme_1"
+        style="@android:style/Widget.Material.Light.Button.Borderless.Small"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="120dp"
-        android:layout_marginStart="120dp"
+        android:layout_marginEnd="118dp"
+        android:layout_marginStart="118dp"
         android:layout_marginTop="8dp"
         android:background="@color/colorPrimary"
         android:text="@string/setting_button_theme_1"

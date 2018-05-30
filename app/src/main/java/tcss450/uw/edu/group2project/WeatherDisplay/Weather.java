@@ -1,17 +1,80 @@
 package tcss450.uw.edu.group2project.WeatherDisplay;
 
-public class Weather {
-    String date;
-    String minTemp;
-    String maxTemp;
-    String link;
+import java.io.Serializable;
 
-    public String getDate() {
-        return date;
+public class Weather implements Serializable {
+    private String zip;
+    private Double lon;
+    private Double lat;
+    private String city;
+    private String state;
+    private String currWeather;
+    private String farTemp;
+    private String minTemp;
+    private String maxTemp;
+    private String cityState;
+
+    public String getZip() {
+        return zip;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCityState() { return cityState; }
+
+    public void setCityState(String cityState) {
+        this.cityState = cityState;
+    }
+
+    public String getCurrWeather() {
+        return currWeather;
+    }
+
+    public void setCurrWeather(String currWeather) {
+        this.currWeather = currWeather;
+    }
+
+
+    public String getFarTemp() {
+        return farTemp;
+    }
+
+    public void setFarTemp(String farTemp) {
+        this.farTemp = farTemp;
     }
 
     public String getMinTemp() {
@@ -30,11 +93,5 @@ public class Weather {
         this.maxTemp = maxTemp;
     }
 
-    public String getLink() {
-        return link;
-    }
 
-    public void setLink(String link) {
-        this.link = link;
-    }
 }

@@ -30,8 +30,7 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 public class StartActivity extends AppCompatActivity
         implements LoginFragment.OnLoginFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener,
-        VerifyFragment.OnFragmentInteractionListener
-{
+        VerifyFragment.OnFragmentInteractionListener {
 
     private Credentials mCredentials;
     //private int mUserMemberID;
@@ -43,7 +42,6 @@ public class StartActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-
 
 
         if (savedInstanceState == null) {
@@ -71,7 +69,7 @@ public class StartActivity extends AppCompatActivity
     /**
      * Previously named loadLandingFragment, shit you not.
      * Since this begins a new activity, now it's name reflects that.
-     *
+     * <p>
      * everything worked and now we are going into the app, starting with the chat activity
      */
     void loadVerifiedUserLandingActivity() {
@@ -80,12 +78,7 @@ public class StartActivity extends AppCompatActivity
                 getSharedPreferences(
                         getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
-        //save the memberid for later usage
-        prefs.edit().putString(
-                getString(R.string.keys_prefs_my_memberid),
-                mUserMemberIDStr)
-                .apply();
-
+        mUserMemberIDStr = prefs.getString(getString(R.string.keys_prefs_my_memberid), "MEMBERID NOT FOUND IN PREFS");
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("userMemberID", mUserMemberIDStr);
         ActivityCompat.finishAffinity(this);
@@ -152,7 +145,7 @@ public class StartActivity extends AppCompatActivity
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
-  //              .encodedAuthority(getString(R.string.ep_base_url))
+                //              .encodedAuthority(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_login))
                 .build();
 
@@ -227,7 +220,7 @@ public class StartActivity extends AppCompatActivity
                     fragmentTransaction.commit();
                     //frag.setError("Log in unsuccessful");
                 } else {
-                    Log.d("LoggingTest","vCode = " + vCode);
+                    Log.d("LoggingTest", "vCode = " + vCode);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(getString(R.string.keys_bundle_vcode), vCode);
 
@@ -299,16 +292,18 @@ public class StartActivity extends AppCompatActivity
 
 
     private void checkStayLoggedIn() {
+        SharedPreferences prefs =
+                getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        //save the username for later usage
+        prefs.edit().putString(
+                getString(R.string.keys_prefs_my_memberid),
+                mUserMemberIDStr)
+                .apply();
         if (((CheckBox) findViewById(R.id.login_check_box_stay_logged_in)).isChecked()) {
-            SharedPreferences prefs =
-                    getSharedPreferences(
-                            getString(R.string.keys_shared_prefs),
-                            Context.MODE_PRIVATE);
-            //save the username for later usage
-            prefs.edit().putString(
-                    getString(R.string.keys_prefs_username),
-                    mCredentials.getUsername())
-                    .apply();
+
+
             //save the users “want” to stay logged in
             prefs.edit().putBoolean(
                     getString(R.string.keys_prefs_stay_logged_in),
