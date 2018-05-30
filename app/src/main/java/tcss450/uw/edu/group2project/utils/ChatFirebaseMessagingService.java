@@ -26,7 +26,7 @@ import tcss450.uw.edu.group2project.chatApp.ChatActivity;
 public class ChatFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "ChatFirebaseMessagingService";
     private static final String CHANNEL_ID = "fb_channel_0";
-    private static int mFBNotificationID = 0;
+    private static int mFBNotificationIDInt = 0;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -62,6 +62,16 @@ public class ChatFirebaseMessagingService extends FirebaseMessagingService {
                 , PendingIntent.FLAG_ONE_SHOT);
         //should probably clear out old notifications? is this stacking, spamming them?
         createNotificationChannel();
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_chat_notif)
+                .setContentTitle(notification.getTitle())
+                .setAutoCancel(true)
+                .setContentText(notification.getBody())
+                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+        notificationManagerCompat.notify(mFBNotificationIDInt, notificationBuilder.build());
 
     }
 
