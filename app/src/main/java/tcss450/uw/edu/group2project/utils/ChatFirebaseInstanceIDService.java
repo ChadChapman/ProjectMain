@@ -89,9 +89,6 @@ public class ChatFirebaseInstanceIDService extends FirebaseInstanceIdService {
                 urlConnection.disconnect();
             }
         }
-
-
-
     }
 
     private JSONObject createJSONTokenRefreshObject(String newIIDToken) {

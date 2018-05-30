@@ -11,6 +11,7 @@
     <string name="keys_prefs_my_memberid">mymemberid</string>
     <string name="keys_prefs_chatids_set">chatidsset</string>
     <string name="keys_prefs_chat_names_set">chatnamesset</string>
+    <string name="keys_prefs_notification_channel_name">notificationChannelA</string>
 
     <string name="keys_bundle_vcode">vCode</string>
 
