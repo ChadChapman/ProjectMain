@@ -299,7 +299,7 @@ public class LandingFragment extends Fragment implements
     }
 
     private void onPostSearchLoc(String result) {
-        Log.e(TAG, result);
+        //Log.e(TAG, result);
         if (result != null && !result.equals("")) {
             try {
                 myCurrInfo = new JSONArray(result).getJSONObject(0);

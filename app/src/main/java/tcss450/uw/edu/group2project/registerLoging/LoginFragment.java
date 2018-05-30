@@ -90,6 +90,8 @@ public class LoginFragment extends Fragment {
                             Context.MODE_PRIVATE);
 
 
+
+
             EditText username = getActivity().findViewById(R.id.login_edit_text_username);
 
             EditText password = getActivity().findViewById(R.id.login_edit_text_password);

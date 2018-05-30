@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.chatApp.ChatActivity;
 import tcss450.uw.edu.group2project.chatApp.ChatFragment;
 import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
@@ -73,6 +74,24 @@ public class CreateChatFragment extends Fragment {
        mRecyclerView = v.findViewById(R.id.create_chat_recycle_view);
        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
        setupCreateNewChatFrag(savedInstanceState);
+
+        if(ChatActivity.mTheme == 1){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+        }else if(ChatActivity.mTheme == 2){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary2));
+
+
+        }else if(ChatActivity.mTheme == 3){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary3));
+
+        }else if(ChatActivity.mTheme == 4){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary4));
+
+
+        }
+
+
        return v;
     }
 
@@ -122,7 +141,7 @@ public class CreateChatFragment extends Fragment {
                 if (!mThisUsername.equals(post.optString("username"))) {
                     ContactFeedItem item = new ContactFeedItem();
                     item.setTitle(post.optString(getString(R.string.username)));
-                    item.setThumbnail(imgAddress);
+                    //item.setThumbnail(imgAddress);
                     item.setFname(post.optString(getString(R.string.firstname)));
                     item.setLname(post.optString(getString(R.string.lastname)));
                     mContactFeedItemList.add(item);
