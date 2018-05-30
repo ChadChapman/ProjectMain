@@ -13,60 +13,47 @@ import java.util.function.Consumer;
 
 public class NetworkUtils {
     private static final String TAG = "NewtorkUtils";
-    private final static String WEATHER_BASE_URL =
-            "http://dataservice.accuweather.com/forecasts/v1/daily/5day/331423";
-    private final static String LOCATION_BASE_URL =
-            "http://dataservice.accuweather.com/locations/v1/postalcodes/search";
+    //    private final static String WEATHER_BASE_URL =
+//            "http://dataservice.accuweather.com/forecasts/v1/daily/5day/331423";
+//    private final static String LOCATION_BASE_URL =
+//            "http://dataservice.accuweather.com/locations/v1/postalcodes/search";
+//    private final static String Curr_BASE_URL =
+//            "http://dataservice.accuweather.com/currentconditions/v1/";
     private final static String Curr_BASE_URL =
-            "http://dataservice.accuweather.com/currentconditions/v1/";
+            "http://api.weatherbit.io/v2.0/current";
 
-// newest -2    private final static String API_KEY = "QpnGCFMmidZOuQtwNIbt3ZnFknggEqRj";
+    // newest -2    private final static String API_KEY = "QpnGCFMmidZOuQtwNIbt3ZnFknggEqRj";
 // newest -1    private final static String API_KEY = "28ibHBD6xBSpomybED2dEQgaAgc0pDh1";
-     private final static String API_KEY = "BoeoxMyWQyO3S2Q6VnEkuWua46XzIPRu"; //newest:
+//  private final static String API_KEY = "BoeoxMyWQyO3S2Q6VnEkuWua46XzIPRu"; //newest:
 // newest -3    private final static String API_KEY = "Y6CvnHQU9pAkGKGCh8NsVldTvsfA0oub";
 // newest +1    private final static String API_KEY = "Gs6baRcWtkDDxmBUYIGR4415NFsQfc0Z";
+    private final static String API_KEY = "01b805016496462e89548686b49d261f";
+
+    private final static String PARAM_API_KEY = "key";
+    private final static String PARAM_CITY = "city";
+    private final static String PARAM_units = "units";
+    private final static String PARAM_units_i = "I";
 
 
-    private final static String PARAM_API_KEY = "apikey";
-
-
-    public static URL buildUrlForWeather() {
-        Uri builtUri = Uri.parse(WEATHER_BASE_URL).buildUpon()
+//    public static URL buildUrlForCurr(String key) {
+//        Uri builtUri = Uri.parse(Curr_BASE_URL + key).buildUpon()
+//                .appendQueryParameter(PARAM_API_KEY, API_KEY)
+//                .build();
+//
+//        URL url = null;
+//        try {
+//            url = new URL(builtUri.toString());
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//        return url;
+//    }
+    public static URL buildUrlForCurr(String city) {
+        Uri builtUri = Uri.parse(Curr_BASE_URL).buildUpon()
+                .appendQueryParameter(PARAM_CITY,city)
+                .appendQueryParameter(PARAM_units,PARAM_units_i)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY)
                 .build();
-
-        URL url = null;
-        try {
-            url = new URL(builtUri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return url;
-
-
-    }
-
-    public static URL buildUrlForCurr(String key) {
-        Uri builtUri = Uri.parse(Curr_BASE_URL + key).buildUpon()
-                .appendQueryParameter(PARAM_API_KEY, API_KEY)
-                .build();
-
-        URL url = null;
-        try {
-            url = new URL(builtUri.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return url;
-    }
-
-
-    public static URL buildUrlForLocation(String zip) {
-        Uri builtUri = Uri.parse(LOCATION_BASE_URL).buildUpon()
-                .appendQueryParameter(PARAM_API_KEY, API_KEY)
-                .appendQueryParameter("q", zip)
-                .build();
-
         URL url = null;
         try {
             url = new URL(builtUri.toString());
@@ -75,6 +62,22 @@ public class NetworkUtils {
         }
         return url;
     }
+
+
+//    public static URL buildUrlForLocation(String zip) {
+//        Uri builtUri = Uri.parse(LOCATION_BASE_URL).buildUpon()
+//                .appendQueryParameter(PARAM_API_KEY, API_KEY)
+//                .appendQueryParameter("q", zip)
+//                .build();
+//
+//        URL url = null;
+//        try {
+//            url = new URL(builtUri.toString());
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//        return url;
+//    }
 
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {

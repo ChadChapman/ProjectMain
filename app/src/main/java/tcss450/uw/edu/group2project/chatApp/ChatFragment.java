@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -24,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
-//import tcss450.uw.edu.group2project.model.Feeders.ChatFeedItem;
-//import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
 import tcss450.uw.edu.group2project.model.ChatFeedItem;
 import tcss450.uw.edu.group2project.utils.GetPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.ListenManager;
@@ -39,11 +39,13 @@ public class ChatFragment extends Fragment {
     private String mUsername;
     private String mSendUrl;
     private ListenManager mListenManager;
-
-
+    private ImageButton sendButton;
+    private Button leaveButton;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter adapter;
     private List<ChatFeedItem> messageFeedItemList;
+    private String mUserMemberID;
+
 
     public ChatFragment() {
         // Required empty public constructor
@@ -52,24 +54,61 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_chat_1, container, false);
-        v.findViewById(R.id.trychatSendButton).setOnClickListener(this::sendMessage);
+        View v = inflater.inflate(R.layout.fragment_chat, container, false);
+        sendButton = v.findViewById(R.id.trychatSendButton);
+        sendButton.setOnClickListener(this::sendMessage);
+        leaveButton =  v.findViewById(R.id.leave_button);
+        leaveButton.setOnClickListener(this::leaveChat);
         messageFeedItemList = new ArrayList<>();
 
-        //messageFeedItemList = new ArrayList<>();
+        messageFeedItemList = new ArrayList<>();
         if (getArguments() != null) {
-            mUserChatIDStr = getArguments().getString("chatid");
+            mUserChatIDStr = getArguments().getString("chatID");
+            ((TextView)v.findViewById(R.id.chat_name_textview)).setText(getArguments().getString("chatName"));
         }
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.trychat_recyclerview));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        SharedPreferences prefs = getActivity().getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
+        mUserMemberID = prefs.getString(getString(R.string.keys_prefs_my_memberid), "MEMBERID NOT FOUND IN PREFS");
+
+
+
+
         return v;
     }
 
-    private void setupChatFragment(){
+    private void leaveChat(View view) {
+        sendButton.setEnabled(false);
+        leaveButton.setEnabled(false);
+        String url = new Uri.Builder()
+                .scheme("https")
+                .authority(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_chat))
+                .appendPath("leaveChat")
+                .build()
+                .toString();
+        JSONObject obj = new JSONObject();
 
+        try {
+            obj.put("chatid",mUserChatIDStr);
+            obj.put("memberid",mUserMemberID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.e("url",url);
+        Log.e("obj",obj.toString());
+        new SendPostAsyncTask.Builder(url, obj).onPostExecute(this::loadChatListFragment)
+                .build().execute();
     }
+
+    private void loadChatListFragment(String s) {
+        getActivity().onBackPressed();
+    }
+
 
     @Override
     public void onStart() {
@@ -224,8 +263,10 @@ public class ChatFragment extends Fragment {
     }
 
     private void publishProgress(JSONObject messages) {
-                if (messages.has(getString(R.string.keys_json_messages))) {
+        if (messages.has(getString(R.string.keys_json_messages))) {
+            List<ChatFeedItem> temp = new ArrayList<>();
             try {
+
                 JSONArray jMessages =
                         messages.getJSONArray((getString(R.string.keys_json_messages)));
                 for (int i = 0; i < jMessages.length(); i++) {
@@ -233,7 +274,7 @@ public class ChatFragment extends Fragment {
                     ChatFeedItem item = new ChatFeedItem();
                     item.setUsername(msg.optString(getString(R.string.username)));
                     item.setMessage(msg.optString(getString(R.string.message)));
-                    messageFeedItemList.add(item);
+                    temp.add(item);
                 }
 
 
@@ -243,9 +284,10 @@ public class ChatFragment extends Fragment {
             }
 
             getActivity().runOnUiThread(() -> {
-                for (ChatFeedItem msg : messageFeedItemList) {
+                for (ChatFeedItem msg : temp) {
 //                    mOutputTextView.append(msg);
 //                    mOutputTextView.append(System.lineSeparator());
+                    messageFeedItemList.add(msg);
                     adapter.notifyDataSetChanged();
                     mRecyclerView.smoothScrollToPosition(adapter.getItemCount());
                 }

@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
@@ -23,18 +24,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
-import tcss450.uw.edu.group2project.model.ChatContact;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.UITextSize;
@@ -45,14 +44,7 @@ public class ChatActivity extends AppCompatActivity
         SearchFragment.OnSearchFragmentInteractionListener,
         SettingFragment.OnSettingFragmentInteractionListener {
 
-    private static SQLiteDatabase mAppDB;
     private String mUserMemberID;
-    //private int mUserMemberIDInt;
-    private ArrayList<ChatContact> mChatContactsArrList;
-    private Button mNewChatButton;
-
-
-
     public static int mTheme = UITheme.THEME_ONE;
     private static final int MY_PERMISSIONS_LOCATIONS = 814;
     private Fragment landing;
@@ -62,6 +54,8 @@ public class ChatActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         // Update theme color
         setTheme(UITheme.getThemeId(mTheme));
 
@@ -69,17 +63,34 @@ public class ChatActivity extends AppCompatActivity
         setTheme(UITextSize.getSizeId(mTextSize));
 
         setContentView(R.layout.activity_chat);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        LinearLayout navHeader = (LinearLayout) navigationView.getHeaderView(0).findViewById(R.id.navChat);
+
+
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(mTheme == 1){
+
+            navHeader.setBackgroundResource(R.color.colorPrimary);
+        }else if(mTheme == 2){
+            navHeader.setBackgroundResource(R.color.colorPrimary2);
+
+        }else if(mTheme == 3){
+            navHeader.setBackgroundResource(R.color.colorPrimary3);
+        }else if(mTheme == 4){
+            navHeader.setBackgroundResource(R.color.colorPrimary4);
+
+        }
+
         landing = new LandingFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragmentContainer,
@@ -103,6 +114,9 @@ public class ChatActivity extends AppCompatActivity
                             , Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_LOCATIONS);
         }
+
+
+
 
 
     }
@@ -243,9 +257,6 @@ public class ChatActivity extends AppCompatActivity
             Fragment contacts = new ContactFragment();
             contacts.setArguments(bundle);
             loadFragment(contacts, getString(R.string.keys_fragment_contacts));
-        } else if (id == R.id.nav_profile) {
-            loadFragment(new ProfileFragment(), getString(R.string.keys_fragment_profile));
-            loadInfo();
         } else if (id == R.id.nav_search) {
             loadFragment(new SearchFragment(), getString(R.string.keys_fragment_search));
         } else if (id == R.id.nav_settings) {
@@ -283,10 +294,6 @@ public class ChatActivity extends AppCompatActivity
     }
 
 
-    //should make one database to pass around
-    public static SQLiteDatabase getmAppDB() {
-        return mAppDB;
-    }
 
     @Override
     public void onSettingThemeButtonClicked(int color) {
@@ -347,6 +354,7 @@ public class ChatActivity extends AppCompatActivity
     public void changeTextSize(final int size) {
         // Handles theme changes to activity
         mTextSize = size;
+
         setTheme(mTextSize);
         String sizeName = " ";
         if(size == 1){

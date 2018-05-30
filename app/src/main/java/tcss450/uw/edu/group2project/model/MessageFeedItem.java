@@ -5,6 +5,15 @@ public class MessageFeedItem {
     private String chatid;
     private String message;
 
+    public String getChatName() {
+        return chatName;
+    }
+
+    public void setChatName(String chatName) {
+        this.chatName = chatName;
+    }
+
+    private String chatName;
     public String getChatid() {
         return chatid;
     }
