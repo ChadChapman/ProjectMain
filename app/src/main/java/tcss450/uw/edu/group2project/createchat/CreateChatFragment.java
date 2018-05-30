@@ -17,6 +17,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -268,7 +270,7 @@ public class CreateChatFragment extends Fragment {
             if (!mNewChatIncludedUsernamesList.contains(mThisUsername)) {//could be possible?
                 //should be added last so easy to remove?
                 mNewChatIncludedUsernamesList.add(mThisUsername);
-                sb.append(mThisUsername + "+");
+                //sb.append(mThisUsername + "+");
             } else {
                 Log.e("ADDING THIS USERNAME TO CHAT ERROR:", "USERNAME WAS ALREADY IN THE CHATNAME");
             }
@@ -392,6 +394,8 @@ public class CreateChatFragment extends Fragment {
             if (success) { //yay, all members were added, let's go to the new chat
                 //TODO now add all members of this chat to the list of sets of usernames fo chats
                 Log.e("ADD ALL MEMBERS RETURNED :", "SUCCESS!");
+                //subscribe this user to the new chat "topic" in firebase
+                FirebaseMessaging.getInstance().subscribeToTopic(mNewChatNameStr); // can unsubscribeFromTopic("xyx"); also
                 loadNewChatInfoIntoPrefs(mNewChatIDStr);
                 ChatFragment newChatFrag = new ChatFragment();
                 Bundle bundle = new Bundle();
