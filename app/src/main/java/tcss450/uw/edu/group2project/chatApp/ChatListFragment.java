@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,6 +33,7 @@ import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
 import tcss450.uw.edu.group2project.model.MessageFeedItem;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
+import tcss450.uw.edu.group2project.utils.UITheme;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +61,46 @@ public class ChatListFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mCreateNewChatBtn = v.findViewById(R.id.createNewChatButtonChatList);
         setupFragmentView();
+        RecyclerView rView = v.findViewById(R.id.message_recycler_view);
+
+        TextView currentChats = v.findViewById(R.id.current_chats_textview);
+
+
         loadMessages();
+
+
+
+
+
+        if(ChatActivity.mTheme == 1){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            currentChats.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            currentChats.setTextSize(36);
+            currentChats.setText("Current Chats");
+        }else if(ChatActivity.mTheme == 2){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary2));
+            currentChats.setBackgroundColor(getResources().getColor(R.color.colorAccent2));
+            currentChats.setTextColor(getResources().getColor(R.color.colorPrimaryDark2));
+            currentChats.setTextSize(36);
+            currentChats.setText("Current Chats");
+
+        }else if(ChatActivity.mTheme == 3){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary3));
+            currentChats.setBackgroundColor(getResources().getColor(R.color.colorAccent3));
+            currentChats.setTextColor(getResources().getColor(R.color.colorPrimaryDark3));
+            currentChats.setTextSize(36);
+            currentChats.setText("Current Chats");
+        }else if(ChatActivity.mTheme == 4){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary4));
+            currentChats.setBackgroundColor(getResources().getColor(R.color.colorAccent4));
+            currentChats.setTextColor(getResources().getColor(R.color.colorPrimaryDark4));
+            currentChats.setTextSize(36);
+            currentChats.setText("Current Chats");
+
+        }
+
+
+
         return v;
     }
 
@@ -75,6 +116,8 @@ public class ChatListFragment extends Fragment {
                         Context.MODE_PRIVATE);
         //mThisUsername = prefs.getString("username", "USERNAME NOT FOUND IN PREFS!");
         mUserMemberIDStr = prefs.getString("mymemberid", "MEMBERID NOT FOUND IN PREFS");
+
+
     }
 
     /**
@@ -166,6 +209,7 @@ public class ChatListFragment extends Fragment {
                         //FeedItem feedItem = feedItemList.get(i);
                         MessageFeedItem feedItem = messageFeedItemList.get(i);
 
+
                         //Setting text view title
                         ((CustomViewHolder) customViewHolder).chatid.setText(feedItem.getChatid());
                         ((CustomViewHolder) customViewHolder).message.setText(feedItem.getMessage());
@@ -217,11 +261,14 @@ public class ChatListFragment extends Fragment {
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected TextView chatid;
         protected TextView message;
+        protected CardView cView;
 
         public CustomViewHolder(View view) {
             super(view);
             this.chatid = (TextView) view.findViewById(R.id.username);
             this.message = (TextView) view.findViewById(R.id.message);
+            this.cView = (CardView) view.findViewById(R.id.message_card_view);
+            //this.cView.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
         }
     }
 

@@ -1,11 +1,13 @@
 package tcss450.uw.edu.group2project.chatApp;
 
 
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -62,18 +64,61 @@ public class ContactFragment extends Fragment {
         progressBar = (ProgressBar) (v.findViewById(R.id.try_progress_bar));
         mContactsUri = buildHerokuAddress(getString(R.string.ep_contacts_verified));
 
+        RecyclerView rView = (RecyclerView) v.findViewById(R.id.try_recycle_view);
+
         //Load the list of friends
         loadContacts();
 
         //Set up each buttons in fragment
         RadioButton rb = (RadioButton) v.findViewById(R.id.friends_radioButton);
         rb.setOnClickListener(this::onRadioButtonClicked);
-        rb = (RadioButton) v.findViewById(R.id.pending_radioButton);
-        rb.setOnClickListener(this::onRadioButtonClicked);
-        rb = (RadioButton) v.findViewById(R.id.sent_radioButton);
-        rb.setOnClickListener(this::onRadioButtonClicked);
+
+
+
+        RadioButton rb2 = (RadioButton) v.findViewById(R.id.pending_radioButton);
+        rb2.setOnClickListener(this::onRadioButtonClicked);
+
+        RadioButton rb3 = (RadioButton) v.findViewById(R.id.sent_radioButton);
+        rb3.setOnClickListener(this::onRadioButtonClicked);
+
+
         Button add = (Button) v.findViewById(R.id.add_button);
         add.setOnClickListener(this::onAddButtonClicked);
+
+
+
+
+        if(ChatActivity.mTheme == 1){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            rb.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            rb2.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            rb3.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            add.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+            rView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        }else if(ChatActivity.mTheme == 2){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary2));
+
+            rb.setBackgroundColor(getResources().getColor(R.color.colorAccent2));
+            rb2.setBackgroundColor(getResources().getColor(R.color.colorAccent2));
+            rb3.setBackgroundColor(getResources().getColor(R.color.colorAccent2));
+            add.setBackgroundColor(getResources().getColor(R.color.colorAccent2));
+            rView.setBackgroundColor(getResources().getColor(R.color.colorPrimary2));
+        }else if(ChatActivity.mTheme == 3){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary3));
+            rb.setBackgroundColor(getResources().getColor(R.color.colorAccent3));
+            rb2.setBackgroundColor(getResources().getColor(R.color.colorAccent3));
+            rb3.setBackgroundColor(getResources().getColor(R.color.colorAccent3));
+            add.setBackgroundColor(getResources().getColor(R.color.colorAccent3));
+            rView.setBackgroundColor(getResources().getColor(R.color.colorPrimary3));
+        }else if(ChatActivity.mTheme == 4){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary4));
+            rb.setBackgroundColor(getResources().getColor(R.color.colorAccent4));
+            rb2.setBackgroundColor(getResources().getColor(R.color.colorAccent4));
+            rb3.setBackgroundColor(getResources().getColor(R.color.colorAccent4));
+            add.setBackgroundColor(getResources().getColor(R.color.colorAccent4));
+            rView.setBackgroundColor(getResources().getColor(R.color.colorPrimary4));
+        }
         return v;
     }
 

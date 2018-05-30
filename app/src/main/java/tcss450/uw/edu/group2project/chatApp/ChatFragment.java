@@ -45,6 +45,7 @@ public class ChatFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private List<ChatFeedItem> messageFeedItemList;
 
+
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -64,6 +65,11 @@ public class ChatFragment extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
+
+
+
+
         return v;
     }
 
