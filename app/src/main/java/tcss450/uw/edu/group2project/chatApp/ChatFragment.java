@@ -27,6 +27,9 @@ import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.model.ChatFeedItem;
+//import tcss450.uw.edu.group2project.model.Feeders.ChatFeedItem;
+//import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
+import tcss450.uw.edu.group2project.model.ChatFeedItem;
 import tcss450.uw.edu.group2project.utils.GetPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.ListenManager;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
@@ -79,6 +82,12 @@ public class ChatFragment extends Fragment {
 
 
         return v;
+    }
+
+    private void setupChatFragment(){
+        messageFeedItemList = new ArrayList<>();
+        mUserChatIDStr = getArguments().getString("chatID");
+
     }
 
     private void leaveChat(View view) {
@@ -274,7 +283,7 @@ public class ChatFragment extends Fragment {
                     ChatFeedItem item = new ChatFeedItem();
                     item.setUsername(msg.optString(getString(R.string.username)));
                     item.setMessage(msg.optString(getString(R.string.message)));
-                    temp.add(item);
+                    messageFeedItemList.add(item);
                 }
 
 
@@ -284,7 +293,7 @@ public class ChatFragment extends Fragment {
             }
 
             getActivity().runOnUiThread(() -> {
-                for (ChatFeedItem msg : temp) {
+                for (ChatFeedItem msg : messageFeedItemList) {
 //                    mOutputTextView.append(msg);
 //                    mOutputTextView.append(System.lineSeparator());
                     messageFeedItemList.add(msg);

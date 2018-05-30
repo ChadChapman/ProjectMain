@@ -5,7 +5,8 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".chatApp.LandingFragment">
+    tools:context=".chatApp.LandingFragment"
+    tools:layout_editor_absoluteY="25dp">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -108,7 +109,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
 
     <ProgressBar
         android:id="@+id/landing_progressbar"
@@ -144,6 +144,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <ListView
+        android:id="@+id/idListView"
+        android:layout_width="match_parent"
+        android:layout_height="443dp"
+        android:layout_marginBottom="8dp"
+        android:footerDividersEnabled="true"
+        app:layout_constraintBottom_toTopOf="@+id/createNewChatFragNewChatButton"
+        tools:layout_editor_absoluteX="0dp" />
+
     <Button
         android:id="@+id/landing_map_button"
         android:layout_width="wrap_content"
@@ -169,6 +178,11 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@mipmap/ic_rabbit_logo_this_round"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="New Messages"

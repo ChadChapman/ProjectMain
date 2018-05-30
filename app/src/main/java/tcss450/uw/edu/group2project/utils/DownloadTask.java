@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import tcss450.uw.edu.group2project.contacts.ContactsActivity;
 import tcss450.uw.edu.group2project.model.ContactFeedItem;
 
 import static android.support.constraint.Constraints.TAG;
@@ -64,6 +65,10 @@ public class DownloadTask extends AsyncTask<String, Void, Integer> {
 
         //this assumes it is a ContactsActivity so I commented it out, otherwise is correct
         if (result == 1) {
+            //adapter = new MyRecyclerViewAdapter(ContactsActivity.this, feedsList);
+//            mMyRecyclerViewAdapter = new MyRecyclerViewAdapter(
+//                    ContactsActivity.this, mContactFeedItemList);
+//            mRecyclerView.setAdapter(adapter);
         } else {
 //            Toast.makeText(ContactsActivity.this
 //                    , "Failed to fetch data!", Toast.LENGTH_SHORT).show();

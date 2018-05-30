@@ -2,6 +2,8 @@ package tcss450.uw.edu.group2project.chatApp;
 
 
 import android.content.res.ColorStateList;
+import android.annotation.SuppressLint;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +36,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.contacts.ContactsActivity;
+import tcss450.uw.edu.group2project.model.ChatContact;
+import tcss450.uw.edu.group2project.model.ContactFeedItem;
+import tcss450.uw.edu.group2project.model.FeedItem;
+import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
+import tcss450.uw.edu.group2project.utils.OnItemClickListener;
 import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
@@ -44,19 +52,23 @@ public class ContactFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter<RecyclerView.ViewHolder> adapter;
     private ProgressBar progressBar;
+    private List<ChatContact> mContactsList;
     private List<ContactFeedItem> mContactFeedItemList;
+    private int mUserMemberID;
     private String mUserMemberIDStr;
     private Uri mContactsUri;
     private View v;
     private int mContactStatus = 0;
     public ContactFragment() {
         // Required empty public constructor
+        mUserMemberID = new Integer(mID);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v = inflater.inflate(R.layout.fragment_contact, container, false);
+        v = inflater.inflate(R.layout.fragment_try_contact, container, false);
         // Inflate the layout for this fragment
         mUserMemberIDStr = getArguments().getString("memberID");
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.try_recycle_view));
@@ -128,7 +140,7 @@ public class ContactFragment extends Fragment {
         String friend = ((EditText) (getActivity().findViewById(R.id.add_editText))).getText().toString();
         JSONObject msg = new JSONObject();
         try {
-            msg.put("memberid", mUserMemberIDStr);
+            msg.put("memberid", mUserMemberID);
             msg.put("username_b", friend);
 
         } catch (JSONException e) {

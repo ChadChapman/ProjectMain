@@ -30,6 +30,8 @@ import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
 //import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
+import tcss450.uw.edu.group2project.model.MessageFeedItem;
+//import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
 import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
 import tcss450.uw.edu.group2project.model.MessageFeedItem;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
@@ -41,15 +43,24 @@ import tcss450.uw.edu.group2project.utils.UITheme;
 public class ChatListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter adapter;
-    private List<MessageFeedItem> messageFeedItemList;
     private ProgressBar progressBar;
+    private List<MessageFeedItem> messageFeedItemList;
+
     private String mUserMemberIDStr;
+    private int mUserMemberID;
     private Uri mContactsUri;
     private View v;
     private ImageButton mCreateNewChatBtn;
 
     public ChatListFragment() {
         // Required empty public constructor
+    }
+    //probably need to get rid of this
+    @SuppressLint("ValidFragment")
+    public ChatListFragment(String mID) {
+        // Required empty public constructor
+        mUserMemberID = new Integer(mID);
+
     }
 
     @Override

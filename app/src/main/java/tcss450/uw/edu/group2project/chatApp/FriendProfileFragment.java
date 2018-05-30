@@ -3,6 +3,7 @@ package tcss450.uw.edu.group2project.chatApp;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,12 +19,14 @@ import org.json.JSONObject;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.model.ContactFeedItem;
+import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FriendProfileFragment extends Fragment {
+    private ContactFeedItem item;
 
     private final String TAG = "FriendProfileFragment";
 
@@ -33,6 +36,12 @@ public class FriendProfileFragment extends Fragment {
 
     public FriendProfileFragment() {
         // Required empty public constructor
+    }
+
+    //need ot get rid of this
+    @SuppressLint("ValidFragment")
+    public FriendProfileFragment(ContactFeedItem item) {
+        this.item = item;
     }
 
 
@@ -133,6 +142,9 @@ public class FriendProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        ((TextView)getActivity().findViewById(R.id.friends_name_textView)).setText(item.getTitle());
+        ((TextView)getActivity().findViewById(R.id.fname_textView)).setText(item.getFname());
+        ((TextView)getActivity().findViewById(R.id.lname_textView)).setText(item.getLname());
     }
 
 }
