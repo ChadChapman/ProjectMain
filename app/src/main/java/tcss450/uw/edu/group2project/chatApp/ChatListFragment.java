@@ -234,7 +234,7 @@ public class ChatListFragment extends Fragment {
     }
 
     private void loadFragment(Fragment frag, String tag) {
-        Log.e("MADE IT TO lOADFRAGMENT() IN LANDING FRAG", tag);
+       // Log.e("MADE IT TO lOADFRAGMENT() IN LANDING FRAG", tag);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, frag, tag)

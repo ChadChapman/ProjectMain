@@ -43,6 +43,7 @@ import tcss450.uw.edu.group2project.WeatherDisplay.NetworkUtils;
 import tcss450.uw.edu.group2project.WeatherDisplay.Weather;
 import tcss450.uw.edu.group2project.WeatherDisplay.WeatherAdapter;
 import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
+import tcss450.uw.edu.group2project.utils.ChatFirebaseInstanceIDService;
 import tcss450.uw.edu.group2project.utils.ListenManager;
 
 import tcss450.uw.edu.group2project.utils.WeatherAsyncTask;
@@ -78,7 +79,7 @@ public class LandingFragment extends Fragment implements
     private String myZip = "";
     private JSONObject myCurrInfo;
     private ProgressBar mProgressBar;
-
+    private ChatFirebaseInstanceIDService fbID;
     private ImageButton mNewChatButton;
 
     public LandingFragment() {
@@ -159,6 +160,8 @@ public class LandingFragment extends Fragment implements
     }
     private void setupNewChatButton(Bundle paramBundle){
 
+        fbID = new ChatFirebaseInstanceIDService();
+        fbID.onTokenRefresh();
         mNewChatButton.setOnClickListener(frag -> loadFragment(new CreateChatFragment()
                 , getString(R.string.keys_fragment_create_new_chat)));
     }
