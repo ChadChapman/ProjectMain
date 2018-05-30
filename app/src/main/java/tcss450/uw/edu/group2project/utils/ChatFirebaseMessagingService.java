@@ -52,7 +52,7 @@ public class ChatFirebaseMessagingService extends FirebaseMessagingService {
 
     /*
         This is where the magic happens.  Send a notification then open whatever
-        activity from the notification.  
+        activity from the notification.
      */
     private void sendNotification(RemoteMessage.Notification notification) {
         Intent intent = new Intent(this, ChatActivity.class);

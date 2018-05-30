@@ -69,8 +69,6 @@ public class ChatFragment extends Fragment {
 
     private void setupChatFragment(){
 
-
-
     }
 
     @Override
