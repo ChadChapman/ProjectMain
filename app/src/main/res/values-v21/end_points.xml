@@ -20,6 +20,7 @@
     <string name="ep_base_localhost_5000">localhost:5000</string>
     <string name="ep_contacts">contacts</string>
     <string name="ep_locations">locations</string>
+    <string name="ep_verify">verify</string>
 
 
     <string name="ep_profile">profile</string>
