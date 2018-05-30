@@ -74,7 +74,7 @@ public class StartActivity extends AppCompatActivity
      * <p>
      * everything worked and now we are going into the app, starting with the chat activity
      */
-    void loadVerifiedUserLandingActivity() {
+
     /**
      * Previously named loadLandingFragment, shit you not.
      * Since this begins a new activity, now it's name reflects that.
@@ -93,10 +93,10 @@ public class StartActivity extends AppCompatActivity
                 mUserMemberIDStr)
                 .apply();
 
-        SharedPreferences prefs =
-                getSharedPreferences(
-                        getString(R.string.keys_shared_prefs),
-                        Context.MODE_PRIVATE);
+//        SharedPreferences prefs =
+//                getSharedPreferences(
+//                        getString(R.string.keys_shared_prefs),
+//                        Context.MODE_PRIVATE);
         mUserMemberIDStr = prefs.getString(getString(R.string.keys_prefs_my_memberid), "MEMBERID NOT FOUND IN PREFS");
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("userMemberID", mUserMemberIDStr);
