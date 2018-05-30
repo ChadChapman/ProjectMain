@@ -62,6 +62,7 @@ import tcss450.uw.edu.group2project.utils.ChatFirebaseInstanceIDService;
 import tcss450.uw.edu.group2project.utils.ListenManager;
 
 import tcss450.uw.edu.group2project.model.MessageFeedItem;
+import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.WeatherAsyncTask;
 
@@ -104,8 +105,6 @@ public class LandingFragment extends Fragment implements
     private Button mLocButton;
     private Uri mContactsUri;
     private String mUserMemberID;
-
-    private ImageButton mNewChatButton;
 
     public LandingFragment() {
         // Required empty public constructor
@@ -155,7 +154,7 @@ public class LandingFragment extends Fragment implements
         v.findViewById(R.id.saved_loc_button).setOnClickListener(this::openLocList);
         v.findViewById(R.id.landing_map_button).setOnClickListener(this::openMap);
         v.findViewById(R.id.io_imageview).setOnClickListener(this::openURL);
-        setupNewChatButton(savedInstanceState);
+        //setupNewChatButton(savedInstanceState);
         loadMessages();
         return v;
     }
@@ -207,7 +206,7 @@ public class LandingFragment extends Fragment implements
                     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
                         View view = LayoutInflater.from(viewGroup.getContext())
                                 .inflate(R.layout.chats_list_rows, null);
-                        return new CustomViewHolder(view);
+                        return new MyRecyclerViewAdapter.CustomViewHolder(view);
                     }
 
                     @Override
@@ -387,7 +386,6 @@ public class LandingFragment extends Fragment implements
             Log.i(TAG, "Connection Connects" + myCity.isEmpty() + (mLocationRequest == null));
             myCity = "";
         }
-
     }
 
     @Override
@@ -399,9 +397,9 @@ public class LandingFragment extends Fragment implements
             mGoogleApiClient.disconnect();
             Log.i(TAG, "Connection suspended");
             myCity = "";
+            }
         }
     }
-
 
     /**
      * Removes location updates from the FusedLocationApi.
@@ -446,7 +444,6 @@ public class LandingFragment extends Fragment implements
                     Log.i(TAG, mCurrentLocation.toString());
                 }
                 Log.i(TAG, "start loc");
-
             }
         }
         startLocationUpdates();
@@ -534,8 +531,6 @@ public class LandingFragment extends Fragment implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private void loadFragment(Fragment frag, String tag) {
@@ -547,21 +542,18 @@ public class LandingFragment extends Fragment implements
         // Commit the transaction
         transaction.commit();
     }
+}//end class LF?
 
+protected class CustomViewHolder extends RecyclerView.ViewHolder {
+    protected TextView chatName;
+    protected TextView message;
+    protected CardView cView;
 
-    public class CustomViewHolder extends RecyclerView.ViewHolder {
-        protected TextView chatName;
-        protected TextView message;
-        protected CardView cView;
-
-        public CustomViewHolder(View view) {
-            super(view);
-            this.chatName = (TextView) view.findViewById(R.id.chat_username_textview);
-            this.message = (TextView) view.findViewById(R.id.chat_message_textview);
-            this.cView = (CardView) view.findViewById(R.id.list_card_view);
-            //this.cView.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        }
+    public CustomViewHolder(View view) {
+        super(view);
+        this.chatName = (TextView) view.findViewById(R.id.chat_username_textview);
+        this.message = (TextView) view.findViewById(R.id.chat_message_textview);
+        this.cView = (CardView) view.findViewById(R.id.list_card_view);
+        //this.cView.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
     }
 }
-
-}//end class LF
