@@ -2,10 +2,12 @@ package tcss450.uw.edu.group2project.chatApp;
 
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -17,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ImageButton;
@@ -76,6 +79,7 @@ public class LandingFragment extends Fragment implements
     private ProgressBar mProgressBar;
     private Weather curWeather;
     private ImageButton mNewChatButton;
+    private Button mLocButton;
 
     public LandingFragment() {
         // Required empty public constructor
@@ -115,9 +119,27 @@ public class LandingFragment extends Fragment implements
 
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mNewChatButton = v.findViewById(R.id.createNewChatFragNewChatButton);
+        v.findViewById(R.id.saved_loc_button).setOnClickListener(this::openLocList);
+        v.findViewById(R.id.landing_map_button).setOnClickListener(this::openMap);
+        v.findViewById(R.id.io_imageview).setOnClickListener(this::openURL);
         setupNewChatButton(savedInstanceState);
 
         return v;
+    }
+
+    private void openURL(View view) {
+        Intent browserIntent = new Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://www.weatherbit.io/"));
+        startActivity(browserIntent);
+    }
+
+    private void openMap(View view) {
+        loadFragment(new DisplayConditionsFragment(),"DisplayConditionsFragment");
+    }
+
+    private void openLocList(View view) {
+        loadFragment(new WeatherLocationList(),"WeatherLocationListFrag");
     }
 
     private boolean pressedDone(TextView exampleView, int actionId, KeyEvent event) {
@@ -128,13 +150,18 @@ public class LandingFragment extends Fragment implements
                 Weather cond = new Weather();
                 Geocoder geo = new Geocoder(getActivity());
                 try {
+
                     Address addresses = geo.getFromLocationName(exampleView.getText().toString(), 1).get(0);
                     cond.setZip(addresses.getPostalCode());
                     cond.setLat(addresses.getLatitude());
                     cond.setLon(addresses.getLongitude());
                     cond.setCity(addresses.getLocality());
+                } catch (IndexOutOfBoundsException e) {
+                    //TODO do some error message on zipcode search edittext
+                    Log.e("ZIPSS","Wrong zip");
+                    return  false;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e("ZIP","Wrong zip");
                 }
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("weather", cond);

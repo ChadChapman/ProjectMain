@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,6 +24,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -32,8 +32,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.WeatherDisplay.NetworkUtils;
@@ -45,16 +43,15 @@ import tcss450.uw.edu.group2project.utils.WeatherAsyncTask;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DisplayConditionsFragment extends Fragment implements OnMapReadyCallback{
+public class DisplayConditionsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
     private GoogleMap mMap;
     private MapView mMapView;
     private View mView;
-
+    private Marker mMarker;
     private Weather curWeather;
     private TextView location;
     private TextView fahrenheit;
     private ProgressBar mProgressBar;
-    private String city;
     private TextView mWeatherDesc;
     private Button mAdd;
     private Button mDel;
@@ -70,7 +67,6 @@ public class DisplayConditionsFragment extends Fragment implements OnMapReadyCal
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_display_conditions, container, false);
-        curWeather = (Weather) getArguments().getSerializable("weather");
         mWeatherDesc = mView.findViewById(R.id.WeatherText_textView);
         location = mView.findViewById(R.id.locDisp_textview);
         fahrenheit = mView.findViewById(R.id.fahrenheit_textView);
@@ -84,30 +80,34 @@ public class DisplayConditionsFragment extends Fragment implements OnMapReadyCal
                 getString(R.string.keys_shared_prefs),
                 Context.MODE_PRIVATE);
         mUserMemberID = prefs.getString(getString(R.string.keys_prefs_my_memberid), "MEMBERID NOT FOUND IN PREFS");
+        if (getArguments() != null) {
+            curWeather = (Weather) getArguments().getSerializable("weather");
+            seeIfLocIsSaved();
+            new WeatherAsyncTask(this::onPostSearchLoc).execute(NetworkUtils.buildUrlForCurr(curWeather.getCity()));
+        }
 
-        seeIfLocIsSaved();
-        city = curWeather.getCity();
-        new WeatherAsyncTask(this::onPostSearchLoc).execute(NetworkUtils.buildUrlForCurr(city));
         return mView;
     }
 
     private void delLoc(View view) {
         sendTask(buildHerokuAddress("deleteLoc").toString());
     }
+
     private void addLoc(View view) {
         sendTask(buildHerokuAddress("addLoc").toString());
     }
-    private void sendTask(String url){
+
+    private void sendTask(String url) {
         JSONObject msg = new JSONObject();
         try {
-            msg.put("memberid",mUserMemberID);
-            msg.put("city",curWeather.getCity());
-            msg.put("lat",curWeather.getLat());
-            msg.put("long",curWeather.getLon());
+            msg.put("memberid", mUserMemberID);
+            msg.put("city", curWeather.getCity());
+            msg.put("lat", curWeather.getLat());
+            msg.put("long", curWeather.getLon());
         } catch (JSONException e) {
             Log.e("Location", e.toString());
         }
-        new SendPostAsyncTask.Builder(url,msg).
+        new SendPostAsyncTask.Builder(url, msg).
                 onPostExecute(this::redrawButtons)
                 .build()
                 .execute();
@@ -130,6 +130,7 @@ public class DisplayConditionsFragment extends Fragment implements OnMapReadyCal
                 .build();
         return uri;
     }
+
     private void seeIfLocIsSaved() {
         String myMsg = new Uri.Builder()
                 .scheme("https")
@@ -138,8 +139,8 @@ public class DisplayConditionsFragment extends Fragment implements OnMapReadyCal
                 .appendPath("savedLoc")
                 .appendQueryParameter("memberid", mUserMemberID)
                 .appendQueryParameter("long", String.valueOf(curWeather.getLon()))
-                .appendQueryParameter("lat",String.valueOf(curWeather.getLat()))
-                .appendQueryParameter("city",curWeather.getCity())
+                .appendQueryParameter("lat", String.valueOf(curWeather.getLat()))
+                .appendQueryParameter("city", curWeather.getCity())
                 .build()
                 .toString();
 
@@ -153,15 +154,15 @@ public class DisplayConditionsFragment extends Fragment implements OnMapReadyCal
     private void getLoc(String result) {
         try {
             Log.e("result", String.valueOf(new JSONObject(result).getBoolean("success")));
-            if(new JSONObject(result).getBoolean("success")){
+            if (new JSONObject(result).getBoolean("success")) {
                 mDel.setVisibility(Button.VISIBLE);
                 mAdd.setVisibility(Button.GONE);
-            }else{
+            } else {
                 mAdd.setVisibility(Button.VISIBLE);
                 mDel.setVisibility(Button.GONE);
             }
         } catch (JSONException e) {
-            Log.e("result",e.toString());
+            Log.e("result", e.toString());
         }
     }
 
@@ -170,7 +171,7 @@ public class DisplayConditionsFragment extends Fragment implements OnMapReadyCal
         if (result != null && !result.equals("")) {
             try {
                 JSONArray temp = new JSONObject(result).getJSONArray("data");
-                parseResulte(temp.getJSONObject(0));
+                parseResult(temp.getJSONObject(0));
                 loadWeatherInfo();
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
             } catch (JSONException e) {
@@ -186,7 +187,7 @@ public class DisplayConditionsFragment extends Fragment implements OnMapReadyCal
         fahrenheit.setText(curWeather.getFarTemp());
     }
 
-    private void parseResulte(JSONObject result) {
+    private void parseResult(JSONObject result) {
         try {
             curWeather.setCityState(result.getString("city_name") + "," + result.getString("state_code"));
             curWeather.setFarTemp(result.getString("temp"));
@@ -199,10 +200,10 @@ public class DisplayConditionsFragment extends Fragment implements OnMapReadyCal
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
-        super.onViewCreated(view,savedInstanceState);
-        mMapView = (MapView)mView.findViewById(R.id.map_fragment);
-        if(mMapView!=null){
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mMapView = (MapView) mView.findViewById(R.id.map_fragment);
+        if (mMapView != null) {
             mMapView.onCreate(null);
             mMapView.onResume();
             mMapView.getMapAsync(this);
@@ -218,8 +219,37 @@ public class DisplayConditionsFragment extends Fragment implements OnMapReadyCal
         MapsInitializer.initialize(getContext());
         mMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(curWeather.getLat(),curWeather.getLon())).title(curWeather.getCity()).snippet(curWeather.getState()));
-        CameraPosition here = CameraPosition.builder().target(new LatLng(curWeather.getLat(),curWeather.getLon())).zoom(15).bearing(0).build();
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(here));
+        googleMap.setOnMapLongClickListener(this);
+        if (curWeather != null) {
+            mMarker = googleMap.addMarker(new MarkerOptions().position(new LatLng(curWeather.getLat(), curWeather.getLon())).title(curWeather.getCity()).snippet(curWeather.getState()));
+            CameraPosition here = CameraPosition.builder().target(new LatLng(curWeather.getLat(), curWeather.getLon())).zoom(15).bearing(0).build();
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(here));
+        }
+
+    }
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        if (curWeather == null)
+            curWeather = new Weather();
+
+
+        Geocoder geo = new Geocoder(getActivity());
+        try {
+            Address addresses = geo.getFromLocation(latLng.latitude, latLng.longitude, 1).get(0);
+            curWeather.setLat(latLng.latitude);
+            curWeather.setLon(latLng.longitude);
+            curWeather.setCity(addresses.getLocality());
+            if (mMarker == null)
+                mMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(curWeather.getLat(), curWeather.getLon())).title(curWeather.getCity()).snippet(curWeather.getState()));
+            mMarker.setPosition(latLng);
+            CameraPosition here = CameraPosition.builder().target(latLng).zoom(15).bearing(0).build();
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(here));
+            seeIfLocIsSaved();
+            new WeatherAsyncTask(this::onPostSearchLoc).execute(NetworkUtils.buildUrlForCurr(curWeather.getCity()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.e("clicked", "long Clicked");
     }
 }
