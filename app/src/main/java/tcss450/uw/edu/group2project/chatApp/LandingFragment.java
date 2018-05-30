@@ -112,7 +112,7 @@ public class LandingFragment extends Fragment implements
         EditText search = v.findViewById(R.id.search_zip_textview);
         search.setOnEditorActionListener(this::pressedDone);
         mLocationTextView = v.findViewById(R.id.location_textview);
-        celTextView = v.findViewById(R.id.cel_textview);
+        //celTextView = v.findViewById(R.id.cel_textview);
         fahTextView = v.findViewById(R.id.fah_textview);
         weatherTextView = v.findViewById(R.id.weather_textview);
         mProgressBar = v.findViewById(R.id.landing_progressbar);
