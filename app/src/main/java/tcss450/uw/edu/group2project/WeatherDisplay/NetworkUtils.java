@@ -13,14 +13,9 @@ import java.util.function.Consumer;
 
 public class NetworkUtils {
     private static final String TAG = "NewtorkUtils";
-    //    private final static String WEATHER_BASE_URL =
-//            "http://dataservice.accuweather.com/forecasts/v1/daily/5day/331423";
-//    private final static String LOCATION_BASE_URL =
-//            "http://dataservice.accuweather.com/locations/v1/postalcodes/search";
-//    private final static String Curr_BASE_URL =
-//            "http://dataservice.accuweather.com/currentconditions/v1/";
-    private final static String Curr_BASE_URL =
-            "http://api.weatherbit.io/v2.0/current";
+    private final static String WEATHER_BASE_URL =
+            "http://dataservice.accuweather.com/forecasts/v1/daily/5day/331423";
+    private final static String API_KEY = "QpnGCFMmidZOuQtwNIbt3ZnFknggEqRj";
 
     // newest -2    private final static String API_KEY = "QpnGCFMmidZOuQtwNIbt3ZnFknggEqRj";
 // newest -1    private final static String API_KEY = "28ibHBD6xBSpomybED2dEQgaAgc0pDh1";
@@ -62,25 +57,7 @@ public class NetworkUtils {
         }
         return url;
     }
-
-
-//    public static URL buildUrlForLocation(String zip) {
-//        Uri builtUri = Uri.parse(LOCATION_BASE_URL).buildUpon()
-//                .appendQueryParameter(PARAM_API_KEY, API_KEY)
-//                .appendQueryParameter("q", zip)
-//                .build();
-//
-//        URL url = null;
-//        try {
-//            url = new URL(builtUri.toString());
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
-//        return url;
-//    }
-
-
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
+    public static String getResponseFromHttpUrl(URL url)throws IOException{
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
             InputStream in = urlConnection.getInputStream();

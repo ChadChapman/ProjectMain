@@ -10,11 +10,13 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +26,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,6 +55,8 @@ import java.util.Locale;
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.WeatherDisplay.NetworkUtils;
 import tcss450.uw.edu.group2project.WeatherDisplay.Weather;
+import tcss450.uw.edu.group2project.WeatherDisplay.WeatherAdapter;
+import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
 import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
 import tcss450.uw.edu.group2project.utils.ChatFirebaseInstanceIDService;
 import tcss450.uw.edu.group2project.utils.ListenManager;
@@ -98,6 +104,8 @@ public class LandingFragment extends Fragment implements
     private Button mLocButton;
     private Uri mContactsUri;
     private String mUserMemberID;
+
+    private ImageButton mNewChatButton;
 
     public LandingFragment() {
         // Required empty public constructor
@@ -360,9 +368,20 @@ public class LandingFragment extends Fragment implements
                 , getString(R.string.keys_fragment_create_new_chat)));
     }
 
+    private void setupNewChatButton(Bundle paramBundle){
+
+        mNewChatButton.setOnClickListener(frag -> loadFragment(new CreateChatFragment()
+                , getString(R.string.keys_fragment_create_new_chat)));
+    }
+
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    private void handleError(Exception e) {
+        Log.e("LISTEN ERROR", e.getMessage());
+    }
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
             Log.i(TAG, "Connection Connects" + myCity.isEmpty() + (mLocationRequest == null));
@@ -372,6 +391,8 @@ public class LandingFragment extends Fragment implements
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
     public void onStop() {
         super.onStop();
         if (mGoogleApiClient != null) {
@@ -527,6 +548,7 @@ public class LandingFragment extends Fragment implements
         transaction.commit();
     }
 
+
     public class CustomViewHolder extends RecyclerView.ViewHolder {
         protected TextView chatName;
         protected TextView message;
@@ -541,3 +563,5 @@ public class LandingFragment extends Fragment implements
         }
     }
 }
+
+}//end class LF

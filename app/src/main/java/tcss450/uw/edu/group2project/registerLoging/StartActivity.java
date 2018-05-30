@@ -30,7 +30,9 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 public class StartActivity extends AppCompatActivity
         implements LoginFragment.OnLoginFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener,
-        VerifyFragment.OnFragmentInteractionListener {
+        VerifyFragment.OnFragmentInteractionListener
+,
+        PasswordChangeFragment.OnFragmentInteractionListener{
 
     private Credentials mCredentials;
     //private int mUserMemberID;
@@ -73,6 +75,23 @@ public class StartActivity extends AppCompatActivity
      * everything worked and now we are going into the app, starting with the chat activity
      */
     void loadVerifiedUserLandingActivity() {
+    /**
+     * Previously named loadLandingFragment, shit you not.
+     * Since this begins a new activity, now it's name reflects that.
+     *
+     * everything worked and now we are going into the app, starting with the chat activity
+     */
+    void loadVerifiedUserLandingActivity() {
+
+        SharedPreferences prefs =
+                getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        //save the memberid for later usage
+        prefs.edit().putString(
+                getString(R.string.keys_prefs_my_memberid),
+                mUserMemberIDStr)
+                .apply();
 
         SharedPreferences prefs =
                 getSharedPreferences(
@@ -146,6 +165,7 @@ public class StartActivity extends AppCompatActivity
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
                 //              .encodedAuthority(getString(R.string.ep_base_url))
+  //              .encodedAuthority(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_login))
                 .build();
 
@@ -162,6 +182,41 @@ public class StartActivity extends AppCompatActivity
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handleLoginOnPost)
                 .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    @Override
+    public void onPasswordClicked() {
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.start_constraint_layout, new PasswordChangeFragment(), getString(R.string.keys_fragment_password))
+                .addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
+    }
+
+    @Override
+    public void onPasswordReset(String username, String password) {
+        //build the web service URL
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_login))
+                .appendPath(getString(R.string.ep_changePassword))
+                .build();
+
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("username", username);
+            msg.put("password", password);
+        } catch (JSONException e) {
+            Log.e("StartActivity", "Reset Password problem");
+        }
+        Toast.makeText(this, "Sending new email", Toast.LENGTH_SHORT).show();
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handlePasswordReset)
                 .build().execute();
     }
 
@@ -282,6 +337,35 @@ public class StartActivity extends AppCompatActivity
                     + System.lineSeparator()
                     + e.getMessage());
         }
+    }
+
+    public void handlePasswordReset(String result) {
+        //No matter what we are returning to login from here
+        LoginFragment frag =
+                (LoginFragment) getSupportFragmentManager()
+                        .findFragmentByTag(
+                                getString(R.string.keys_fragment_login));
+        try {
+            JSONObject resultsJSON = new JSONObject(result);
+            boolean success = resultsJSON.getBoolean("success");
+
+            if (success) {
+                Toast.makeText(this, "Password updated.  Check your email, " +
+                        "you will need a new verifictation code", Toast.LENGTH_SHORT).show();
+            } else {
+                //Password change was unsuccessful. Go back to login and inform the user
+                frag.setError("Failed to change password, try again");
+            }
+        } catch (JSONException e) {
+            Log.e("JSON_PARSE_ERROR Change Password", result
+                    + System.lineSeparator()
+                    + e.getMessage());
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.start_constraint_layout,
+                        frag, getString(R.string.keys_fragment_login))
+                .addToBackStack(null)
+                .commit();
     }
 
 

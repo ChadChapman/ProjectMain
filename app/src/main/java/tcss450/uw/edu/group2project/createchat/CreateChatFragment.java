@@ -144,7 +144,7 @@ public class CreateChatFragment extends Fragment {
                 if (!mThisUsername.equals(post.optString("username"))) {
                     ContactFeedItem item = new ContactFeedItem();
                     item.setTitle(post.optString(getString(R.string.username)));
-                    //item.setThumbnail(imgAddress);
+                    item.setThumbnail(imgAddress);
                     item.setFname(post.optString(getString(R.string.firstname)));
                     item.setLname(post.optString(getString(R.string.lastname)));
                     mContactFeedItemList.add(item);
@@ -413,6 +413,7 @@ public class CreateChatFragment extends Fragment {
             if (success) { //yay, all members were added, let's go to the new chat
                 //TODO now add all members of this chat to the list of sets of usernames fo chats
                 Log.e("ADD ALL MEMBERS RETURNED :", "SUCCESS!");
+
                 //subscribe this user to the new chat "topic" in firebase
                 FirebaseMessaging.getInstance().subscribeToTopic(mNewChatNameStr); // can unsubscribeFromTopic("xyx"); also
                 loadNewChatInfoIntoPrefs(mNewChatIDStr);
@@ -421,6 +422,9 @@ public class CreateChatFragment extends Fragment {
                 bundle.putString("chatID", mNewChatIDStr);
                 newChatFrag.setArguments(bundle);
                 loadNewChatFrag(newChatFrag, getString(R.string.keys_fragment_chat));
+
+                loadNewChatInfoIntoPrefs(mNewChatIDStr);
+                loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
 
             } else {
                 //need to determine what ot return if not successful

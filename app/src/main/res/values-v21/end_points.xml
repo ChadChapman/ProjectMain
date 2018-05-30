@@ -14,6 +14,7 @@
     <!-- <string name="ep_base_url">localhost:5000</string> -->
     <string name="ep_login">login</string>
     <string name="ep_email">email</string>
+    <string name="ep_changePassword">changePassword</string>
     <string name="ep_register">register</string>
     <string name="ep_register_saveVerificationCode">saveVerificationCode</string>
     <string name="ep_base_localhost_5000">localhost:5000</string>
@@ -30,6 +31,7 @@
     <string name="ep_contacts_find_new">contacts/find</string>
     <string name="ep_contacts_verified">verified</string>
     <string name="ep_contacts_add">createContact</string>
+    <string name="ep_contacts_getAllContacts">getAllContacts</string>
 
     //Messages
     <string name="ep_send_message">sendMessages</string>

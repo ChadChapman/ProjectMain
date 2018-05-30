@@ -12,8 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,11 +21,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,9 +42,16 @@ public class ChatActivity extends AppCompatActivity
         SettingFragment.OnSettingFragmentInteractionListener {
 
     private String mUserMemberID;
+    //private int mUserMemberIDInt;
+    private ArrayList<ChatContact> mChatContactsArrList;
+    private Button mNewChatButton;
+
+
+
     public static int mTheme = UITheme.THEME_ONE;
     private static final int MY_PERMISSIONS_LOCATIONS = 814;
     private Fragment landing;
+    public static int mTextSize = UITextSize.SIZE_MEDIUM;
     public static int mTextSize = UITextSize.SIZE_MEDIUM;
 
     @Override
@@ -101,8 +105,16 @@ public class ChatActivity extends AppCompatActivity
         if (extras != null) {
             mUserMemberID = extras.getString("userMemberID");
         }
+
+
+
+//        mNewChatButton = findViewById(R.id.buttonStartNewChat);
+//
+//        mNewChatButton.setOnClickListener(button -> {
+//            startNewChat(mNewChatButton);
+//        });
         //let's just make an sqlite db and be done with it
-        //mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
+//        mAppDB = openOrCreateDatabase("rabbitChatDB", MODE_PRIVATE, null);
 //        setupDeviceDatabase();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
@@ -121,6 +133,10 @@ public class ChatActivity extends AppCompatActivity
 
     }
 
+    /**
+     * For now this is just being overridden but i think once we use an internal db, we will want to
+     * use it since the db should already be created
+     */
 
 /**
      * For now this is just being overridden but i think once we use an internal db, we will want to
@@ -168,6 +184,29 @@ public class ChatActivity extends AppCompatActivity
             // other 'case' lines to check for other
             // permissions this app might request
         }
+    }
+
+    /**
+     * Begin a new chat conversation with verified contact or friend.
+     * This process begins with selecting a person to chat with from a list of verified contacts.
+     * Once a user has been selected, a request is sent to that user to notify they have a new chat open.
+     * At that point, everything should be handed off.
+     *
+     * @param paramButton which button will be used to create a new chat
+     */
+    public void startNewChat(Button paramButton) {
+        //load blank chat frag
+        //add this frag to the back stack
+
+        //start a new chat with at least one other person
+        //load list of contacts to click on one to start a new chat
+        //
+        //get the other memberID
+        //hit endpoint to create a new chat
+        //on success load a fragment for a new chat
+        //on fail, return to this frag and give a long toast that signals failure
+
+
     }
 
     /**
@@ -270,7 +309,6 @@ public class ChatActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
             onLogout();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -332,8 +370,7 @@ public class ChatActivity extends AppCompatActivity
 
         int duration = Toast.LENGTH_SHORT;
         Context context = this.getBaseContext();
-        Toast toast = Toast.makeText(context, "Changed Theme to " + themeName, duration);
-        toast.show();
+        Toast toast = Toast.makeText(context, "Changed Theme to " + themeName, duration);toast.show();
     }
 
     @Override
