@@ -113,6 +113,7 @@ public class ChatActivity extends AppCompatActivity
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION
                             , Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_LOCATIONS);
+
         }
 
 
@@ -148,7 +149,7 @@ public class ChatActivity extends AppCompatActivity
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                        this.recreate();
                     // permission was granted, yay! Do the
                     // locations-related task you need to do.
 

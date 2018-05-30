@@ -144,7 +144,7 @@ public class LandingFragment extends Fragment implements
         v.findViewById(R.id.io_imageview).setOnClickListener(this::openURL);
         setupNewChatButton(savedInstanceState);
         loadMessages();
-        return v;
+                return v;
     }
     /**
      * For loading all messages
