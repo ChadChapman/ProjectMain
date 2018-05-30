@@ -41,8 +41,8 @@ import tcss450.uw.edu.group2project.utils.UITheme;
 public class ChatListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter adapter;
-    private ProgressBar progressBar;
     private List<MessageFeedItem> messageFeedItemList;
+    private ProgressBar progressBar;
     private String mUserMemberIDStr;
     private Uri mContactsUri;
     private View v;
@@ -164,12 +164,14 @@ public class ChatListFragment extends Fragment {
      */
     private void parseHerokuResult(String result) {
         try {
+            Log.e(",c", result);
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray(getString(R.string.contacts));
             messageFeedItemList = new ArrayList<>();
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
                 MessageFeedItem item = new MessageFeedItem();
+                item.setChatName(post.optString("name"));
                 item.setChatid(post.optString(getString(R.string.chatid)));
                 item.setMessage(post.optString(getString(R.string.message)));
                 messageFeedItemList.add(item);
@@ -200,7 +202,7 @@ public class ChatListFragment extends Fragment {
                     @Override
                     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
                         View view = LayoutInflater.from(viewGroup.getContext())
-                                .inflate(R.layout.messaging_list_rows, null);
+                                .inflate(R.layout.chats_list_rows, null);
                         return new CustomViewHolder(view);
                     }
 
@@ -211,7 +213,7 @@ public class ChatListFragment extends Fragment {
 
 
                         //Setting text view title
-                        ((CustomViewHolder) customViewHolder).chatid.setText(feedItem.getChatid());
+                        ((CustomViewHolder) customViewHolder).chatName.setText(feedItem.getChatName());
                         ((CustomViewHolder) customViewHolder).message.setText(feedItem.getMessage());
 
                         View.OnClickListener listener = new View.OnClickListener() {
@@ -220,7 +222,7 @@ public class ChatListFragment extends Fragment {
                                 onMsgItemClick(feedItem);
                             }
                         };
-                        ((CustomViewHolder) customViewHolder).chatid.setOnClickListener(listener);
+                        ((CustomViewHolder) customViewHolder).chatName.setOnClickListener(listener);
                         ((CustomViewHolder) customViewHolder).message.setOnClickListener(listener);
                     }
                     @Override
@@ -248,6 +250,7 @@ public class ChatListFragment extends Fragment {
     private void onMsgItemClick(MessageFeedItem item) {
         Bundle bundle = new Bundle();
         bundle.putString("chatID", item.getChatid());
+        bundle.putString("chatName",item.getChatName() );
         Fragment chats = new ChatFragment();
         chats.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager()
@@ -259,15 +262,15 @@ public class ChatListFragment extends Fragment {
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        protected TextView chatid;
+        protected TextView chatName;
         protected TextView message;
         protected CardView cView;
 
         public CustomViewHolder(View view) {
             super(view);
-            this.chatid = (TextView) view.findViewById(R.id.username);
-            this.message = (TextView) view.findViewById(R.id.message);
-            this.cView = (CardView) view.findViewById(R.id.message_card_view);
+            this.chatName = (TextView) view.findViewById(R.id.chat_username_textview);
+            this.message = (TextView) view.findViewById(R.id.chat_message_textview);
+            this.cView = (CardView) view.findViewById(R.id.list_card_view);
             //this.cView.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
         }
     }
