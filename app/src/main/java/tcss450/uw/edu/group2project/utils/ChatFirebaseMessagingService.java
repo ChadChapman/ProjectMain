@@ -5,8 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -17,8 +15,6 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.chatApp.ChatActivity;
-
-//import group2.tcss450.uw.edu.chatapp.Activities.ChatListActivity;
 
 /**
  @credit: https://developer.android.com/training/notify-user/build-notification#Updating
@@ -54,13 +50,17 @@ public class ChatFirebaseMessagingService extends FirebaseMessagingService {
         // message, here is where that should be initiated. See sendNotification method below.
     }
 
+    /*
+        This is where the magic happens.  Send a notification then open whatever
+        activity from the notification.  
+     */
     private void sendNotification(RemoteMessage.Notification notification) {
         Intent intent = new Intent(this, ChatActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this
                 , 0
                 , intent
                 , PendingIntent.FLAG_ONE_SHOT);
-        //should probably clear out old notifications? is this stacking, spamming them?
+        //should probably clear out old notifications? is this stacking?, spamming them?
         createNotificationChannel();
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_chat_notif)
@@ -72,9 +72,12 @@ public class ChatFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(mFBNotificationIDInt, notificationBuilder.build());
-
     }
 
+    /*
+        Basically straight from the FireBase / Android docs.
+        Because why wouldn't you make a separate thing for some APIs but support a ton of them?
+     */
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
