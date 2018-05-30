@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -124,9 +125,10 @@ public class WeatherLocationList extends Fragment {
 
                         }
                     };
-                    ((CustomViewHolder) customViewHolder).city.setOnClickListener(listener);
-                    ((CustomViewHolder) customViewHolder).lat.setOnClickListener(listener);
-                    ((CustomViewHolder) customViewHolder).lng.setOnClickListener(listener);
+                    ((CustomViewHolder) customViewHolder).v.setOnClickListener(listener);
+//                    ((CustomViewHolder) customViewHolder).city.setOnClickListener(listener);
+//                    ((CustomViewHolder) customViewHolder).lat.setOnClickListener(listener);
+//                    ((CustomViewHolder) customViewHolder).lng.setOnClickListener(listener);
 
                 }
 
@@ -164,9 +166,10 @@ public class WeatherLocationList extends Fragment {
         private final TextView city;
         private final TextView lat;
         private final TextView lng;
-
+        private final CardView v;
         public CustomViewHolder(View view) {
             super(view);
+            v = view.findViewById(R.id.cardView);
             city = view.findViewById(R.id.weather_list_city);
             lat = view.findViewById(R.id.weather_list_lat);
             lng = view.findViewById(R.id.weather_list_lng);
