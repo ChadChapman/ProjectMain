@@ -54,6 +54,8 @@ public class LoginFragment extends Fragment {
         b.setOnClickListener(this::attemptLogin);
         Button c = (Button) view.findViewById(R.id.login_button_register);
         c.setOnClickListener(this::registerOpen);
+        c = (Button) view.findViewById(R.id.login_button_reset_password);
+        c.setOnClickListener(this::changePassword);
         return view;
     }
 
@@ -72,6 +74,13 @@ public class LoginFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void changePassword(View view) {
+        if (mListener != null) {
+
+            mListener.onPasswordClicked();
+        }
     }
 
     private void registerOpen(View view) {
@@ -133,6 +142,8 @@ public class LoginFragment extends Fragment {
         void onLoginAttempt(Credentials credentials);
 
         void onRegisterClicked();
+
+        void onPasswordClicked();
     }
 }
 

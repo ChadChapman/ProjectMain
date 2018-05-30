@@ -25,8 +25,9 @@
     <string name="login_register_edit_text_username">username</string>
     <string name="login_register_edit_text_password">password</string>
     <string name="login_button_login">Login</string>
-    <string name="login_register_button_register">Register</string>
     <string name="login_check_box_stay_logged_in">Stay logged in</string>
+    <string name="login_button_reset_password">Reset Password</string>
+    <string name="login_register_button_register">Register</string>
     <string name="register_edit_text_first_name">First Name</string>
     <string name="register_edit_text_last_name">Last Name</string>
     <string name="register_edit_text_email">Email</string>
@@ -38,6 +39,12 @@
     <string name="verify_check_button">Submit Code</string>
 
     <string name="chat_start_new_chat_button">new chat</string>
+
+    <!--ChangePasswordFragment -->
+    <string name="change_password_textview">Enter your username and new password</string>
+    <string name="change_password_username">Username</string>
+    <string name="change_password_password">Password</string>
+    <string name="change_password_submit_button">Send new verification email</string>
 
     <!-- Landing Fragment -->
     <string name="landing_button_logout">Logout</string>

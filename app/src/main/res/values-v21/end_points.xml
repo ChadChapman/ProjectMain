@@ -16,6 +16,7 @@
     <string name="ep_email">email</string>
     <string name="ep_register">register</string>
     <string name="ep_register_saveVerificationCode">saveVerificationCode</string>
+    <string name="ep_changePassword">changePassword</string>
     <string name="ep_base_localhost_5000">localhost:5000</string>
     <string name="ep_contacts">contacts</string>
     <string name="ep_locations">locations</string>
