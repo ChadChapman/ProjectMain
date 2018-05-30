@@ -123,7 +123,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:src="@mipmap/ic_rabbit_logo"
+        android:src="@mipmap/ic_rabbit_logo_translucent"
         app:layout_constraintBottom_toTopOf="@+id/login_edit_text_username"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
