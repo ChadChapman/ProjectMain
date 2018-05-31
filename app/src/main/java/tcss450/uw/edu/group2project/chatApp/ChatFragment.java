@@ -148,24 +148,28 @@ public class ChatFragment extends Fragment {
                 .appendQueryParameter("chatId", mUserChatIDStr)
                 .build();
 
-
-        if (prefs.contains(getString(R.string.keys_prefs_time_stamp))) {
-            //ignore all of the seen messages. You may want to store these messages locally
-            mListenManager = new ListenManager.Builder(retrieve.toString(),
-                    this::publishProgress)
-                    .setTimeStamp(prefs.getString(getString(R.string.keys_prefs_time_stamp), "0"))
-                    .setExceptionHandler(this::handleError)
-                    .setDelay(1000)
-                    .build();
-        } else {
-            //no record of a saved timestamp. must be a first time login
-            mListenManager = new ListenManager.Builder(retrieve.toString(),
-                    this::publishProgress)
-                    .setExceptionHandler(this::handleError)
-                    .setDelay(1000)
-                    .build();
-
-        }
+        /*
+            TODO
+            somehow, the 2 lambdas below throw a ConcurrentModificationException. I know, right.
+            anyways, they do.
+         */
+//        if (prefs.contains(getString(R.string.keys_prefs_time_stamp))) {
+//            //ignore all of the seen messages. You may want to store these messages locally
+//            mListenManager = new ListenManager.Builder(retrieve.toString(),
+//                    this::publishProgress)
+//                    .setTimeStamp(prefs.getString(getString(R.string.keys_prefs_time_stamp), "0"))
+//                    .setExceptionHandler(this::handleError)
+//                    .setDelay(1000)
+//                    .build();
+//        } else {
+//            //no record of a saved timestamp. must be a first time login
+//            mListenManager = new ListenManager.Builder(retrieve.toString(),
+//                    this::publishProgress)
+//                    .setExceptionHandler(this::handleError)
+//                    .setDelay(1000)
+//                    .build();
+//
+//        }
         adapter = new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             @NonNull
             @Override
@@ -211,20 +215,20 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mListenManager.startListening();
+//TODO        mListenManager.startListening();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        String latestMessage = mListenManager.stopListening();
+//TODO        String latestMessage = mListenManager.stopListening();
         SharedPreferences prefs =
                 getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
         //save the most recent message timestamp
-        prefs.edit().putString(getString(R.string.keys_prefs_time_stamp),
-                latestMessage)
-                .apply();
+//TODO        prefs.edit().putString(getString(R.string.keys_prefs_time_stamp),
+//                latestMessage)
+//                .apply();
     }
 
     private void sendMessage(final View theButton) {
