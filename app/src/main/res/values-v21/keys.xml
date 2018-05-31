@@ -13,7 +13,7 @@
     <string name="keys_prefs_chat_names_set">chatnamesset</string>
     <string name="keys_prefs_theme">theme</string>
     <string name="keys_prefs_text_size">textsize</string>
-
+    <string name="keys_prefs_notification_channel_name">channelName</string>
     <string name="keys_bundle_vcode">vCode</string>
 
     <string name="keys_fragment_login">loginFragmentTag</string>
