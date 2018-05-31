@@ -21,6 +21,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,8 +31,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import java.util.ArrayList;
+
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
+import tcss450.uw.edu.group2project.model.ChatContact;
 import tcss450.uw.edu.group2project.registerLoging.StartActivity;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.UITextSize;
@@ -52,13 +57,10 @@ public class ChatActivity extends AppCompatActivity
     private static final int MY_PERMISSIONS_LOCATIONS = 814;
     private Fragment landing;
     public static int mTextSize = UITextSize.SIZE_MEDIUM;
-    public static int mTextSize = UITextSize.SIZE_MEDIUM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         // Update theme color
         setTheme(UITheme.getThemeId(mTheme));
@@ -209,29 +211,6 @@ public class ChatActivity extends AppCompatActivity
 
     }
 
-    /**
-     * Begin a new chat conversation with verified contact or friend.
-     * This process begins with selecting a person to chat with from a list of verified contacts.
-     * Once a user has been selected, a request is sent to that user to notify they have a new chat open.
-     * At that point, everything should be handed off.
-     *
-     * @param paramButton which button will be used to create a new chat
-     */
-    public void startNewChat(Button paramButton) {
-        //load blank chat frag
-        //add this frag to the back stack
-
-        //start a new chat with at least one other person
-        //load list of contacts to click on one to start a new chat
-        //
-        //get the other memberID
-        //hit endpoint to create a new chat
-        //on success load a fragment for a new chat
-        //on fail, return to this frag and give a long toast that signals failure
-
-
-    }
-
     private void loadFragment(Fragment frag, String tag) {
         // Pop off everything up to and including the current tab
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -272,7 +251,6 @@ public class ChatActivity extends AppCompatActivity
         } else if (id == R.id.action_logout) {
             onLogout();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -330,8 +308,6 @@ public class ChatActivity extends AppCompatActivity
         ActivityCompat.finishAffinity(this);
         startActivity(intent);
     }
-
-
 
     @Override
     public void onSettingThemeButtonClicked(int color) {
