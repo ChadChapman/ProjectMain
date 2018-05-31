@@ -31,7 +31,8 @@ public class StartActivity extends AppCompatActivity
         implements LoginFragment.OnLoginFragmentInteractionListener,
         RegisterFragment.OnFragmentInteractionListener,
         VerifyFragment.OnFragmentInteractionListener
-{
+,
+        PasswordChangeFragment.OnFragmentInteractionListener{
 
     private Credentials mCredentials;
     //private int mUserMemberID;
@@ -43,7 +44,6 @@ public class StartActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-
 
 
         if (savedInstanceState == null) {
@@ -71,6 +71,13 @@ public class StartActivity extends AppCompatActivity
     /**
      * Previously named loadLandingFragment, shit you not.
      * Since this begins a new activity, now it's name reflects that.
+     * <p>
+     * everything worked and now we are going into the app, starting with the chat activity
+     */
+
+    /**
+     * Previously named loadLandingFragment, shit you not.
+     * Since this begins a new activity, now it's name reflects that.
      *
      * everything worked and now we are going into the app, starting with the chat activity
      */
@@ -86,6 +93,11 @@ public class StartActivity extends AppCompatActivity
                 mUserMemberIDStr)
                 .apply();
 
+//        SharedPreferences prefs =
+//                getSharedPreferences(
+//                        getString(R.string.keys_shared_prefs),
+//                        Context.MODE_PRIVATE);
+        mUserMemberIDStr = prefs.getString(getString(R.string.keys_prefs_my_memberid), "MEMBERID NOT FOUND IN PREFS");
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("userMemberID", mUserMemberIDStr);
         ActivityCompat.finishAffinity(this);
@@ -152,6 +164,7 @@ public class StartActivity extends AppCompatActivity
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
+                //              .encodedAuthority(getString(R.string.ep_base_url))
   //              .encodedAuthority(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_login))
                 .build();
@@ -169,6 +182,41 @@ public class StartActivity extends AppCompatActivity
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handleLoginOnPost)
                 .onCancelled(this::handleErrorsInTask)
+                .build().execute();
+    }
+
+    @Override
+    public void onPasswordClicked() {
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.start_constraint_layout, new PasswordChangeFragment(), getString(R.string.keys_fragment_password))
+                .addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
+    }
+
+    @Override
+    public void onPasswordReset(String username, String password) {
+        //build the web service URL
+        Uri uri = new Uri.Builder()
+                .scheme("https")
+                .appendPath(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_login))
+                .appendPath(getString(R.string.ep_changePassword))
+                .build();
+
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("username", username);
+            msg.put("password", password);
+        } catch (JSONException e) {
+            Log.e("StartActivity", "Reset Password problem");
+        }
+        Toast.makeText(this, "Sending new email", Toast.LENGTH_SHORT).show();
+        new SendPostAsyncTask.Builder(uri.toString(), msg)
+                .onPostExecute(this::handlePasswordReset)
                 .build().execute();
     }
 
@@ -227,7 +275,7 @@ public class StartActivity extends AppCompatActivity
                     fragmentTransaction.commit();
                     //frag.setError("Log in unsuccessful");
                 } else {
-                    Log.d("LoggingTest","vCode = " + vCode);
+                    Log.d("LoggingTest", "vCode = " + vCode);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(getString(R.string.keys_bundle_vcode), vCode);
 
@@ -291,6 +339,35 @@ public class StartActivity extends AppCompatActivity
         }
     }
 
+    public void handlePasswordReset(String result) {
+        //No matter what we are returning to login from here
+        LoginFragment frag =
+                (LoginFragment) getSupportFragmentManager()
+                        .findFragmentByTag(
+                                getString(R.string.keys_fragment_login));
+        try {
+            JSONObject resultsJSON = new JSONObject(result);
+            boolean success = resultsJSON.getBoolean("success");
+
+            if (success) {
+                Toast.makeText(this, "Password updated.  Check your email, " +
+                        "you will need a new verifictation code", Toast.LENGTH_SHORT).show();
+            } else {
+                //Password change was unsuccessful. Go back to login and inform the user
+                frag.setError("Failed to change password, try again");
+            }
+        } catch (JSONException e) {
+            Log.e("JSON_PARSE_ERROR Change Password", result
+                    + System.lineSeparator()
+                    + e.getMessage());
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.start_constraint_layout,
+                        frag, getString(R.string.keys_fragment_login))
+                .addToBackStack(null)
+                .commit();
+    }
+
 
 
     /*
@@ -299,16 +376,18 @@ public class StartActivity extends AppCompatActivity
 
 
     private void checkStayLoggedIn() {
+        SharedPreferences prefs =
+                getSharedPreferences(
+                        getString(R.string.keys_shared_prefs),
+                        Context.MODE_PRIVATE);
+        //save the username for later usage
+        prefs.edit().putString(
+                getString(R.string.keys_prefs_my_memberid),
+                mUserMemberIDStr)
+                .apply();
         if (((CheckBox) findViewById(R.id.login_check_box_stay_logged_in)).isChecked()) {
-            SharedPreferences prefs =
-                    getSharedPreferences(
-                            getString(R.string.keys_shared_prefs),
-                            Context.MODE_PRIVATE);
-            //save the username for later usage
-            prefs.edit().putString(
-                    getString(R.string.keys_prefs_username),
-                    mCredentials.getUsername())
-                    .apply();
+
+
             //save the users “want” to stay logged in
             prefs.edit().putBoolean(
                     getString(R.string.keys_prefs_stay_logged_in),

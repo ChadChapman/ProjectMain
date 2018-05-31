@@ -9,12 +9,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +31,11 @@ import java.util.List;
 import tcss450.uw.edu.group2project.R;
 //import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
 import tcss450.uw.edu.group2project.model.MessageFeedItem;
+//import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
+import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
+import tcss450.uw.edu.group2project.model.MessageFeedItem;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
+import tcss450.uw.edu.group2project.utils.UITheme;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,15 +45,17 @@ public class ChatListFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private ProgressBar progressBar;
     private List<MessageFeedItem> messageFeedItemList;
+
     private String mUserMemberIDStr;
     private int mUserMemberID;
     private Uri mContactsUri;
     private View v;
+    private ImageButton mCreateNewChatBtn;
 
     public ChatListFragment() {
         // Required empty public constructor
     }
-
+    //probably need to get rid of this
     @SuppressLint("ValidFragment")
     public ChatListFragment(String mID) {
         // Required empty public constructor
@@ -62,12 +70,54 @@ public class ChatListFragment extends Fragment {
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.message_recycler_view));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mCreateNewChatBtn = v.findViewById(R.id.createNewChatButtonChatList);
         setupFragmentView();
+        RecyclerView rView = v.findViewById(R.id.message_recycler_view);
+
+        TextView currentChats = v.findViewById(R.id.current_chats_textview);
+
+
         loadMessages();
+
+
+
+
+
+        if(ChatActivity.mTheme == 1){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            currentChats.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+            currentChats.setTextSize(36);
+            currentChats.setText("Current Chats");
+        }else if(ChatActivity.mTheme == 2){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary2));
+            currentChats.setBackgroundColor(getResources().getColor(R.color.colorAccent2));
+            currentChats.setTextColor(getResources().getColor(R.color.colorPrimaryDark2));
+            currentChats.setTextSize(36);
+            currentChats.setText("Current Chats");
+
+        }else if(ChatActivity.mTheme == 3){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary3));
+            currentChats.setBackgroundColor(getResources().getColor(R.color.colorAccent3));
+            currentChats.setTextColor(getResources().getColor(R.color.colorPrimaryDark3));
+            currentChats.setTextSize(36);
+            currentChats.setText("Current Chats");
+        }else if(ChatActivity.mTheme == 4){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary4));
+            currentChats.setBackgroundColor(getResources().getColor(R.color.colorAccent4));
+            currentChats.setTextColor(getResources().getColor(R.color.colorPrimaryDark4));
+            currentChats.setTextSize(36);
+            currentChats.setText("Current Chats");
+
+        }
+
+
+
         return v;
     }
 
     private void setupFragmentView() {
+        mCreateNewChatBtn.setOnClickListener(frag -> loadFragment(new CreateChatFragment()
+                , getString(R.string.keys_fragment_create_new_chat)));
 
         progressBar = (ProgressBar) (v.findViewById(R.id.message_progressBar));
         mContactsUri = buildHerokuAddress(getString(R.string.ep_get_recent_chat));
@@ -77,6 +127,8 @@ public class ChatListFragment extends Fragment {
                         Context.MODE_PRIVATE);
         //mThisUsername = prefs.getString("username", "USERNAME NOT FOUND IN PREFS!");
         mUserMemberIDStr = prefs.getString("mymemberid", "MEMBERID NOT FOUND IN PREFS");
+
+
     }
 
     /**
@@ -123,12 +175,14 @@ public class ChatListFragment extends Fragment {
      */
     private void parseHerokuResult(String result) {
         try {
+            Log.e(",c", result);
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray(getString(R.string.contacts));
             messageFeedItemList = new ArrayList<>();
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
                 MessageFeedItem item = new MessageFeedItem();
+                item.setChatName(post.optString("name"));
                 item.setChatid(post.optString(getString(R.string.chatid)));
                 item.setMessage(post.optString(getString(R.string.message)));
                 messageFeedItemList.add(item);
@@ -159,7 +213,7 @@ public class ChatListFragment extends Fragment {
                     @Override
                     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
                         View view = LayoutInflater.from(viewGroup.getContext())
-                                .inflate(R.layout.messaging_list_rows, null);
+                                .inflate(R.layout.chats_list_rows, null);
                         return new CustomViewHolder(view);
                     }
 
@@ -168,8 +222,9 @@ public class ChatListFragment extends Fragment {
                         //FeedItem feedItem = feedItemList.get(i);
                         MessageFeedItem feedItem = messageFeedItemList.get(i);
 
+
                         //Setting text view title
-                        ((CustomViewHolder) customViewHolder).chatid.setText(feedItem.getChatid());
+                        ((CustomViewHolder) customViewHolder).chatName.setText(feedItem.getChatName());
                         ((CustomViewHolder) customViewHolder).message.setText(feedItem.getMessage());
 
                         View.OnClickListener listener = new View.OnClickListener() {
@@ -178,7 +233,7 @@ public class ChatListFragment extends Fragment {
                                 onMsgItemClick(feedItem);
                             }
                         };
-                        ((CustomViewHolder) customViewHolder).chatid.setOnClickListener(listener);
+                        ((CustomViewHolder) customViewHolder).chatName.setOnClickListener(listener);
                         ((CustomViewHolder) customViewHolder).message.setOnClickListener(listener);
                     }
                     @Override
@@ -206,6 +261,7 @@ public class ChatListFragment extends Fragment {
     private void onMsgItemClick(MessageFeedItem item) {
         Bundle bundle = new Bundle();
         bundle.putString("chatID", item.getChatid());
+        bundle.putString("chatName",item.getChatName() );
         Fragment chats = new ChatFragment();
         chats.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager()
@@ -217,14 +273,27 @@ public class ChatListFragment extends Fragment {
     }
 
     public class CustomViewHolder extends RecyclerView.ViewHolder {
-        protected TextView chatid;
+        protected TextView chatName;
         protected TextView message;
+        protected CardView cView;
 
         public CustomViewHolder(View view) {
             super(view);
-            this.chatid = (TextView) view.findViewById(R.id.username);
-            this.message = (TextView) view.findViewById(R.id.message);
+            this.chatName = (TextView) view.findViewById(R.id.chat_username_textview);
+            this.message = (TextView) view.findViewById(R.id.chat_message_textview);
+            this.cView = (CardView) view.findViewById(R.id.list_card_view);
+            //this.cView.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
         }
+    }
+
+    private void loadFragment(Fragment frag, String tag) {
+       // Log.e("MADE IT TO lOADFRAGMENT() IN LANDING FRAG", tag);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, frag, tag)
+                .addToBackStack(null);
+        // Commit the transaction
+        transaction.commit();
     }
 
 }

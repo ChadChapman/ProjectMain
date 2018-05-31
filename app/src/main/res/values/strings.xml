@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">Rabbit Chat</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -10,6 +11,7 @@
     <string name="message">message</string>
     <string name="chatid">chatid</string>
 
+    <string name="notifications_channel_name">general channel</string>
     <string name="memberid">memberid</string>
     <string name="contacts">contacts</string>
     <string name="firstname">firstname</string>
@@ -27,10 +29,18 @@
     <string name="login_button_login">Login</string>
     <string name="login_register_button_register">Register</string>
     <string name="login_check_box_stay_logged_in">Stay logged in</string>
+    <string name="login_button_reset_password">Reset Password</string>
     <string name="register_edit_text_first_name">First Name</string>
     <string name="register_edit_text_last_name">Last Name</string>
     <string name="register_edit_text_email">Email</string>
+    <string name="firebase_iidtoken">token</string>
     <string name="contacts_textview_fragheader">Chat Contacts</string>
+
+    <!--ChangePasswordFragment -->
+    <string name="change_password_textview">Enter your username and new password</string>
+    <string name="change_password_username">Username</string>
+    <string name="change_password_password">Password</string>
+    <string name="change_password_submit_button">Send new verification email</string>
 
     <!--Verify Fragment -->
     <string name="verify_textview">Enter your verification code</string>
@@ -52,27 +62,12 @@
     <!-- Create a New Chat -->
     <string name="create_new_chat_add_users_textview_default">click on a friend to add them</string>
 
-    <!-- >>>>>> SQLITE3 INTERNAL DEVICE DB QUERY STRINGS GO HERE <<<<<< -->
-    <!-- >>>>>> naming example: sqlite_create_table_ChatContact <<<<<< -->
-    <string name="sqlite_create_table_ChatContact">CREATE TABLE IF NOT EXISTS
-        RabbitChatDB.ChatContact ( memberid INTEGER PRIMARY KEY,  username TEXT UNIQUE NOT NULL
-        , fname TEXT, lname TEXT, created_at TEXT, last_modified TEXT, verified TEXT
-        , image_link TEXT , display_color TEXT</string>
-
-
-    <!-- >>>>>> HEROKU POSTGRES DB QUERY STRINGS GO HERE <<<<<< -->
-
     <!-- Setting Fragment -->
     <string name="setting_text_view_theme">Select App Theme</string>
     <string name="setting_button_theme_1">Underwater Haze</string>
     <string name="setting_button_theme_2">Arctic Blast</string>
     <string name="setting_button_theme_3">Magentalman</string>
     <string name="setting_button_theme_4">Minty Breeze</string>
-
-    <string name="setting_text_view_text_size">Select App Text Size</string>
-    <string name="setting_button_text_size_small">Small</string>
-    <string name="setting_button_text_size_medium">Medium</string>
-    <string name="setting_button_text_size_large">Large</string>
 
     <!-- Search Fragment -->
     <string name="search_text_view_username">Username</string>
@@ -82,9 +77,13 @@
     <string name="search_button_search_by_username">Search by username</string>
     <string name="search_button_search_by_email">Search by email</string>
     <string name="search_button_search_by_name">Search by name</string>
-
+    <string name="setting_text_view_text_size">Select App Text Size</string>
+    <string name="setting_button_text_size_small">Small</string>
+    <string name="setting_button_text_size_medium">Medium</string>
+    <string name="setting_button_text_size_large">Large</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_chat">ChatActivity</string>
+
 </resources>

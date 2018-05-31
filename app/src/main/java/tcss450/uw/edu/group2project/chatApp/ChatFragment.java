@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.model.ChatFeedItem;
 //import tcss450.uw.edu.group2project.model.Feeders.ChatFeedItem;
 //import tcss450.uw.edu.group2project.model.Feeders.MessageFeedItem;
 import tcss450.uw.edu.group2project.model.ChatFeedItem;
@@ -39,11 +42,13 @@ public class ChatFragment extends Fragment {
     private String mUsername;
     private String mSendUrl;
     private ListenManager mListenManager;
-
-
+    private ImageButton sendButton;
+    private Button leaveButton;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter adapter;
     private List<ChatFeedItem> messageFeedItemList;
+    private String mUserMemberID;
+
 
     public ChatFragment() {
         // Required empty public constructor
@@ -52,14 +57,30 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_chat_1, container, false);
-        v.findViewById(R.id.trychatSendButton).setOnClickListener(this::sendMessage);
+        View v = inflater.inflate(R.layout.fragment_chat, container, false);
+        sendButton = v.findViewById(R.id.trychatSendButton);
+        sendButton.setOnClickListener(this::sendMessage);
+        leaveButton =  v.findViewById(R.id.leave_button);
+        leaveButton.setOnClickListener(this::leaveChat);
         messageFeedItemList = new ArrayList<>();
-        mUserChatIDStr = getArguments().getString("chatID");
+
+        messageFeedItemList = new ArrayList<>();
+        if (getArguments() != null) {
+            mUserChatIDStr = getArguments().getString("chatID");
+            ((TextView)v.findViewById(R.id.chat_name_textview)).setText(getArguments().getString("chatName"));
+        }
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.trychat_recyclerview));
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        SharedPreferences prefs = getActivity().getSharedPreferences(
+                getString(R.string.keys_shared_prefs),
+                Context.MODE_PRIVATE);
+        mUserMemberID = prefs.getString(getString(R.string.keys_prefs_my_memberid), "MEMBERID NOT FOUND IN PREFS");
+
+
+
+
         return v;
     }
 
@@ -68,6 +89,35 @@ public class ChatFragment extends Fragment {
         mUserChatIDStr = getArguments().getString("chatID");
 
     }
+
+    private void leaveChat(View view) {
+        sendButton.setEnabled(false);
+        leaveButton.setEnabled(false);
+        String url = new Uri.Builder()
+                .scheme("https")
+                .authority(getString(R.string.ep_base_url))
+                .appendPath(getString(R.string.ep_chat))
+                .appendPath("leaveChat")
+                .build()
+                .toString();
+        JSONObject obj = new JSONObject();
+
+        try {
+            obj.put("chatid",mUserChatIDStr);
+            obj.put("memberid",mUserMemberID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.e("url",url);
+        Log.e("obj",obj.toString());
+        new SendPostAsyncTask.Builder(url, obj).onPostExecute(this::loadChatListFragment)
+                .build().execute();
+    }
+
+    private void loadChatListFragment(String s) {
+        getActivity().onBackPressed();
+    }
+
 
     @Override
     public void onStart() {
@@ -98,24 +148,28 @@ public class ChatFragment extends Fragment {
                 .appendQueryParameter("chatId", mUserChatIDStr)
                 .build();
 
-
-        if (prefs.contains(getString(R.string.keys_prefs_time_stamp))) {
-            //ignore all of the seen messages. You may want to store these messages locally
-            mListenManager = new ListenManager.Builder(retrieve.toString(),
-                    this::publishProgress)
-                    .setTimeStamp(prefs.getString(getString(R.string.keys_prefs_time_stamp), "0"))
-                    .setExceptionHandler(this::handleError)
-                    .setDelay(1000)
-                    .build();
-        } else {
-            //no record of a saved timestamp. must be a first time login
-            mListenManager = new ListenManager.Builder(retrieve.toString(),
-                    this::publishProgress)
-                    .setExceptionHandler(this::handleError)
-                    .setDelay(1000)
-                    .build();
-
-        }
+        /*
+            TODO
+            somehow, the 2 lambdas below throw a ConcurrentModificationException. I know, right.
+            anyways, they do.
+         */
+//        if (prefs.contains(getString(R.string.keys_prefs_time_stamp))) {
+//            //ignore all of the seen messages. You may want to store these messages locally
+//            mListenManager = new ListenManager.Builder(retrieve.toString(),
+//                    this::publishProgress)
+//                    .setTimeStamp(prefs.getString(getString(R.string.keys_prefs_time_stamp), "0"))
+//                    .setExceptionHandler(this::handleError)
+//                    .setDelay(1000)
+//                    .build();
+//        } else {
+//            //no record of a saved timestamp. must be a first time login
+//            mListenManager = new ListenManager.Builder(retrieve.toString(),
+//                    this::publishProgress)
+//                    .setExceptionHandler(this::handleError)
+//                    .setDelay(1000)
+//                    .build();
+//
+//        }
         adapter = new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             @NonNull
             @Override
@@ -161,20 +215,20 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mListenManager.startListening();
+//TODO        mListenManager.startListening();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        String latestMessage = mListenManager.stopListening();
+//TODO        String latestMessage = mListenManager.stopListening();
         SharedPreferences prefs =
                 getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
         //save the most recent message timestamp
-        prefs.edit().putString(getString(R.string.keys_prefs_time_stamp),
-                latestMessage)
-                .apply();
+//TODO        prefs.edit().putString(getString(R.string.keys_prefs_time_stamp),
+//                latestMessage)
+//                .apply();
     }
 
     private void sendMessage(final View theButton) {
@@ -222,8 +276,10 @@ public class ChatFragment extends Fragment {
     }
 
     private void publishProgress(JSONObject messages) {
-                if (messages.has(getString(R.string.keys_json_messages))) {
+        if (messages.has(getString(R.string.keys_json_messages))) {
+            List<ChatFeedItem> temp = new ArrayList<>();
             try {
+
                 JSONArray jMessages =
                         messages.getJSONArray((getString(R.string.keys_json_messages)));
                 for (int i = 0; i < jMessages.length(); i++) {
@@ -244,6 +300,7 @@ public class ChatFragment extends Fragment {
                 for (ChatFeedItem msg : messageFeedItemList) {
 //                    mOutputTextView.append(msg);
 //                    mOutputTextView.append(System.lineSeparator());
+                    messageFeedItemList.add(msg);
                     adapter.notifyDataSetChanged();
                     mRecyclerView.smoothScrollToPosition(adapter.getItemCount());
                 }

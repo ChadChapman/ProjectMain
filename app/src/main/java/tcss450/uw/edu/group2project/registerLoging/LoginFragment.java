@@ -54,6 +54,9 @@ public class LoginFragment extends Fragment {
         b.setOnClickListener(this::attemptLogin);
         Button c = (Button) view.findViewById(R.id.login_button_register);
         c.setOnClickListener(this::registerOpen);
+        c = (Button) view.findViewById(R.id.login_button_reset_password);
+        c.setOnClickListener(this::changePassword);
+
         return view;
     }
 
@@ -74,6 +77,13 @@ public class LoginFragment extends Fragment {
         mListener = null;
     }
 
+    private void changePassword(View view) {
+        if (mListener != null) {
+
+            mListener.onPasswordClicked();
+        }
+    }
+
     private void registerOpen(View view) {
         if (mListener != null) {
             mListener.onRegisterClicked();
@@ -88,6 +98,8 @@ public class LoginFragment extends Fragment {
                     getActivity().getSharedPreferences(
                             getString(R.string.keys_shared_prefs),
                             Context.MODE_PRIVATE);
+
+
 
 
             EditText username = getActivity().findViewById(R.id.login_edit_text_username);
@@ -131,6 +143,8 @@ public class LoginFragment extends Fragment {
         void onLoginAttempt(Credentials credentials);
 
         void onRegisterClicked();
+
+        void onPasswordClicked();
     }
 }
 

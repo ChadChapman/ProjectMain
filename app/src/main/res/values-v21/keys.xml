@@ -11,13 +11,17 @@
     <string name="keys_prefs_my_memberid">mymemberid</string>
     <string name="keys_prefs_chatids_set">chatidsset</string>
     <string name="keys_prefs_chat_names_set">chatnamesset</string>
-
+    <string name="keys_prefs_theme">theme</string>
+    <string name="keys_prefs_text_size">textsize</string>
+    <string name="keys_prefs_notification_channel_name">channelName</string>
     <string name="keys_bundle_vcode">vCode</string>
 
     <string name="keys_fragment_login">loginFragmentTag</string>
     <string name="keys_fragment_register">registerFragmentTag</string>
+    <string name="keys_fragment_password">changePasswordFragmentTag</string>
     <string name="keys_fragment_landing">landingFragmentTag</string>
     <string name="keys_fragment_chat">chatFragmentTag</string>
+    <string name="keys_fragment_condition">DisplayConditionsFragmentTag</string>
     <string name="keys_fragment_chat_list">chatListFragmentTag</string>
     <string name="keys_fragment_create_new_chat">createChatFragmentTag</string>
     <string name="keys_fragment_profile">profileFragmentTag</string>

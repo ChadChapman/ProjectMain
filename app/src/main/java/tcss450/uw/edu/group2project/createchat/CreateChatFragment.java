@@ -17,16 +17,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import tcss450.uw.edu.group2project.R;
+import tcss450.uw.edu.group2project.chatApp.ChatActivity;
 import tcss450.uw.edu.group2project.chatApp.ChatFragment;
 import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
@@ -73,6 +77,24 @@ public class CreateChatFragment extends Fragment {
        mRecyclerView = v.findViewById(R.id.create_chat_recycle_view);
        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
        setupCreateNewChatFrag(savedInstanceState);
+
+        if(ChatActivity.mTheme == 1){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
+        }else if(ChatActivity.mTheme == 2){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary2));
+
+
+        }else if(ChatActivity.mTheme == 3){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary3));
+
+        }else if(ChatActivity.mTheme == 4){
+            v.setBackgroundColor(getResources().getColor(R.color.colorPrimary4));
+
+
+        }
+
+
        return v;
     }
 
@@ -264,18 +286,25 @@ public class CreateChatFragment extends Fragment {
             return msg;
         } else { //make the chat name from names of all members, like we agreed on
             StringBuilder sb = new StringBuilder();
+            if (!mNewChatIncludedUsernamesList.contains(mThisUsername)) {//could be possible?
+                //should be added last so easy to remove?
+                mNewChatIncludedUsernamesList.add(mThisUsername);
+                //sb.append(mThisUsername + "+");
+            } else {
+                Log.e("ADDING THIS USERNAME TO CHAT ERROR:", "USERNAME WAS ALREADY IN THE CHATNAME");
+            }
+            mNewChatIncludedUsernamesList.sort(new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    return o1.compareToIgnoreCase(o2);
+                }
+            });
             for (String s : mNewChatIncludedUsernamesList) {
                 sb.append(s);
                 sb.append('+');
             }
 
-            if (!mNewChatIncludedUsernamesList.contains(mThisUsername)) {//could be possible?
-                //should be added last so easy to remove?
-                mNewChatIncludedUsernamesList.add(mThisUsername);
-                sb.append(mThisUsername);
-            } else {
-                Log.e("ADDING THIS USERNAME TO CHAT ERROR:", "USERNAME WAS ALREADY IN THE CHATNAME");
-            }
+
 
             Log.e("NEW CHAT WILL BE NAMED: ", sb.toString());
             try {
@@ -384,6 +413,16 @@ public class CreateChatFragment extends Fragment {
             if (success) { //yay, all members were added, let's go to the new chat
                 //TODO now add all members of this chat to the list of sets of usernames fo chats
                 Log.e("ADD ALL MEMBERS RETURNED :", "SUCCESS!");
+
+                //subscribe this user to the new chat "topic" in firebase
+//TODO                FirebaseMessaging.getInstance().subscribeToTopic(mNewChatNameStr); // can unsubscribeFromTopic("xyx"); also
+                loadNewChatInfoIntoPrefs(mNewChatIDStr);
+                ChatFragment newChatFrag = new ChatFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("chatID", mNewChatIDStr);
+                newChatFrag.setArguments(bundle);
+                loadNewChatFrag(newChatFrag, getString(R.string.keys_fragment_chat));
+
                 loadNewChatInfoIntoPrefs(mNewChatIDStr);
                 loadNewChatFrag(new ChatFragment(), getString(R.string.keys_fragment_chat));
 
@@ -424,6 +463,7 @@ public class CreateChatFragment extends Fragment {
     }
 
     private void loadNewChatFrag(Fragment frag, String tag) {
+
         FragmentTransaction transaction = getActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, frag, tag)
@@ -512,21 +552,5 @@ public class CreateChatFragment extends Fragment {
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
-
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
-
 
 }

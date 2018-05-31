@@ -31,7 +31,7 @@ public class WeatherAdapter extends ArrayAdapter<Weather> {
         TextView maxTextView = convertView.findViewById(R.id.tvHighTemperature);
 
 
-        dateTextView.setText(weather.getDate());
+        //dateTextView.setText(weather.getDate());
         minTextView.setText(weather.getMinTemp());
 
         maxTextView.setText(weather.getMaxTemp());
