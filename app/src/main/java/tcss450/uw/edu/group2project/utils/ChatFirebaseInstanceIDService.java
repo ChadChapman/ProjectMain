@@ -99,7 +99,6 @@ public class ChatFirebaseInstanceIDService extends FirebaseInstanceIdService {
         } catch (JSONException e) {
             Log.e("CREATE JSON TOKEN REFRESH OBJECT FAILED : ", e.getMessage());
         }
-
         return jsonObject;
     }
 
