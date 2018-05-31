@@ -59,10 +59,9 @@ public class ContactFragment extends Fragment {
     private Uri mContactsUri;
     private View v;
     private int mContactStatus = 0;
+
     public ContactFragment() {
         // Required empty public constructor
-        mUserMemberID = new Integer(mID);
-
     }
 
     @Override
@@ -70,6 +69,7 @@ public class ContactFragment extends Fragment {
                              Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_try_contact, container, false);
         // Inflate the layout for this fragment
+        //mUserMemberID = new Integer(mID);
         mUserMemberIDStr = getArguments().getString("memberID");
         mRecyclerView = (RecyclerView) (v.findViewById(R.id.try_recycle_view));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
