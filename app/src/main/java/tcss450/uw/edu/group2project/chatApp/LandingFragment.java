@@ -367,10 +367,10 @@ public class LandingFragment extends Fragment implements
     public void onDestroyView() {
         super.onDestroyView();
         stopLocationUpdates();
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
-            Log.i(TAG, "Connection suspended");
-        mGoogleApiClient.disconnect();
-        myCity = "";
+//        if (mGoogleApiClient != null && mGoogleApiClient.isConnected())
+//            Log.i(TAG, "Connection suspended");
+//        mGoogleApiClient.disconnect();
+//        myCity = "";
     }
 
     private void setupNewChatButton(Bundle paramBundle) {
