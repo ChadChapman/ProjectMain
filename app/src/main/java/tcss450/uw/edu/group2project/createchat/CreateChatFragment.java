@@ -415,7 +415,7 @@ public class CreateChatFragment extends Fragment {
                 Log.e("ADD ALL MEMBERS RETURNED :", "SUCCESS!");
 
                 //subscribe this user to the new chat "topic" in firebase
-                FirebaseMessaging.getInstance().subscribeToTopic(mNewChatNameStr); // can unsubscribeFromTopic("xyx"); also
+//TODO                FirebaseMessaging.getInstance().subscribeToTopic(mNewChatNameStr); // can unsubscribeFromTopic("xyx"); also
                 loadNewChatInfoIntoPrefs(mNewChatIDStr);
                 ChatFragment newChatFrag = new ChatFragment();
                 Bundle bundle = new Bundle();

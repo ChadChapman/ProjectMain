@@ -215,20 +215,20 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mListenManager.startListening();
+//TODO        mListenManager.startListening();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        String latestMessage = mListenManager.stopListening();
+//TODO        String latestMessage = mListenManager.stopListening();
         SharedPreferences prefs =
                 getActivity().getSharedPreferences(getString(R.string.keys_shared_prefs),
                         Context.MODE_PRIVATE);
         //save the most recent message timestamp
-        prefs.edit().putString(getString(R.string.keys_prefs_time_stamp),
-                latestMessage)
-                .apply();
+//TODO        prefs.edit().putString(getString(R.string.keys_prefs_time_stamp),
+//                latestMessage)
+//                .apply();
     }
 
     private void sendMessage(final View theButton) {
