@@ -5,7 +5,8 @@
 This repo is where our deliverable project lives.  
 
 This should not be a sandbox or test repo for anyone, if you are looking to hone your git skills or get used to IDE & git integration features, please use either our group repo titled: "practice" or "ChadLab2".  
-Lab uploads can be separate repos for each lab for each person, eg Lab3Chad, Lab3Igor, etc so we can all check out how the other members solved the lab problems and we can compare techniques without confusion.  We can make a bajillion repos so don't worry about that, better to keep things clean and tidy.
+
+We can make a bajillion branches, they are cheap and disposable so don't worry about that, better to keep things clean and tidy.
 
 ## NOBODY SHOULD BE WORKING ON THE MASTER BRANCH IN THIS REPO!!!
 
