@@ -125,38 +125,38 @@ public class LandingFragment extends Fragment implements
         weatherTextView = v.findViewById(R.id.weather_textview);
         mProgressBar = v.findViewById(R.id.landing_progressbar);
         mProgressBar.setVisibility(ProgressBar.VISIBLE);
-        curWeather = new Weather();
+        //curWeather = new Weather();
         mRecyclerView = v.findViewById(R.id.landing_recyclerview);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         // Create an instance of GoogleAPIClient.
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-        }
-        mLocationRequest = LocationRequest.create();
+//        if (mGoogleApiClient == null) {
+//            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+//                    .addConnectionCallbacks(this)
+//                    .addOnConnectionFailedListener(this)
+//                    .addApi(LocationServices.API)
+//                    .build();
+//        }
+//        mLocationRequest = LocationRequest.create();
         // Sets the desired interval for active location updates. This interval is
         // inexact. You may not receive updates at all if no location sources are available, or
         // you may receive them slower than requested. You may also receive updates faster than
         // requested if other applications are requesting location at a faster interval.
-        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+//        mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         // Sets the fastest rate for active location updates. This interval is exact, and your
         // application will never receive updates faster than this value.
-        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+//        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
         SharedPreferences prefs = getActivity().getSharedPreferences(
                 getString(R.string.keys_shared_prefs),
                 Context.MODE_PRIVATE);
         mUserMemberID = prefs.getString(getString(R.string.keys_prefs_my_memberid), "MEMBERID NOT FOUND IN PREFS");
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mNewChatButton = v.findViewById(R.id.createNewChatFragNewChatButton);
         v.findViewById(R.id.saved_loc_button).setOnClickListener(this::openLocList);
         v.findViewById(R.id.landing_map_button).setOnClickListener(this::openMap);
         v.findViewById(R.id.io_imageview).setOnClickListener(this::openURL);
         //setupNewChatButton(savedInstanceState);
-        loadMessages();
+        //loadMessages();
         return v;
     }
     /**
@@ -190,6 +190,7 @@ public class LandingFragment extends Fragment implements
     private void handleErrorsInTask(String result) {
         Log.e("ASYNCT_TASK_ERROR", result);
     }
+
     public void handleMessageQueryResponseOnPostExec(String result) {
         try {
             JSONObject resultsJSON = new JSONObject(result);
@@ -199,7 +200,7 @@ public class LandingFragment extends Fragment implements
                 //Query was successful
 
                 //need to populate the contacts list before passing it to the adapter
-                parseHerokuResult(result);
+                //parseHerokuResult(result);
                 //added from here
                 /*
                     ^^ the way this got added, with implmenting all the methods to create a ViewHolder
@@ -306,6 +307,7 @@ public class LandingFragment extends Fragment implements
         }
         return msg;
     }
+
     private void openURL(View view) {
         Intent browserIntent = new Intent(
                 Intent.ACTION_VIEW,
@@ -521,7 +523,7 @@ public class LandingFragment extends Fragment implements
         if (result != null && !result.equals("")) {
             try {
                 JSONArray temp = new JSONObject(result).getJSONArray("data");
-                parseResulte(temp.getJSONObject(0));
+                parseResult(temp.getJSONObject(0));
                 loadWeatherInfo();
             } catch (JSONException e) {
                 Log.e(TAG, "ERR" + e.getMessage());
@@ -529,7 +531,7 @@ public class LandingFragment extends Fragment implements
         }
     }
 
-    private void parseResulte(JSONObject result) {
+    private void parseResult(JSONObject result) {
         try {
             curWeather.setCityState(result.getString("city_name") + "," + result.getString("state_code"));
             curWeather.setFarTemp(result.getString("temp"));
