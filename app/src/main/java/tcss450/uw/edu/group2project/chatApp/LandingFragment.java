@@ -58,6 +58,7 @@ import tcss450.uw.edu.group2project.WeatherDisplay.Weather;
 import tcss450.uw.edu.group2project.WeatherDisplay.WeatherAdapter;
 import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
 import tcss450.uw.edu.group2project.createchat.CreateChatFragment;
+import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.ChatFirebaseInstanceIDService;
 import tcss450.uw.edu.group2project.utils.ListenManager;
 
@@ -200,39 +201,50 @@ public class LandingFragment extends Fragment implements
                 //need to populate the contacts list before passing it to the adapter
                 parseHerokuResult(result);
                 //added from here
-                adapter = new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-                    @NonNull
-                    @Override
-                    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-                        View view = LayoutInflater.from(viewGroup.getContext())
-                                .inflate(R.layout.chats_list_rows, null);
-                        return new MyRecyclerViewAdapter.CustomViewHolder(view);
-                    }
-
-                    @Override
-                    public void onBindViewHolder(RecyclerView.ViewHolder customViewHolder, int i) {
-                        //FeedItem feedItem = feedItemList.get(i);
-                        MessageFeedItem feedItem = messageFeedItemList.get(i);
-
-
-                        //Setting text view title
-                        ((CustomViewHolder) customViewHolder).chatName.setText(feedItem.getChatName());
-                        ((CustomViewHolder) customViewHolder).message.setText(feedItem.getMessage());
-
-                        View.OnClickListener listener = new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                onMsgItemClick(feedItem);
-                            }
-                        };
-                        ((CustomViewHolder) customViewHolder).chatName.setOnClickListener(listener);
-                        ((CustomViewHolder) customViewHolder).message.setOnClickListener(listener);
-                    }
-                    @Override
-                    public int getItemCount() {
-                        return (null != messageFeedItemList ? messageFeedItemList.size() : 0);
-                    }
-                };
+                /*
+                    ^^ the way this got added, with implmenting all the methods to create a ViewHolder
+                     and all the associated loc here, I'm just not sure about that.
+                     For the time being, I'm just going to use the original
+                    RV to make it compile.  But this should be revisited and pulled out of this method.
+                    TODO ^^
+                 */
+//                adapter = new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+//                    @NonNull
+//                    @Override
+//                    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+//                        View view = LayoutInflater.from(viewGroup.getContext())
+//                                .inflate(R.layout.chats_list_rows, null);
+//                        //return new MyRecyclerViewAdapter.CustomViewHolder(view);
+//                        return new  {
+//                        };
+//                    }
+//
+//                    @Override
+//                    public void onBindViewHolder(RecyclerView.ViewHolder customViewHolder, int i) {
+//                        //FeedItem feedItem = feedItemList.get(i);
+//                        MessageFeedItem feedItem = messageFeedItemList.get(i);
+//
+//
+//                        //Setting text view title
+//                        ((CustomViewHolder) customViewHolder).chatName.setText(feedItem.getChatName());
+//                        ((CustomViewHolder) customViewHolder).message.setText(feedItem.getMessage());
+//
+//                        View.OnClickListener listener = new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                onMsgItemClick(feedItem);
+//                            }
+//                        };
+//                        ((CustomViewHolder) customViewHolder).chatName.setOnClickListener(listener);
+//                        ((CustomViewHolder) customViewHolder).message.setOnClickListener(listener);
+//                    }
+//                    @Override
+//                    public int getItemCount() {
+//                        return (null != messageFeedItemList ? messageFeedItemList.size() : 0);
+//                    }
+//                };
+                List<ContactFeedItem> localContactsList = new ArrayList<>();
+                adapter = new MyRecyclerViewAdapter(this.getContext(), localContactsList);
                 mRecyclerView.setAdapter(adapter);
             } else {
                 Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
@@ -360,15 +372,8 @@ public class LandingFragment extends Fragment implements
     }
 
     private void setupNewChatButton(Bundle paramBundle) {
-
         fbID = new ChatFirebaseInstanceIDService();
         fbID.onTokenRefresh();
-        mNewChatButton.setOnClickListener(frag -> loadFragment(new CreateChatFragment()
-                , getString(R.string.keys_fragment_create_new_chat)));
-    }
-
-    private void setupNewChatButton(Bundle paramBundle){
-
         mNewChatButton.setOnClickListener(frag -> loadFragment(new CreateChatFragment()
                 , getString(R.string.keys_fragment_create_new_chat)));
     }
@@ -376,11 +381,6 @@ public class LandingFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
-    }
-
-    private void handleError(Exception e) {
-        Log.e("LISTEN ERROR", e.getMessage());
-    }
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
             Log.i(TAG, "Connection Connects" + myCity.isEmpty() + (mLocationRequest == null));
@@ -388,9 +388,17 @@ public class LandingFragment extends Fragment implements
         }
     }
 
+    private void handleError(Exception e) {
+        Log.e("LISTEN ERROR", e.getMessage());
+    }
+
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
     public void onStop() {
         super.onStop();
         if (mGoogleApiClient != null) {
@@ -399,7 +407,7 @@ public class LandingFragment extends Fragment implements
             myCity = "";
             }
         }
-    }
+
 
     /**
      * Removes location updates from the FusedLocationApi.
@@ -485,7 +493,6 @@ public class LandingFragment extends Fragment implements
         List<Address> addresses;
         geocoder = new Geocoder(getActivity(), Locale.getDefault());
         try {
-
             addresses = geocoder.getFromLocation(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), 1);
             String city = addresses.get(0).getLocality();
             myLocURL = NetworkUtils.buildUrlForCurr(city);
@@ -519,7 +526,6 @@ public class LandingFragment extends Fragment implements
             } catch (JSONException e) {
                 Log.e(TAG, "ERR" + e.getMessage());
             }
-
         }
     }
 
@@ -542,18 +548,19 @@ public class LandingFragment extends Fragment implements
         // Commit the transaction
         transaction.commit();
     }
+
+    private class CustomViewHolder extends RecyclerView.ViewHolder {
+        protected TextView chatName;
+        protected TextView message;
+        protected CardView cView;
+
+        public CustomViewHolder(View view) {
+            super(view);
+            this.chatName = (TextView) view.findViewById(R.id.chat_username_textview);
+            this.message = (TextView) view.findViewById(R.id.chat_message_textview);
+            this.cView = (CardView) view.findViewById(R.id.list_card_view);
+            //this.cView.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        }
+    }
 }//end class LF?
 
-protected class CustomViewHolder extends RecyclerView.ViewHolder {
-    protected TextView chatName;
-    protected TextView message;
-    protected CardView cView;
-
-    public CustomViewHolder(View view) {
-        super(view);
-        this.chatName = (TextView) view.findViewById(R.id.chat_username_textview);
-        this.message = (TextView) view.findViewById(R.id.chat_message_textview);
-        this.cView = (CardView) view.findViewById(R.id.list_card_view);
-        //this.cView.setCardBackgroundColor(getResources().getColor(R.color.colorPrimary));
-    }
-}

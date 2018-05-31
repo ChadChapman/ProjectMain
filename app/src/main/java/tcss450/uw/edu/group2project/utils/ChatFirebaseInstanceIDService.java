@@ -95,7 +95,7 @@ public class ChatFirebaseInstanceIDService extends FirebaseInstanceIdService {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put(getString(R.string.keys_prefs_my_memberid), mUserMemberIDStr);
-            jsonObject.put(getString(R.string.firebase_token), newIIDToken);
+            jsonObject.put(getString(R.string.firebase_iidtoken), newIIDToken);
         } catch (JSONException e) {
             Log.e("CREATE JSON TOKEN REFRESH OBJECT FAILED : ", e.getMessage());
         }

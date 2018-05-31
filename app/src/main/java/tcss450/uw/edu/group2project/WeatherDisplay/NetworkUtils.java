@@ -22,7 +22,7 @@ public class NetworkUtils {
 //  private final static String API_KEY = "BoeoxMyWQyO3S2Q6VnEkuWua46XzIPRu"; //newest:
 // newest -3    private final static String API_KEY = "Y6CvnHQU9pAkGKGCh8NsVldTvsfA0oub";
 // newest +1    private final static String API_KEY = "Gs6baRcWtkDDxmBUYIGR4415NFsQfc0Z";
-    private final static String API_KEY = "01b805016496462e89548686b49d261f";
+    //private final static String API_KEY = "01b805016496462e89548686b49d261f";
 
     private final static String PARAM_API_KEY = "key";
     private final static String PARAM_CITY = "city";
@@ -43,8 +43,14 @@ public class NetworkUtils {
 //        }
 //        return url;
 //    }
+    /*
+        TODO
+        not sure i did the right thing with weather vs curr types of url
+        but it compiles for now, so there's that
+     */
     public static URL buildUrlForCurr(String city) {
-        Uri builtUri = Uri.parse(Curr_BASE_URL).buildUpon()
+        //Uri builtUri = Uri.parse(Curr_BASE_URL).buildUpon()
+        Uri builtUri = Uri.parse(WEATHER_BASE_URL).buildUpon()
                 .appendQueryParameter(PARAM_CITY,city)
                 .appendQueryParameter(PARAM_units,PARAM_units_i)
                 .appendQueryParameter(PARAM_API_KEY, API_KEY)
