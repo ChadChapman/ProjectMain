@@ -1,5 +1,12 @@
 /**
- * merged so far: Igor, Josh, Raymond
+ * Start Activity handles all async tasks and fragments pertaining to registering, logging in
+ * and verify your account.
+ * @author Charles Bryan
+ * @author Chad Chapman
+ * @author Khoa Doan
+ * @author Ifor Kalezic
+ * @author Josh Lansang
+ * @author Raymond Schooley
  */
 
 package tcss450.uw.edu.group2project.registerLoging;
@@ -32,29 +39,34 @@ public class StartActivity extends AppCompatActivity
         RegisterFragment.OnFragmentInteractionListener,
         VerifyFragment.OnFragmentInteractionListener,
         PasswordChangeFragment.OnFragmentInteractionListener{
-
+    /**Account info*/
     private Credentials mCredentials;
-    //private int mUserMemberID;
     private String mUserMemberIDStr;
     private int mUserMemberIDInt;
 
 
+    /**
+     * App starts here.  You'll go to login screen or straight to the main landing
+     * page if you've selected stay logged in.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-
+        //Retrieve your preferences
         if (savedInstanceState == null) {
             if (findViewById(R.id.start_constraint_layout) != null) {
                 SharedPreferences prefs =
                         getSharedPreferences(
                                 getString(R.string.keys_shared_prefs),
                                 Context.MODE_PRIVATE);
-
+                //Check if you've select stay logged in
                 if (prefs.getBoolean(getString(R.string.keys_prefs_stay_logged_in),
                         false)) {
                     loadVerifiedUserLandingActivity();
+                //Go to login
                 } else {
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.start_constraint_layout,
@@ -68,13 +80,10 @@ public class StartActivity extends AppCompatActivity
 
 
     /**
-     * Previously named loadLandingFragment, shit you not.
-     * Since this begins a new activity, now it's name reflects that.
-     * <p>
-     * everything worked and now we are going into the app, starting with the chat activity
+     * Once you are verified load the ChatAvtivity and landing screen.
      */
     void loadVerifiedUserLandingActivity() {
-
+        //If you're verified then the memberid should be in sharedPrefs.
         SharedPreferences prefs =
                 getSharedPreferences(
                         getString(R.string.keys_shared_prefs),
@@ -96,6 +105,7 @@ public class StartActivity extends AppCompatActivity
                 .appendPath(getString(R.string.ep_email))
                 .build();
 
+        //email end point just need a memberid, pack that into a json object
         JSONObject msg = new JSONObject();
 
         try {
@@ -103,6 +113,7 @@ public class StartActivity extends AppCompatActivity
         } catch (JSONException e) {
             Log.e("StartActivity", "Email problem");
         }
+        //notify user that email is being sent and send it
         Toast.makeText(this, "Sending new email", Toast.LENGTH_SHORT).show();
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .build().execute();
@@ -111,24 +122,28 @@ public class StartActivity extends AppCompatActivity
     /*
     --------------------------Register fragment interface---------------------------
      */
+
+    /**
+     * When register button is click from the register fragment we need to hit the endpoint
+     * and check if it was successful.
+     * @param credentials Current users login credentials
+     */
     @Override
     public void onRegisterAttempt(Credentials credentials) {
-        //build the web service URL
+        //build the register web service URL
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
                 .appendPath(getString(R.string.ep_register))
                 .build();
 
-        //build the JSONObject
-        JSONObject msg = credentials.asJSONObject();
-
+        //build the JSONObject containing all credential info
         mCredentials = credentials;
+        JSONObject msg = mCredentials.asJSONObject();
+
+
 
         //instantiate and execute the AsyncTask.
-        //Feel free to add a handler for onPreExecution so that a progress bar
-        //is displayed or maybe disable buttons. You would need a method in
-        //LoginFragment to perform this.
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handleRegisterOnPost)
                 .onCancelled(this::handleErrorsInTask)
@@ -139,10 +154,15 @@ public class StartActivity extends AppCompatActivity
     --------------------------Login fragment interface-------------------------------
      */
 
+    /**
+     * When login button is click from the login fragment we need to hit the endpoint
+     * and check if it was successful.
+     * @param credentials Current users login credentials
+     */
     @Override
     public void onLoginAttempt(Credentials credentials) {
 
-        //build the web service URL
+        //build the login web service URL
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
@@ -150,22 +170,24 @@ public class StartActivity extends AppCompatActivity
                 .appendPath(getString(R.string.ep_login))
                 .build();
 
-        //build the JSONObject
-        JSONObject msg = credentials.asJSONObject();
-
+        //build the JSONObject containing username and password
         mCredentials = credentials;
+        JSONObject msg = mCredentials.asJSONObject();
+
+
 
 
         //instantiate and execute the AsyncTask.
-        //Feel free to add a handler for onPreExecution so that a progress bar
-        //is displayed or maybe disable buttons. You would need a method in
-        //LoginFragment to perform this.
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handleLoginOnPost)
                 .onCancelled(this::handleErrorsInTask)
                 .build().execute();
     }
 
+    /**
+     * When clicking the reset password button in the login screen load the password reset
+     * fragment.
+     */
     @Override
     public void onPasswordClicked() {
         FragmentTransaction transaction = getSupportFragmentManager()
@@ -177,9 +199,15 @@ public class StartActivity extends AppCompatActivity
         transaction.commit();
     }
 
+    /**
+     * When clicking the button to reset password and send new email containing new verification
+     * code.
+     * @param username Current user's handle
+     * @param password Current user's new password
+     */
     @Override
     public void onPasswordReset(String username, String password) {
-        //build the web service URL
+        //build the reset password web service URL
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
@@ -188,19 +216,23 @@ public class StartActivity extends AppCompatActivity
                 .build();
 
         JSONObject msg = new JSONObject();
-
+        //put username and password into json object
         try {
             msg.put("username", username);
             msg.put("password", password);
         } catch (JSONException e) {
             Log.e("StartActivity", "Reset Password problem");
         }
+        //notify user and hit the reset password endpoint
         Toast.makeText(this, "Sending new email", Toast.LENGTH_SHORT).show();
         new SendPostAsyncTask.Builder(uri.toString(), msg)
                 .onPostExecute(this::handlePasswordReset)
                 .build().execute();
     }
 
+    /**
+     * When pressing the register button from the login screen just load the register fragment.
+     */
     @Override
     public void onRegisterClicked() {
         FragmentTransaction transaction = getSupportFragmentManager()
@@ -239,11 +271,15 @@ public class StartActivity extends AppCompatActivity
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) {
-                //Login was successful. Switch to the loadSuccessFragment.
+                //Login was successful.  Retrieve the memberid and check the verification
+                // code coming back.
                 mUserMemberIDStr = resultsJSON.getString("message");
                 Log.e("MEMBERID WAS: ", mUserMemberIDStr);
+                //record stay logged in choice
                 checkStayLoggedIn();
+                //check verification code
                 int vCode = resultsJSON.getInt("code");
+                //verified
                 if (vCode == 1) {
                     loadVerifiedUserLandingActivity();
                 } else if (vCode == 0) {
@@ -255,6 +291,7 @@ public class StartActivity extends AppCompatActivity
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                     //frag.setError("Log in unsuccessful");
+                //Unverifed user load the verfiation fragment
                 } else {
                     Log.d("LoggingTest", "vCode = " + vCode);
                     Bundle bundle = new Bundle();
