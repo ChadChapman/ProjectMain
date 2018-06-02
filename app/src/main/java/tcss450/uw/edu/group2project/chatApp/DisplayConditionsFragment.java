@@ -41,7 +41,14 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.WeatherAsyncTask;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Display current weather conditions
+ * @author Charles Bryan
+ * @author Chad Chapman
+ * @author Khoa Doan
+ * @author Ifor Kalezic
+ * @author Josh Lansang
+ * @author Raymond Schooley
+ * @version 1.0
  */
 public class DisplayConditionsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
     private GoogleMap mMap;

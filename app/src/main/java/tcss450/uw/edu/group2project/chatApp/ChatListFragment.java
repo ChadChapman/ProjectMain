@@ -36,7 +36,14 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.UITheme;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment for user to choose which chat to enter.
+ * @author Charles Bryan
+ * @author Chad Chapman
+ * @author Khoa Doan
+ * @author Ifor Kalezic
+ * @author Josh Lansang
+ * @author Raymond Schooley
+ * @version 1.0
  */
 public class ChatListFragment extends Fragment {
     private RecyclerView mRecyclerView;

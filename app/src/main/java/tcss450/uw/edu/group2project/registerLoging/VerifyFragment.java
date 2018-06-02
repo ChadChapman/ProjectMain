@@ -13,6 +13,18 @@ import android.widget.Toast;
 
 import tcss450.uw.edu.group2project.R;
 
+/**
+ * Receives and checks verification code.  Interacts with StartActivity to hit the verify ep.
+ * @author Charles Bryan
+ * @author Chad Chapman
+ * @author Khoa Doan
+ * @author Ifor Kalezic
+ * @author Josh Lansang
+ * @author Raymond Schooley
+ * @version 1.0
+ */
+
+
 public class VerifyFragment extends Fragment implements View.OnClickListener{
 
     private OnFragmentInteractionListener mListener;

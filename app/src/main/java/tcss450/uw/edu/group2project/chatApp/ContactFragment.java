@@ -38,7 +38,14 @@ import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment for showing you current contacts as well as sent and pending requests.
+ * @author Charles Bryan
+ * @author Chad Chapman
+ * @author Khoa Doan
+ * @author Ifor Kalezic
+ * @author Josh Lansang
+ * @author Raymond Schooley
+ * @version 1.0
  */
 public class ContactFragment extends Fragment {
     private RecyclerView mRecyclerView;

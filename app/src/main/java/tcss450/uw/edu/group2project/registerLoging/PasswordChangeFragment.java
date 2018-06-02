@@ -12,6 +12,16 @@ import android.widget.EditText;
 
 import tcss450.uw.edu.group2project.R;
 
+/**
+ * Allows user to reset password
+ * @author Charles Bryan
+ * @author Chad Chapman
+ * @author Khoa Doan
+ * @author Ifor Kalezic
+ * @author Josh Lansang
+ * @author Raymond Schooley
+ * @version 1.0
+ */
 public class PasswordChangeFragment extends Fragment {
 
 

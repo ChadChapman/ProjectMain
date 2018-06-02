@@ -33,6 +33,17 @@ import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.MyRecyclerViewAdapter;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
+/**
+ * Allows user to create new chat
+ * @author Charles Bryan
+ * @author Chad Chapman
+ * @author Khoa Doan
+ * @author Ifor Kalezic
+ * @author Josh Lansang
+ * @author Raymond Schooley
+ * @version 1.0
+ */
+
 
 public class CreateChatFragment extends Fragment {
     private static final String TAG = "create_chat_fragment";

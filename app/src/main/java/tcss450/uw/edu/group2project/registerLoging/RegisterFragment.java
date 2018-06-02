@@ -17,16 +17,36 @@ import java.util.regex.Pattern;
 import tcss450.uw.edu.group2project.R;
 import tcss450.uw.edu.group2project.model.Credentials;
 
+
+/**
+ * Accepts user registration credentials and interacts with StartActivity to hit the register ep.
+ * Performs client-side validation.
+ * @author Charles Bryan
+ * @author Chad Chapman
+ * @author Khoa Doan
+ * @author Ifor Kalezic
+ * @author Josh Lansang
+ * @author Raymond Schooley
+ * @version 1.0
+ */
+
 public class RegisterFragment extends Fragment {
     //min size for any textfield
     private final int mMinSizeText = 6;
+    /**StartActivity implements interface to hit eps and navigate fragment changes*/
     private RegisterFragment.OnFragmentInteractionListener mListener;
 
     public RegisterFragment() {
         // Required empty public constructor
     }
 
-
+    /**
+     * Inflate view, save references to ui elements and set onClick listeners for buttons.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -37,6 +57,10 @@ public class RegisterFragment extends Fragment {
         return v;
     }
 
+    /**
+     * Save instance of StartActivity as fragment listener
+     * @param context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -54,10 +78,15 @@ public class RegisterFragment extends Fragment {
         mListener = null;
     }
 
-
+    /**
+     * Take in user info and call Activity method to hit register ep.
+     * @param view
+     */
     public void goSuccess(View view) {
+        //keep track of number of errors
         int errors = 0;
         if (mListener != null) {
+            //get all string values enter in by user
             EditText emailField = ((EditText) getActivity().findViewById(R.id.registerfrag_edittext_email));
             String email = emailField.getText().toString();
             EditText fNameField = ((EditText) getActivity().findViewById(R.id.registerfrag_edittext_firstname));

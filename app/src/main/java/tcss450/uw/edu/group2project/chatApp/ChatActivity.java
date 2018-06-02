@@ -39,6 +39,18 @@ import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 import tcss450.uw.edu.group2project.utils.UITextSize;
 import tcss450.uw.edu.group2project.utils.UITheme;
 
+/**
+ * Main activity for the app.
+ *
+ * @author Charles Bryan
+ * @author Chad Chapman
+ * @author Khoa Doan
+ * @author Ifor Kalezic
+ * @author Josh Lansang
+ * @author Raymond Schooley
+ * @version 1.0
+ */
+
 public class ChatActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         SearchFragment.OnSearchFragmentInteractionListener,

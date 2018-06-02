@@ -21,7 +21,13 @@ import tcss450.uw.edu.group2project.model.ContactFeedItem;
 import tcss450.uw.edu.group2project.utils.SendPostAsyncTask;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment to display info about a contacts.  
+ * @author Chad Chapman
+ * @author Khoa Doan
+ * @author Igor Kalezic
+ * @author Josh Lansang
+ * @author Raymond Schooley
+ * @version 1.0
  */
 public class FriendProfileFragment extends Fragment {
 

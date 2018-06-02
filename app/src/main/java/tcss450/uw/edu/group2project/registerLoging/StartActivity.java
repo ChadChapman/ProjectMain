@@ -7,6 +7,7 @@
  * @author Ifor Kalezic
  * @author Josh Lansang
  * @author Raymond Schooley
+ * @version 1.0
  */
 
 package tcss450.uw.edu.group2project.registerLoging;
@@ -259,7 +260,7 @@ public class StartActivity extends AppCompatActivity
     }
 
     /**
-     * Handle onPostExecute of the AsynceTask. The result from our webservice is
+     * Handle onPostExecute of Login task. The result from our login ep is
      * a JSON formatted String. Parse it for success or failure.
      *
      * @param result the JSON formatted String response from the web service
@@ -323,14 +324,20 @@ public class StartActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Handle onPostExecute of register task. The result from our register ep is
+     * a JSON formatted String. Parse it for success or failure.
+     *
+     * @param result the JSON formatted String response from the web service
+     */
     private void handleRegisterOnPost(String result) {
         try {
             JSONObject resultsJSON = new JSONObject(result);
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) {
+                //save memberid
                 mUserMemberIDInt = resultsJSON.getInt("memberid");
-                System.out.println(mUserMemberIDInt);
                 //now we return to login and let the user know to check email
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.start_constraint_layout,
@@ -357,6 +364,12 @@ public class StartActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Handle onPostExecute of password reset task. The result from our password reset ep is
+     * a JSON formatted String. Parse it for success or failure.
+     *
+     * @param result the JSON formatted String response from the web service
+     */
     public void handlePasswordReset(String result) {
         //No matter what we are returning to login from here
         LoginFragment frag =
@@ -368,6 +381,7 @@ public class StartActivity extends AppCompatActivity
             boolean success = resultsJSON.getBoolean("success");
 
             if (success) {
+                //inform user to check email
                 Toast.makeText(this, "Password updated.  Check your email, " +
                         "you will need a new verifictation code", Toast.LENGTH_SHORT).show();
             } else {
@@ -393,6 +407,9 @@ public class StartActivity extends AppCompatActivity
      */
 
 
+    /**
+     * Update stay logged in preference
+     */
     private void checkStayLoggedIn() {
         SharedPreferences prefs =
                 getSharedPreferences(
@@ -414,9 +431,13 @@ public class StartActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * When the verify button is pressed in the verify fragment and it matches what came back
+     * when the user tried to log, this will exucute.
+     */
     @Override
     public void onFragmentInteraction() {
-
+        //The user has already entered the correct code so now we just want to update the db
         Uri uri = new Uri.Builder()
                 .scheme("https")
                 .appendPath(getString(R.string.ep_base_url))
@@ -432,6 +453,7 @@ public class StartActivity extends AppCompatActivity
         } catch (JSONException e) {
             Log.wtf("Verify", "Error creating JSON " + e.getMessage());
         }
+        //Go to landing activity.
         loadVerifiedUserLandingActivity();
     }
 
